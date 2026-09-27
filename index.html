@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Especialista em Shopee — Método Erika Marques</title>
+<meta name="description" content="Научу зарабатывать на Shopee без вложений — с нуля до первых реалов, с телефона и из дома.">
+<meta name="theme-color" content="#F3F9FC">
+<link rel="icon" href="data:,">
+<script>
+  /* Движение включаем, только если посетитель не просил его убрать.
+     Без класса .motion (нет JS или prefers-reduced-motion) страница показывается статично: постер + все тексты. */
+  (function (el) {
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.classList.add(still ? 'still' : 'motion');
+  })(document.documentElement);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Raleway:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="assets/poster.jpg" media="(min-width: 768px)">
+<link rel="preload" as="image" href="assets/poster-mobile.jpg" media="(max-width: 767.98px)">
+<style>
+/* ============ Токены ============ */
+:root{
+  --sky-0:#F3F9FC; --sky-1:#EAF5FA; --sky-2:#DCEEF5; --sky-3:#C9E6F0;
+  --powder:#78B3CE; --ink:#1F2A33; --ink-2:#66727B; --cta:#F96E2A; --wa:#25D366;
+  --line:rgba(31,42,51,.10);
+  --glass:rgba(255,255,255,.62); --glass-edge:rgba(255,255,255,.9);
+  --shadow:0 1px 2px rgba(31,42,51,.04), 0 18px 48px -22px rgba(31,42,51,.24);
+  --serif:"Prata", Georgia, "Times New Roman", serif;
+  --sans:"Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --gut:clamp(20px, 5vw, 80px);
+  --hdr:76px;
+  --ease:cubic-bezier(.22,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--sky-0)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--sky-0);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;
+  font-variant-numeric:lining-nums;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-synthesis:none}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+video,svg{display:block}
+.nw{white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Стекло. Внимание: не ставить opacity<1 на ПРЕДКОВ стеклянных элементов — пропадёт размытие фона. */
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border:1px solid var(--glass-edge);box-shadow:var(--shadow)}
+
+/* ============ Кнопки ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:0 30px;border-radius:999px;border:0;
+  font:600 18px/1 var(--sans);letter-spacing:.01em;text-decoration:none;white-space:nowrap;cursor:pointer;
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease),background-color .4s var(--ease)}
+.btn-cta{background:var(--cta);color:#fff;box-shadow:0 14px 30px -14px rgba(249,110,42,.75)} /* белый — только жирный от 18px */
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 20px 38px -16px rgba(249,110,42,.8)}
+.btn-ghost{color:var(--ink);font-weight:500;font-size:17px;padding:0 24px 0 9px;background:rgba(255,255,255,.5);border:1px solid rgba(31,42,51,.14)}
+.btn-ghost:hover{background:rgba(255,255,255,.8)}
+.play{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 14px -6px rgba(31,42,51,.35)}
+.play svg{width:12px;height:12px;margin-left:2px}
+.btn-soft{color:var(--ink);font-weight:500;font-size:16.5px;padding:0 26px 0 8px;min-height:56px;background:rgba(255,255,255,.72);border:1px solid rgba(31,42,51,.1)}
+.btn-soft:hover{background:#fff}
+.btn-lg{min-height:62px;padding:0 46px;font-size:19px}
+.wa{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--wa);text-decoration:none;
+  box-shadow:0 8px 20px -10px rgba(37,211,102,.9);transition:transform .3s var(--ease)}
+.wa:hover{transform:scale(1.06)}
+.wa svg{width:22px;height:22px}
+.btn-soft .wa{width:40px;height:40px;box-shadow:none}
+.btn-soft .wa svg{width:19px;height:19px}
+
+/* ============ Шапка ============ */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--hdr);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 var(--gut)}
+.hdr::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--glass-edge);box-shadow:0 10px 30px -24px rgba(31,42,51,.4);opacity:0;transition:opacity .6s var(--ease)}
+.hdr.is-solid::before{opacity:1}
+.logo{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:-.01em;color:var(--ink);text-decoration:none;white-space:nowrap}
+.hdr-actions{display:flex;align-items:center;gap:12px}
+.pill{display:inline-flex;align-items:center;min-height:42px;padding:0 20px;border-radius:999px;background:var(--ink);color:#fff;
+  font:600 14px/1 var(--sans);letter-spacing:.02em;text-decoration:none;transition:background-color .3s}
+.pill:hover{background:#34444F}
+
+/* ============ Сцена с роликом ============ */
+.stage{position:relative;height:600vh}
+.stage-pin{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden}
+.media{position:absolute;inset:0;background:var(--sky-1)}
+.film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 100%}
+.veil{position:absolute;inset:0;pointer-events:none}
+.veil-l{background:linear-gradient(90deg,rgba(243,249,252,.93) 0%,rgba(243,249,252,.82) 25%,rgba(243,249,252,.42) 37%,rgba(243,249,252,0) 47%)}
+.veil-r{background:linear-gradient(270deg,rgba(243,249,252,.93) 0%,rgba(243,249,252,.82) 25%,rgba(243,249,252,.42) 37%,rgba(243,249,252,0) 47%)}
+.motion .veil-l,.motion .veil-r{opacity:.4}
+.veil-top{position:absolute;left:0;right:0;top:0;height:170px;pointer-events:none;background:linear-gradient(180deg,rgba(243,249,252,.72),rgba(243,249,252,0))}
+.cue{position:absolute;left:50%;bottom:30px;width:1px;height:60px;margin-left:-.5px;overflow:hidden;background:rgba(31,42,51,.14)}
+.cue i{position:absolute;left:0;top:0;width:1px;height:20px;background:var(--ink);animation:cue 2.6s var(--ease) infinite}
+@keyframes cue{from{transform:translateY(-20px)}to{transform:translateY(60px)}}
+
+/* Главы поверх ролика (десктоп): левая и правая треть экрана */
+.ch{z-index:2}
+.motion .ch{position:absolute;top:0;bottom:0;width:min(470px,max(33vw,340px));display:flex;align-items:center;padding:calc(var(--hdr) + 10px) 0 34px}
+.motion .ch-l{left:var(--gut)}
+.motion .ch-r{right:var(--gut)}
+.motion .ch:not(#ch1){visibility:hidden}
+.motion .ch:not(#ch1) [data-s]{opacity:0}
+.ch-in{width:100%}
+
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500;letter-spacing:.02em;color:var(--ink-2)}
+.eyebrow::before{content:"";flex:none;width:28px;height:1px;background:currentColor;opacity:.6}
+.h1{margin-top:22px;font-family:var(--serif);font-weight:400;font-size:clamp(40px,3.9vw,60px);line-height:1.06;letter-spacing:-.01em}
+.lead{margin-top:20px;font-size:21px;line-height:1.4;font-weight:500}
+.sub{margin-top:12px;font-size:17px;line-height:1.55;color:var(--ink-2)}
+.tags{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px}
+.tags li{padding:8px 14px;border-radius:999px;border:1px solid rgba(31,42,51,.14);background:rgba(255,255,255,.5);font-size:14px;font-weight:500;line-height:1.2}
+.actions{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
+.fine{margin-top:16px;font-size:13.5px;line-height:1.5;color:var(--ink-2);letter-spacing:.01em}
+.h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,2.9vw,46px);line-height:1.08;letter-spacing:-.01em}
+
+/* Гл.2 — 5 способов */
+.ways{margin-top:20px;display:grid;gap:8px}
+.way{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:13px 20px 14px;border-radius:18px}
+.way .n{font-family:var(--serif);font-size:19px;line-height:1.3;color:var(--ink-2)}
+.way h3{font-size:16.5px;font-weight:600;line-height:1.3}
+.way p{margin-top:2px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.note{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.note h3{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.2;letter-spacing:-.01em}
+.note p{margin-top:6px;font-size:15px;line-height:1.5;color:var(--ink-2)}
+
+/* Гл.3 — 5 шагов */
+.steps{position:relative;margin-top:16px;display:grid;gap:2px}
+.steps::before{content:"";position:absolute;left:17px;top:20px;bottom:56px;width:1px;background:rgba(31,42,51,.16)}
+.step{position:relative;display:grid;grid-template-columns:36px 1fr;gap:16px;padding:7px 0}
+.step .n{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(31,42,51,.2);background:var(--sky-0);
+  font-family:var(--serif);font-size:16px;line-height:1}
+.step h3{padding-top:6px;font-size:16.5px;font-weight:600;line-height:1.3}
+.step p{margin-top:3px;font-size:14.5px;line-height:1.45;color:var(--ink-2)}
+.step.accent{margin:8px -18px 0;padding:14px 18px;border-radius:20px}
+.step.accent .n{background:var(--cta);border-color:var(--cta);color:#fff;font:600 18px/1 var(--sans)}
+.quote{margin-top:16px;font-family:var(--serif);font-size:25px;line-height:1.25;letter-spacing:-.01em}
+.legal{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+
+/* Гл.4 — регалии */
+.creds{margin-top:22px;border-top:1px solid var(--line)}
+.creds li{padding:14px 0;border-bottom:1px solid var(--line);font-size:17px;line-height:1.45}
+.fig{font-family:var(--serif);font-weight:400;font-size:1.55em;line-height:1;letter-spacing:-.01em;white-space:nowrap}
+
+/* Невысокие ноутбуки */
+@media (min-width:768px) and (max-height:820px){
+  .h1{font-size:clamp(36px,3.3vw,50px);margin-top:16px}
+  .lead{font-size:19px;margin-top:14px}
+  .sub{font-size:16px}
+  .tags{margin-top:16px}
+  .actions{margin-top:20px}
+  .ways{gap:8px;margin-top:16px}
+  .way{padding:12px 18px}
+  .way p{font-size:13.5px}
+  .note{margin-top:14px;padding-top:12px}
+  .step{padding:6px 0}
+  .step p{font-size:13.5px}
+  .quote{font-size:22px;margin-top:14px}
+  .creds li{padding:10px 0;font-size:16px}
+}
+
+/* ============ Разделы после ролика ============ */
+.after{position:relative;z-index:3;background:var(--sky-1)}
+.blobs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%}
+.b1{width:72vw;height:72vw;max-width:1100px;max-height:1100px;left:-20vw;top:-6%;
+  background:radial-gradient(closest-side,rgba(201,230,240,.95),rgba(201,230,240,0));animation:drift1 34s ease-in-out infinite alternate}
+.b2{width:60vw;height:60vw;max-width:980px;max-height:980px;right:-18vw;top:22%;
+  background:radial-gradient(closest-side,rgba(120,179,206,.26),rgba(120,179,206,0));animation:drift2 42s ease-in-out infinite alternate}
+.b3{width:82vw;height:82vw;max-width:1250px;max-height:1250px;left:8vw;top:50%;
+  background:radial-gradient(closest-side,rgba(243,249,252,.95),rgba(243,249,252,0));animation:drift3 38s ease-in-out infinite alternate}
+.b4{width:58vw;height:58vw;max-width:920px;max-height:920px;right:-12vw;bottom:-6%;
+  background:radial-gradient(closest-side,rgba(201,230,240,.9),rgba(201,230,240,0));animation:drift1 46s ease-in-out infinite alternate-reverse}
+@keyframes drift1{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(9vw,7vh,0) scale(1.12)}}
+@keyframes drift2{from{transform:translate3d(0,0,0) scale(1.06)}to{transform:translate3d(-8vw,10vh,0) scale(.94)}}
+@keyframes drift3{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-7vw,-8vh,0) scale(1.1)}}
+
+.sec{position:relative;z-index:1;padding-top:clamp(96px,11vw,150px)}
+.wrap{width:min(1200px,100% - 2 * var(--gut));margin:0 auto}
+.h-sec{font-family:var(--serif);font-weight:400;font-size:clamp(38px,4.6vw,68px);line-height:1.05;letter-spacing:-.01em;text-align:center}
+
+/* появление при входе в экран */
+.motion .rv{opacity:0;transform:translate3d(0,32px,0);transition:opacity 1s var(--ease),transform 1.2s var(--ease);transition-delay:calc(var(--d,0) * 110ms)}
+.motion .rv.in{opacity:1;transform:none}
+
+/* Таймер */
+.timer{display:flex;align-items:flex-start;justify-content:center;gap:4px}
+.tu{display:flex;flex-direction:column;align-items:center;min-width:74px}
+.tu b{font-family:var(--serif);font-weight:400;font-size:52px;line-height:1;letter-spacing:-.01em;min-width:2.2ch;text-align:center}
+.tu span{margin-top:10px;font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--ink-2)}
+.timer i{font-style:normal;font-family:var(--serif);font-size:38px;line-height:1.15;color:var(--powder)}
+
+/* Тарифы */
+.bonus{margin-top:48px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:40px;align-items:center;padding:34px 40px;border-radius:28px}
+.bonus-title{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.22;letter-spacing:-.01em}
+.bonus-lead{margin-top:10px;font-size:15px;color:var(--ink-2)}
+.bonus-list{margin-top:14px;display:grid;gap:8px}
+.bonus-list li{position:relative;padding-left:22px;font-size:15.5px;line-height:1.45}
+.bonus-list li::before{content:"";position:absolute;left:0;top:.74em;width:10px;height:1px;background:var(--ink)}
+
+.plans{margin-top:56px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:stretch}
+.plan{position:relative;display:flex;flex-direction:column;padding:42px 32px 32px;border-radius:30px}
+.plan-best{background:rgba(255,255,255,.86);border-color:#fff;box-shadow:0 0 0 1px rgba(120,179,206,.6),0 40px 80px -34px rgba(31,42,51,.38)}
+.badge{position:absolute;top:0;left:32px;transform:translateY(-50%);padding:8px 14px;border-radius:999px;background:var(--ink);color:#fff;
+  font-size:13px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.plan h3{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.12;letter-spacing:-.01em}
+.plan .for{margin-top:10px;font-size:15.5px;line-height:1.5;color:var(--ink-2);min-height:3em}
+.feat{margin-top:24px;padding-top:22px;border-top:1px solid var(--line);display:grid;gap:11px;align-content:start}
+.feat li{position:relative;padding-left:26px;font-size:15px;line-height:1.45}
+.feat li::before{content:"";position:absolute;left:1px;top:.4em;width:11px;height:6px;border-left:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);transform:rotate(-45deg);opacity:.7}
+.feat .off{color:var(--ink-2);text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:rgba(102,114,123,.75)}
+.feat .off::before{top:.74em;width:10px;height:0;border-left:0;border-bottom-color:var(--ink-2);transform:none;opacity:.5}
+.feat .lbl{margin-top:8px;padding-left:0;font-size:12.5px;letter-spacing:.03em;color:var(--ink-2)}
+.feat .lbl::before{display:none}
+.price{margin-top:auto;padding-top:30px}
+.price-main{font-family:var(--serif);font-weight:400;font-size:clamp(32px,2.8vw,40px);line-height:1.05;letter-spacing:-.01em;white-space:nowrap}
+.price-main small{font-size:.6em;letter-spacing:0;margin-right:.12em}
+.price-once{margin-top:8px;font-size:14px;color:var(--ink-2)}
+.plan .btn{margin-top:22px;width:100%}
+
+/* Финальный призыв */
+.final{text-align:center}
+.final .wrap{max-width:1000px}
+.final-lead{margin:22px auto 0;max-width:640px;font-size:19px;line-height:1.55;color:var(--ink-2)}
+.paths{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:left}
+.path{padding:34px 34px 36px;border-radius:26px}
+.path h3{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.15;letter-spacing:-.01em}
+.path p{margin-top:12px;font-size:16.5px;line-height:1.55}
+.path-stay{border:1px solid rgba(31,42,51,.1);background:rgba(255,255,255,.2);color:var(--ink-2)}
+.path-go h3::after{content:"";display:inline-block;width:8px;height:8px;margin-left:12px;border-radius:50%;background:var(--cta);vertical-align:middle;transform:translateY(-3px)}
+.motto{margin:64px auto 0;max-width:780px;font-family:var(--serif);font-size:clamp(28px,3vw,42px);line-height:1.22;letter-spacing:-.01em}
+.deadline{margin-top:56px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.deadline-title{font-size:17px;font-weight:500}
+.deadline .fine{max-width:620px;margin-top:0;font-size:14.5px}
+.final-cta{margin-top:44px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.final-cta p{margin-top:14px;font-size:15.5px;color:var(--ink-2)}
+
+/* Подвал */
+.foot{position:relative;z-index:1;margin-top:clamp(96px,11vw,150px);padding:56px 0 44px;border-top:1px solid var(--line);font-size:14px;line-height:1.6;color:var(--ink-2)}
+.foot-brand{font-family:var(--serif);font-size:24px;line-height:1.25;letter-spacing:-.01em;color:var(--ink)}
+.foot-grid{margin-top:32px;display:grid;grid-template-columns:1fr 1.3fr;gap:48px}
+.foot h4{margin-bottom:12px;font-size:14px;font-weight:600;color:var(--ink)}
+.foot p+p{margin-top:6px}
+.foot ul{display:grid;gap:8px}
+.foot-links{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 10px}
+.foot-links a{text-decoration:none;border-bottom:1px solid rgba(31,42,51,.2)}
+.copy{margin-top:14px}
+
+/* Нижняя панель (телефон) */
+.mbar{display:none}
+
+/* ============ Телефон ============ */
+@media (max-width:767.98px){
+  :root{--hdr:60px}
+  body{font-size:16px}
+  .logo{font-size:19px}
+  .hdr-actions{display:none}
+  .stage{height:500vh}
+  /* Масштаб кадра от прогресса задаёт JS (1.13 → 1); в статичном режиме — постоянный, лицо над панелями */
+  html:not(.motion) .film{transform:scale(1.13)}
+  .veil-l,.veil-r,.cue{display:none}
+  .motion .ch{left:16px;right:16px;width:auto;top:auto;bottom:calc(82px + env(safe-area-inset-bottom));padding:0;display:block}
+  .ch-in{background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--glass-edge);
+    box-shadow:var(--shadow);border-radius:24px;padding:18px 16px 16px}
+  .eyebrow{font-size:12.5px;gap:10px}
+  .eyebrow::before{width:18px}
+  .h1{margin-top:8px;font-size:28px}
+  .lead{margin-top:8px;font-size:16px}
+  .sub{margin-top:5px;font-size:13.5px;line-height:1.42}
+  .tags{margin-top:10px;gap:6px}
+  .tags li{padding:5px 10px;font-size:12.5px}
+  .actions{margin-top:12px}
+  .ch .btn-cta{display:none} /* на телефоне «Получить доступ» живёт в нижней панели */
+  .btn-ghost{min-height:40px;font-size:14.5px;padding:0 16px 0 5px;gap:10px}
+  .play{width:30px;height:30px}
+  .play svg{width:11px;height:11px}
+  .fine{margin-top:8px;font-size:12px}
+  .h2{font-size:26px}
+  .note{margin-top:12px;padding-top:10px}
+  .note h3{font-size:17px}
+  .note p{margin-top:3px;font-size:13px;line-height:1.42}
+  .desk-only{display:none}
+  .quote{margin-top:12px;font-size:18px}
+  .legal{margin-top:6px;font-size:11.5px;line-height:1.4}
+  /* Гл.2 и гл.3 на телефоне: список заголовков + текст активного пункта, пункт меняется прокруткой.
+     Панель остаётся низкой и не закрывает лицо Эрики. */
+  .motion .ways,.motion .steps{display:grid;grid-template-columns:30px 1fr;column-gap:8px;margin-top:10px}
+  .motion .ch .way,.motion .ch .way>div,.motion .ch .step,.motion .ch .step>div{display:contents}
+  .motion .steps::before{display:none}
+  .motion .ways .n,.motion .steps .n{grid-column:1;align-self:center;justify-self:start}
+  .motion .ways .n{font-size:14px;line-height:30px}
+  .motion .ways h3,.motion .steps h3{grid-column:2;align-self:center;padding:0;font-size:15px;line-height:30px}
+  .motion .steps .n{width:26px;height:26px;margin:2px 0;font-size:13px}
+  .motion .step.accent .n{font:600 18px/1 var(--sans)}
+  .motion .ways p,.motion .steps p{grid-column:1/-1;grid-row:6;align-self:start;margin-top:8px;padding-top:9px;border-top:1px solid var(--line);
+    font-size:13.5px;line-height:1.42;color:var(--ink)}
+  .creds{margin-top:12px}
+  .creds li{padding:9px 0;font-size:14.5px;line-height:1.4}
+  .fig{font-size:1.45em}
+
+  .sec{padding-top:88px}
+  .bonus{grid-template-columns:1fr;gap:26px;padding:26px 22px;border-radius:24px;margin-top:32px}
+  .bonus-title{font-size:22px}
+  .bonus-list li{font-size:14.5px}
+  .tu{min-width:58px}
+  .tu b{font-size:38px}
+  .tu span{font-size:11px}
+  .timer i{font-size:28px}
+  .plans{grid-template-columns:1fr;gap:28px;margin-top:40px}
+  .plan{padding:36px 24px 24px;border-radius:26px}
+  .badge{left:24px}
+  .plan .for{min-height:0}
+  .final-lead{font-size:17px}
+  .paths{grid-template-columns:1fr;gap:14px;margin-top:36px}
+  .path{padding:26px 24px}
+  .path h3{font-size:24px}
+  .path p{font-size:15.5px}
+  .motto{margin-top:48px}
+  .btn-soft{font-size:15.5px}
+  .foot{padding-bottom:120px}
+  .foot-grid{grid-template-columns:1fr;gap:28px}
+
+  .mbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--glass-edge);box-shadow:0 -10px 30px -22px rgba(31,42,51,.45)}
+  .mbar .btn{flex:1;min-height:52px;padding:0 16px}
+  .mbar .wa{width:52px;height:52px}
+  .mbar .wa svg{width:24px;height:24px}
+}
+
+/* ============ Статичный режим: prefers-reduced-motion или нет JS ============ */
+html:not(.motion) .stage{height:auto}
+html:not(.motion) .stage-pin{position:relative;height:auto;overflow:visible}
+html:not(.motion) .media{position:sticky;inset:auto;top:0;height:100vh;height:100dvh;margin-bottom:-100vh;margin-bottom:-100dvh}
+html:not(.motion) .veil-l,html:not(.motion) .veil-r{opacity:.55}
+html:not(.motion) .cue{display:none}
+html:not(.motion) .ch{position:relative;min-height:100vh;display:flex;align-items:center;padding:calc(var(--hdr) + 24px) var(--gut) 56px}
+html:not(.motion) .ch-r{justify-content:flex-end}
+html:not(.motion) .ch-in{width:min(520px,100%);padding:30px 28px;border-radius:28px;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border:1px solid var(--glass-edge);box-shadow:var(--shadow)}
+html:not(.motion) .ch .way{background:rgba(255,255,255,.55);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+html:not(.motion) .blob{animation:none}
+@media (max-width:767.98px){html:not(.motion) .ch{padding:calc(var(--hdr) + 16px) 16px 96px;align-items:flex-end}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- Своя иконка «облачко чата» (не логотип WhatsApp) -->
+  <symbol id="i-chat" viewBox="0 0 24 24">
+    <path fill="#fff" d="M12 3.2c-5.1 0-9.2 3.5-9.2 7.9 0 2.36 1.18 4.47 3.06 5.92-.12 1.2-.57 2.34-1.4 3.33a.45.45 0 0 0 .38.74c1.9-.14 3.56-.8 4.82-1.7.76.15 1.54.22 2.34.22 5.1 0 9.2-3.54 9.2-8.51S17.1 3.2 12 3.2Z"/>
+    <circle cx="8" cy="11.3" r="1.2" fill="#25D366"/><circle cx="12" cy="11.3" r="1.2" fill="#25D366"/><circle cx="16" cy="11.3" r="1.2" fill="#25D366"/>
+  </symbol>
+</svg>
+
+<!-- WhatsApp: номер бота продаж ещё не выдан. Когда будет — https://wa.me/<номер>?text=<заготовленный текст> во все [data-wa]. -->
+<header class="hdr" id="hdr">
+  <a class="logo" href="#top">Especialista em Shopee</a>
+  <div class="hdr-actions">
+    <a class="pill" href="#tariffs">Получить доступ</a>
+    <a class="wa" href="#" data-wa data-soon aria-label="Написать в WhatsApp"><svg aria-hidden="true"><use href="#i-chat"/></svg></a>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ============ Сцена: ролик идёт ровно вместе с прокруткой ============ -->
+  <section class="stage" id="stage" aria-label="Знакомство с курсом">
+    <div class="stage-pin">
+      <div class="media" aria-hidden="true">
+        <video class="film" id="film" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1"></video>
+        <script>document.getElementById('film').poster = matchMedia('(max-width: 767.98px)').matches ? 'assets/poster-mobile.jpg' : 'assets/poster.jpg';</script>
+        <noscript><style>.media{background:url(assets/poster.jpg) center/cover}</style></noscript>
+        <div class="veil veil-l" id="veilL"></div>
+        <div class="veil veil-r" id="veilR"></div>
+        <div class="veil-top"></div>
+        <div class="cue" id="cue"><i></i></div>
+      </div>
+
+      <!-- Гл.1 — оффер (блок 1) -->
+      <article class="ch ch-l" id="ch1">
+        <div class="ch-in">
+          <p class="eyebrow" data-s>Специалист по Shopee — метод Эрики Маркес</p>
+          <h1 class="h1" data-s>Научу зарабатывать на&nbsp;Shopee без&nbsp;вложений</h1>
+          <p class="lead" data-s>С&nbsp;нуля до&nbsp;первых реалов, с&nbsp;телефона и&nbsp;из&nbsp;дома</p>
+          <p class="sub" data-s>Получи востребованную профессию в&nbsp;интернете и&nbsp;выйди на&nbsp;доход от&nbsp;<span class="nw">R$ 4 000</span> до&nbsp;<span class="nw">R$ 15 000</span> в&nbsp;месяц</p>
+          <ul class="tags" data-s>
+            <li>Смартфон и&nbsp;интернет</li><li>Без опыта</li><li>Без лица в&nbsp;кадре</li><li>От&nbsp;1 до&nbsp;4&nbsp;часов в&nbsp;день</li>
+          </ul>
+          <div class="actions" data-s>
+            <a class="btn btn-cta" href="#tariffs">Получить доступ</a>
+            <!-- Продающая презентация Эрики (MP4, свой плеер, португальские субтитры) — подключим, когда будет готова -->
+            <a class="btn btn-ghost" href="#" data-soon><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path fill="#1F2A33" d="M2.6 1.3v9.4a.6.6 0 0 0 .92.5l7.5-4.7a.6.6 0 0 0 0-1L3.52.8a.6.6 0 0 0-.92.5Z"/></svg></span>Смотреть видео</a>
+          </div>
+          <p class="fine" data-s>Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+        </div>
+      </article>
+
+      <!-- Гл.2 — 5 способов заработка (блок 4) -->
+      <article class="ch ch-r" id="ch2">
+        <div class="ch-in">
+          <h2 class="h2" data-s>5 способов заработка</h2>
+          <ol class="ways">
+            <li class="way glass" data-s><span class="n">01</span><div><h3>Карточки товаров</h3><p>Оформляешь страницу товара для магазина: фото, название, описание — так, чтобы покупательница всё поняла и&nbsp;захотела купить.</p></div></li>
+            <li class="way glass" data-s><span class="n">02</span><div><h3>Дизайн карточек</h3><p>Делаешь яркие картинки товара с&nbsp;помощью ИИ — такие, на&nbsp;которых палец останавливается.</p></div></li>
+            <li class="way glass" data-s><span class="n">03</span><div><h3>Чат-менеджер магазина</h3><p>Отвечаешь покупателям вместо хозяйки магазина: про размер, доставку, заказ.</p></div></li>
+            <li class="way glass" data-s><span class="n">04</span><div><h3>Видео без лица</h3><p>Снимаешь короткие видео товара: в&nbsp;кадре только руки и&nbsp;товар.</p></div></li>
+            <li class="way glass" data-s><span class="n">05</span><div><h3>Партнёрка Shopee</h3><p>Делишься ссылками на&nbsp;товары, а&nbsp;Shopee платит тебе комиссию с&nbsp;каждой покупки.</p></div></li>
+          </ol>
+          <div class="note" data-s>
+            <h3>Не нужно уметь всё сразу</h3>
+            <p>Выбираешь один способ и&nbsp;начинаешь с&nbsp;него. Потом добавляешь следующий — и&nbsp;к&nbsp;концу программы собираешь все пять в&nbsp;свою систему.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Гл.3 — как проходит обучение (блок 6А) -->
+      <article class="ch ch-l" id="ch3">
+        <div class="ch-in">
+          <h2 class="h2" data-s>Как проходит обучение</h2>
+          <p class="sub" data-s>Пять шагов — от&nbsp;первого урока до&nbsp;первого клиента</p>
+          <ol class="steps">
+            <li class="step" data-s><span class="n">1</span><div><h3>Смотришь урок</h3><p>15–25 минут. Запись экрана телефона: видишь каждое нажатие и&nbsp;повторяешь за&nbsp;мной.</p></div></li>
+            <li class="step" data-s><span class="n">2</span><div><h3>Делаешь домашнее задание</h3><p>Сразу после урока, пока всё свежо в&nbsp;голове.</p></div></li>
+            <li class="step" data-s><span class="n">3</span><div><h3>Тренируешься на&nbsp;тренажёре</h3><p>Отрабатываешь на&nbsp;практике столько раз, сколько нужно. Ошибаться можно сколько угодно — никто не&nbsp;видит.</p></div></li>
+            <li class="step" data-s><span class="n">4</span><div><h3>Получаешь учебный заказ от&nbsp;меня</h3><p>Проходишь весь путь, как с&nbsp;настоящим магазином: задача, срок, готовая работа. Только без риска и&nbsp;без денег.</p></div></li>
+            <li class="step accent glass" data-s><span class="n">5</span><div><h3>Идёшь за&nbsp;настоящим клиентом</h3><p>И&nbsp;приходишь к&nbsp;нему уже не&nbsp;новичком: ты это делала.</p></div></li>
+          </ol>
+          <p class="fine desk-only" data-s>Так на&nbsp;каждом способе: карточки · дизайн · чат · видео.</p>
+          <p class="quote" data-s>Твой первый клиент не&nbsp;будет для тебя первым.</p>
+          <p class="legal" data-s>Учебный заказ — тренировка, а&nbsp;не&nbsp;оплачиваемая работа. Настоящих клиентов ты находишь сама.</p>
+        </div>
+      </article>
+
+      <!-- Гл.4 — регалии (блок 3) -->
+      <article class="ch ch-r" id="ch4">
+        <div class="ch-in">
+          <h2 class="h2" data-s>Меня зовут Эрика Маркес</h2>
+          <ul class="creds">
+            <li data-s>Блогер — больше <span class="fig">5 млн</span> подписчиков в&nbsp;соцсетях</li>
+            <li data-s>Работаю с&nbsp;Shopee больше <span class="fig">2 лет</span></li>
+            <li data-s>Зарабатываю на&nbsp;Shopee <span class="fig">R$ 100 000–120 000</span> в&nbsp;месяц — с&nbsp;телефона, из&nbsp;дома</li>
+            <li data-s>С&nbsp;первого же товара на&nbsp;Shopee получила <span class="fig">R$ 50 000</span> комиссии</li>
+            <li data-s>Предприниматель — два своих магазина косметики</li>
+            <li data-s>Жена и&nbsp;мама двоих детей</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="after">
+    <div class="blobs" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><i class="blob b4"></i></div>
+
+    <!-- ============ Тарифы (блок 8) ============ -->
+    <section class="sec" id="tariffs" aria-labelledby="t-title">
+      <div class="wrap">
+        <h2 class="h-sec rv" id="t-title">Выбери свой тариф</h2>
+
+        <div class="bonus glass rv">
+          <div>
+            <p class="bonus-title">Бонусы, если оплатишь до&nbsp;04.10, 23:59 (по&nbsp;Бразилиа)</p>
+            <p class="bonus-lead">Получает каждая, кто успеет:</p>
+            <ul class="bonus-list">
+              <li>Удвоение доступа: в&nbsp;«Специалисте по&nbsp;Shopee» — 12&nbsp;месяцев вместо 6, в&nbsp;VIP — 24 вместо 12</li>
+              <li>Учебных заказов от&nbsp;Эрики вдвое больше: в&nbsp;«Специалисте по&nbsp;Shopee» — 8 вместо 4 (в&nbsp;VIP 8 входят всегда)</li>
+              <li>Чек-лист «Первый клиент за&nbsp;14&nbsp;дней»</li>
+              <li>Калькулятор цены + готовый прайс для клиентов</li>
+            </ul>
+          </div>
+          <div class="timer" data-timer role="timer" aria-label="До конца бонусов">
+            <div class="tu"><b data-u="d">00</b><span>дни</span></div><i>:</i>
+            <div class="tu"><b data-u="h">00</b><span>часы</span></div><i>:</i>
+            <div class="tu"><b data-u="m">00</b><span>минуты</span></div><i>:</i>
+            <div class="tu"><b data-u="s">00</b><span>секунды</span></div>
+          </div>
+        </div>
+
+        <!-- Кнопки «Оплатить»: аффилиатские ссылки Эрики на три кассы Hotmart ещё не выданы (даёт Семён).
+             Формат: одна «?», дальше параметры через «&», плюс метка src=site. -->
+        <div class="plans">
+          <article class="plan glass rv" style="--d:0">
+            <h3>Старт</h3>
+            <p class="for">Начать с&nbsp;двух способов: карточки и&nbsp;картинки</p>
+            <ul class="feat">
+              <li>Модули 0–3: 28&nbsp;уроков, 2&nbsp;способа</li>
+              <li>Домашние задания</li>
+              <li>Доступ 2&nbsp;месяца</li>
+              <li>Гарантия 7&nbsp;дней</li>
+              <li class="lbl">Недоступно в&nbsp;этом тарифе:</li>
+              <li class="off">Учебный тренажёр</li>
+              <li class="off">Учебные заказы от&nbsp;Эрики</li>
+              <li class="off">Эфиры со&nbsp;мной</li>
+              <li class="off">Поддержка</li>
+              <li class="off">Готовые команды для ИИ</li>
+              <li class="off">Образцы, которые продают</li>
+              <li class="off">Именной сертификат</li>
+              <li class="off">Бонусные уроки</li>
+            </ul>
+            <div class="price">
+              <p class="price-main"><small>12&nbsp;×</small> R$&nbsp;30,92</p>
+              <p class="price-once">или R$&nbsp;299 одним платежом</p>
+              <a class="btn btn-cta" href="#" data-pay="start">Оплатить</a><!-- TODO: касса Hotmart «Старт» -->
+            </div>
+          </article>
+
+          <article class="plan plan-best glass rv" style="--d:1">
+            <span class="badge">⭐ выбирают чаще всего</span>
+            <h3>Специалист по&nbsp;Shopee</h3>
+            <p class="for">Освоить профессию целиком — все 5&nbsp;способов</p>
+            <ul class="feat">
+              <li>Все 8&nbsp;модулей: более 55&nbsp;уроков, 5&nbsp;способов</li>
+              <li>Домашние задания</li>
+              <li>Учебный тренажёр</li>
+              <li>4 учебных заказа от&nbsp;Эрики: карточки, дизайн, чат, видео</li>
+              <li>Доступ 6&nbsp;месяцев</li>
+              <li>3 эфира со&nbsp;мной</li>
+              <li>Поддержка — ответы на&nbsp;вопросы</li>
+              <li>Готовые команды для ИИ и&nbsp;образцы, которые продают — по&nbsp;всем 5&nbsp;способам</li>
+              <li>Именной сертификат</li>
+              <li>2 бонусных урока: «Mercado Livre и&nbsp;Amazon», «Как продавать свои услуги и&nbsp;поднимать чек»</li>
+              <li>Гарантия 7&nbsp;дней</li>
+            </ul>
+            <div class="price">
+              <p class="price-main"><small>12&nbsp;×</small> R$&nbsp;41,27</p>
+              <p class="price-once">или R$&nbsp;399 одним платежом</p>
+              <a class="btn btn-cta" href="#" data-pay="specialist">Оплатить</a><!-- TODO: касса Hotmart «Специалист по Shopee» -->
+            </div>
+          </article>
+
+          <article class="plan glass rv" style="--d:2">
+            <h3>VIP</h3>
+            <p class="for">Всё из&nbsp;«Специалиста по&nbsp;Shopee» — и&nbsp;вдвое больше практики</p>
+            <ul class="feat">
+              <li>Всё, что в&nbsp;тарифе «Специалист по&nbsp;Shopee»</li>
+              <li>8 учебных заказов от&nbsp;Эрики — вдвое больше: по&nbsp;два на&nbsp;каждый способ</li>
+              <li>Доступ 12&nbsp;месяцев</li>
+              <li>5 бонусных уроков: два из&nbsp;«Специалиста» + «TikTok Shop с&nbsp;нуля», «Портфолио и&nbsp;профиль, к&nbsp;которым магазины приходят сами», «Как вести несколько магазинов сразу и&nbsp;не&nbsp;выгореть»</li>
+            </ul>
+            <div class="price">
+              <p class="price-main"><small>12&nbsp;×</small> R$&nbsp;61,95</p>
+              <p class="price-once">или R$&nbsp;599 одним платежом</p>
+              <a class="btn btn-cta" href="#" data-pay="vip">Оплатить</a><!-- TODO: касса Hotmart «VIP» -->
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Финальный призыв (блок 10) ============ -->
+    <section class="sec final" id="final" aria-labelledby="f-title">
+      <div class="wrap">
+        <h2 class="h-sec rv" id="f-title">Новые действия — новый результат</h2>
+        <p class="final-lead rv">Можно закрыть эту страницу — и&nbsp;завтра будет как вчера.<br>А&nbsp;можно сегодня вечером открыть первый урок.</p>
+        <div class="paths">
+          <div class="path path-stay rv"><h3>Оставить всё как есть</h3><p>Та же работа, те же деньги. Свой дом, помощь маме — так и&nbsp;остаются мечтой в&nbsp;заметках телефона.</p></div>
+          <div class="path path-go glass rv" style="--d:1"><h3>Начать</h3><p>Через неделю ты понимаешь Shopee изнутри и&nbsp;знаешь, с&nbsp;какого способа начнёшь. Дальше — первая карточка и&nbsp;первый клиент.</p></div>
+        </div>
+        <p class="motto rv">У&nbsp;женщины должны быть свои деньги. Давай начнём с&nbsp;твоих.</p>
+        <div class="deadline rv">
+          <p class="deadline-title">Запись в&nbsp;этот поток открыта до&nbsp;04.10, 23:59 (по&nbsp;Бразилиа)</p>
+          <div class="timer" data-timer role="timer" aria-label="До закрытия записи">
+            <div class="tu"><b data-u="d">00</b><span>дни</span></div><i>:</i>
+            <div class="tu"><b data-u="h">00</b><span>часы</span></div><i>:</i>
+            <div class="tu"><b data-u="m">00</b><span>минуты</span></div><i>:</i>
+            <div class="tu"><b data-u="s">00</b><span>секунды</span></div>
+          </div>
+          <p class="fine">Оплатишь до&nbsp;этого срока — получишь бонусы: удвоение доступа, вдвое больше учебных заказов, чек-лист «Первый клиент за&nbsp;14&nbsp;дней», калькулятор цены и&nbsp;готовый прайс.</p>
+        </div>
+        <div class="final-cta rv">
+          <a class="btn btn-cta btn-lg" href="#tariffs">Получить доступ</a>
+          <p>Не знаешь, какой тариф выбрать? Напиши в&nbsp;WhatsApp — поможем.</p>
+          <a class="btn btn-soft" href="#" data-wa data-soon><span class="wa"><svg aria-hidden="true"><use href="#i-chat"/></svg></span>Задать вопрос в&nbsp;WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Подвал (блок 12) ============ -->
+    <footer class="foot">
+      <div class="wrap">
+        <p class="foot-brand">Especialista em Shopee — Método Erika Marques</p>
+        <div class="foot-grid">
+          <div>
+            <h4>Кто продаёт курс</h4>
+            <p>[название компании], ОАЭ · Лицензия №&nbsp;[номер] · Адрес: [адрес]</p>
+            <p>Почта: [почта] · WhatsApp: [номер]</p>
+            <p>Оплату принимает и&nbsp;проводит Hotmart.</p>
+          </div>
+          <div>
+            <h4>Важно</h4>
+            <ul>
+              <li>Это обучающий продукт. Доход зависит от&nbsp;твоих действий и&nbsp;не&nbsp;гарантируется.</li>
+              <li>Суммы на&nbsp;сайте — ориентир и&nbsp;личный результат Эрики Маркес, а&nbsp;не&nbsp;обещание заработка.</li>
+              <li>Курс независимый: Shopee его не&nbsp;создавала и&nbsp;не&nbsp;спонсирует. Марка Shopee принадлежит её&nbsp;владельцу.</li>
+              <li>Учебные заказы внутри обучения — тренировочные, от&nbsp;вымышленных магазинов. Курс не&nbsp;предоставляет клиентов и&nbsp;не&nbsp;гарантирует трудоустройство.</li>
+            </ul>
+          </div>
+        </div>
+        <nav class="foot-links" aria-label="Документы">
+          <a href="#" data-soon>Политика конфиденциальности</a><span>·</span><a href="#" data-soon>Условия покупки и&nbsp;возврата</a><span>·</span><a href="#" data-soon>Настройки cookies</a>
+        </nav>
+        <p class="copy">© 2026 Especialista em Shopee</p>
+      </div>
+    </footer>
+  </div>
+</main>
+
+<!-- Телефон: закреплённая панель на всех экранах -->
+<div class="mbar">
+  <a class="btn btn-cta" href="#tariffs">Получить доступ</a>
+  <a class="wa" href="#" data-wa data-soon aria-label="Написать в WhatsApp"><svg aria-hidden="true"><use href="#i-chat"/></svg></a>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const w = window, d = document;
+  const $ = (s, c = d) => c.querySelector(s);
+  const $$ = (s, c = d) => Array.from(c.querySelectorAll(s));
+  const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
+  const ease = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const motion = d.documentElement.classList.contains('motion');
+  const mqPhone = w.matchMedia('(max-width: 767.98px)');
+
+  // Ссылки, которых ещё нет (видео, WhatsApp, документы, кассы Hotmart), никуда не уводят.
+  $$('[data-soon], [data-pay]').forEach(a => a.addEventListener('click', e => { if (a.getAttribute('href') === '#') e.preventDefault(); }));
+
+  /* ---------- Таймер: до фиксированной минуты, одинаковый для всех ---------- */
+  const DEADLINE = Date.parse('2026-10-04T23:59:00-03:00');
+  const now = () => (typeof w.__virtualNow === 'number' ? w.__virtualNow : Date.now()); // __virtualNow — только для записи превью
+  const pad = n => String(n).padStart(2, '0');
+  const timers = $$('[data-timer]').map(el => ({ units: ['d', 'h', 'm', 's'].map(k => $(`[data-u="${k}"]`, el)), last: null }));
+  function tick() {
+    const left = Math.max(0, Math.floor((DEADLINE - now()) / 1000));
+    const parts = [Math.floor(left / 86400), Math.floor(left % 86400 / 3600), Math.floor(left % 3600 / 60), left % 60].map(pad);
+    for (const t of timers) {
+      if (t.last === left) continue;
+      t.last = left;
+      t.units.forEach((el, i) => { if (el.textContent !== parts[i]) el.textContent = parts[i]; });
+    }
+  }
+  w.__tick = tick;
+  tick();
+
+  /* ---------- Появление разделов ---------- */
+  const reveal = $$('.rv');
+  if (motion && 'IntersectionObserver' in w) {
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    reveal.forEach(el => io.observe(el));
+  } else reveal.forEach(el => el.classList.add('in'));
+
+  const hdr = $('#hdr');
+  const video = $('#film');
+  const posterFor = phone => (phone ? 'assets/poster-mobile.jpg' : 'assets/poster.jpg');
+
+  /* ---------- Статичный режим: только постер, без анимаций ---------- */
+  if (!motion) {
+    video.poster = posterFor(mqPhone.matches);
+    mqPhone.addEventListener('change', () => { video.poster = posterFor(mqPhone.matches); });
+    const onScroll = () => hdr.classList.toggle('is-solid', w.scrollY > 40);
+    w.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    setInterval(tick, 1000);
+    return;
+  }
+
+  /* ---------- Ролик: fetch → Blob URL (перемотка без Range-запросов) ---------- */
+  const film = w.__film = { ready: false, failed: false, phone: null, duration: 0, target: 0, url: '', mediaTime: -1, rvfc: false, progress: 0 };
+  let loadSeq = 0;
+  async function loadFilm() {
+    const phone = mqPhone.matches;
+    if (film.phone === phone) return;
+    film.phone = phone;
+    film.ready = false;
+    film.failed = false;
+    const seq = ++loadSeq;
+    video.poster = posterFor(phone);
+    try {
+      const res = await fetch(phone ? 'assets/film-mobile.mp4' : 'assets/film.mp4');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const blob = await res.blob();
+      if (seq !== loadSeq) return;
+      const url = URL.createObjectURL(blob);
+      await new Promise((resolve, reject) => {
+        const done = ok => () => { video.removeEventListener('loadeddata', onOk); video.removeEventListener('error', onErr); ok ? resolve() : reject(new Error('video')); };
+        const onOk = done(true), onErr = done(false);
+        video.addEventListener('loadeddata', onOk);
+        video.addEventListener('error', onErr);
+        video.src = url;
+      });
+      if (film.url) URL.revokeObjectURL(film.url);
+      film.url = url;
+      if (seq !== loadSeq) return;
+      film.duration = video.duration || 0;
+      film.ready = film.duration > 0;
+    } catch (err) {
+      if (seq === loadSeq) film.failed = true; // остаётся постер
+    }
+  }
+  if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
+    const onFrame = (_, meta) => { film.mediaTime = meta.mediaTime; film.rvfc = true; video.requestVideoFrameCallback(onFrame); };
+    video.requestVideoFrameCallback(onFrame);
+  }
+  // iOS: без жеста видео не отрисовывает кадры при перемотке — «разблокируем» первым касанием.
+  w.addEventListener('touchstart', () => {
+    const p = video.play();
+    if (p && p.then) p.then(() => video.pause()).catch(() => {});
+  }, { once: true, passive: true });
+
+  /* ---------- Главы: прозрачность и сдвиг от прогресса прокрутки ---------- */
+  const chapters = [
+    { id: 'ch1', a: 0.00, b: 0.22, fin: false, fout: true, side: 0 },
+    { id: 'ch2', a: 0.25, b: 0.47, fin: true, fout: true, side: 1 },
+    { id: 'ch3', a: 0.50, b: 0.72, fin: true, fout: true, side: 0 },
+    { id: 'ch4', a: 0.75, b: 1.00, fin: true, fout: false, side: 1 },
+  ].map(c => { const el = $('#' + c.id); return Object.assign(c, { el, inner: $('.ch-in', el), items: $$('[data-s]', el) }); });
+  const RAMP = 0.042, STAGGER = 0.007, RISE = 28, LIFT = 44;
+  const stage = $('#stage'), veils = [$('#veilL'), $('#veilR')], cue = $('#cue');
+
+  const setO = (el, o) => { o = Math.round(o * 1000) / 1000; if (el.__o !== o) { el.style.opacity = o; el.__o = o; } };
+  const setY = (el, y) => { y = Math.round(y * 10) / 10; if (el.__y !== y) { el.style.transform = y ? `translate3d(0,${y}px,0)` : 'none'; el.__y = y; } };
+  const setV = (el, on) => { if (el.__v !== on) { el.style.visibility = on ? 'visible' : 'hidden'; el.__v = on; } };
+
+  function renderChapters(p) {
+    const phone = mqPhone.matches, side = [0, 0];
+    for (const c of chapters) {
+      const out = c.fout ? ease(clamp((c.b - p) / RAMP)) : 1;
+      const inn = c.fin ? ease(clamp((p - c.a) / RAMP)) : 1;
+      const shown = out > 0.001 && (!c.fin || p > c.a);
+      side[c.side] = Math.max(side[c.side], Math.min(out, inn));
+      setV(c.el, shown);
+      if (!shown) continue;
+      setY(c.el, -(1 - out) * LIFT);                   // уход — вверх всей главой (только transform)
+      setO(c.inner, phone ? Math.min(out, inn) : 1);   // на телефоне гаснет стеклянная панель целиком
+      c.items.forEach((it, i) => {                     // вход — строки поднимаются по очереди
+        const e = c.fin ? ease(clamp((p - c.a - i * STAGGER) / RAMP)) : 1;
+        setO(it, phone ? e : e * out);                 // на десктопе прозрачность — у строк, не у предков стекла
+        setY(it, (1 - e) * RISE);
+      });
+    }
+    veils.forEach((v, i) => setO(v, 0.4 + 0.6 * side[i]));
+    setO(cue, 1 - clamp(p / 0.03));
+    // Телефон: на общем плане кадр крупнее и выше (лицо над стеклянной панелью), к концу — обычный cover.
+    const k = phone ? Math.round((1 + 0.13 * (1 - p)) * 1000) / 1000 : 1;
+    if (video.__k !== k) { video.style.transform = k === 1 ? '' : `scale(${k})`; video.__k = k; }
+    renderSeq(p, phone);
+  }
+
+  // Телефон: в гл.2 и гл.3 активный пункт списка меняется прокруткой (текст пункта — в одном слоте под списком).
+  const seqs = [chapters[1], chapters[2]].map(c => {
+    const rows = c.items.filter(el => el.matches('.way, .step'));
+    return { c, titles: rows.map(r => [$('.n', r), $('h3', r)]), texts: rows.map(r => $('p', r)), phone: null };
+  });
+  function renderSeq(p, phone) {
+    for (const s of seqs) {
+      if (!phone) {
+        if (s.phone !== false) {
+          s.titles.flat().concat(s.texts).forEach(el => { el.style.opacity = ''; el.style.transform = ''; el.__o = el.__y = undefined; });
+          s.phone = false;
+        }
+        continue;
+      }
+      s.phone = true;
+      const n = s.texts.length;
+      const q = clamp((p - s.c.a) / (s.c.b - s.c.a - 0.03));
+      const pos = clamp(q * n - 0.5, 0, n - 1);
+      for (let i = 0; i < n; i++) {
+        const dist = Math.abs(pos - i);
+        const txt = clamp((0.5 - dist) / 0.15);          // тексты сменяются по очереди и не накладываются
+        const hi = clamp((0.75 - dist) / 0.5);           // подсветка заголовка — плавнее
+        setO(s.texts[i], txt);
+        setY(s.texts[i], (1 - txt) * 8 * (i < pos ? -1 : 1));
+        s.titles[i].forEach(el => setO(el, 0.4 + 0.6 * hi));
+      }
+    }
+  }
+
+  /* ---------- Геометрия и главный цикл ---------- */
+  const geo = w.__geo = { top: 0, h: 0, vh: 0 };
+  function measure() {
+    geo.top = stage.getBoundingClientRect().top + w.scrollY;
+    geo.h = stage.offsetHeight;
+    geo.vh = w.innerHeight;
+  }
+  let lastP = -1, solid = null, lastPhone = null;
+  function frame() {
+    const y = w.scrollY;
+    const p = clamp((y - geo.top) / Math.max(1, geo.h - geo.vh));
+    film.progress = p;
+    if (film.ready) {
+      const t = Math.min(p * film.duration, film.duration - 0.02);
+      film.target = t;
+      // Не копим очередь перемоток: следующая — только когда закончилась предыдущая.
+      if (!video.seeking && Math.abs(video.currentTime - t) > 1 / 60) video.currentTime = t;
+    }
+    const phone = mqPhone.matches;
+    if (p !== lastP || phone !== lastPhone) { lastP = p; lastPhone = phone; renderChapters(p); }
+    const s = y > geo.top + geo.h - geo.vh * 0.6;
+    if (s !== solid) { solid = s; hdr.classList.toggle('is-solid', s); }
+    tick();
+    requestAnimationFrame(frame);
+  }
+  let rT = 0;
+  w.addEventListener('resize', () => {
+    clearTimeout(rT);
+    rT = setTimeout(() => { measure(); lastP = -1; loadFilm(); }, 120);
+  }, { passive: true });
+  w.addEventListener('load', () => { measure(); lastP = -1; });
+  measure();
+  loadFilm();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
