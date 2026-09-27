@@ -10,7 +10,7 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="Специалист по Shopee — метод Эрики Маркес">
 <meta property="og:description" content="Научу зарабатывать на Shopee без вложений — с нуля до первых реалов, с телефона и из дома.">
-<meta property="og:image" content="assets/poster.jpg?v=3">
+<meta property="og:image" content="assets/poster.jpg?v=4">
 <meta name="theme-color" content="#EAF5FA">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%239CCBE0'/%3E%3Cstop offset='1' stop-color='%233C9CC7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='32' fill='url(%23g)'/%3E%3Cpath fill='%23fff' d='M22.5 18H41.4V24H40.3C39.9 21.2 38.6 19.7 35.2 19.7H29.6V31.1H34C35.9 31.1 36.4 30.2 36.6 28.6H37.7V35.4H36.6C36.4 33.8 35.9 32.9 34 32.9H29.6V44.3H35.6C39.2 44.3 40.4 42.6 41 39.4H42.1L41.8 46H22.5V44.9C24.6 44.8 25.2 44.4 25.2 42.6V21.4C25.2 19.6 24.6 19.2 22.5 19.1Z'/%3E%3C/svg%3E">
 <script>
@@ -24,8 +24,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Raleway:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="assets/poster.jpg?v=3" media="(min-width: 768px)">
-<link rel="preload" as="image" href="assets/poster-mobile.jpg?v=3" media="(max-width: 767.98px)">
+<link rel="preload" as="image" href="assets/poster.jpg?v=4" media="(min-width: 768px)">
+<link rel="preload" as="image" href="assets/poster-mobile.jpg?v=4" media="(max-width: 767.98px)">
 <style>
 /* ============ Токены ============ */
 :root{
@@ -125,6 +125,14 @@ a.wa:active{transform:translateY(1px) scale(.96);transition-duration:.08s}
 .media{position:absolute;inset:0;background:var(--sky-1)}
 .film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 100%}
 .film.is-portrait{transform-origin:50% 30%}
+/* Живая петля первого экрана — слой над роликом прокрутки; гаснет за 350 мс, когда начали крутить */
+.film.loop{opacity:0;transition:opacity .35s var(--ease)}
+.film.loop.is-on{opacity:1}
+/* Мягкий наезд на постер, пока петля не играет (autoplay запрещён, экономия трафика, петля ещё грузится).
+   Свойство scale складывается с transform ролика; вне первого экрана наезд стоит на паузе. */
+.motion #film{animation:kb 14s ease-in-out infinite alternate;animation-play-state:paused}
+.motion #film.kb-run{animation-play-state:running}
+@keyframes kb{from{scale:1}to{scale:1.05}}
 .veil{position:absolute;inset:0;pointer-events:none}
 .veil-l{background:linear-gradient(90deg,rgba(243,249,252,.93) 0%,rgba(243,249,252,.82) 25%,rgba(243,249,252,.42) 37%,rgba(243,249,252,0) 47%)}
 .veil-r{background:linear-gradient(270deg,rgba(243,249,252,.93) 0%,rgba(243,249,252,.82) 25%,rgba(243,249,252,.42) 37%,rgba(243,249,252,0) 47%)}
@@ -549,8 +557,10 @@ html:not(.motion) .blob{animation:none}
     <div class="stage-pin">
       <div class="media" aria-hidden="true">
         <video class="film" id="film" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1"></video>
-        <script>document.getElementById('film').poster = matchMedia('(max-width: 767.98px)').matches ? 'assets/poster-mobile.jpg?v=3' : 'assets/poster.jpg?v=3';</script>
-        <noscript><style>.media{background:url(assets/poster.jpg?v=3) center/cover}</style></noscript>
+        <!-- Живая петля 5 с (камера стоит, двигаются ленты и облака): src ставит JS сразу при загрузке -->
+        <video class="film loop" id="loop" muted playsinline webkit-playsinline loop autoplay preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1"></video>
+        <script>document.getElementById('film').poster = matchMedia('(max-width: 767.98px)').matches ? 'assets/poster-mobile.jpg?v=4' : 'assets/poster.jpg?v=4';</script>
+        <noscript><style>.media{background:url(assets/poster.jpg?v=4) center/cover}</style></noscript>
         <div class="veil veil-l" id="veilL"></div>
         <div class="veil veil-r" id="veilR"></div>
         <div class="veil-top"></div>
@@ -943,7 +953,7 @@ html:not(.motion) .blob{animation:none}
 
   const hdr = $('#hdr');
   const video = $('#film');
-  const posterFor = phone => (phone ? 'assets/poster-mobile.jpg?v=3' : 'assets/poster.jpg?v=3');
+  const posterFor = phone => (phone ? 'assets/poster-mobile.jpg?v=4' : 'assets/poster.jpg?v=4');
   const media = { portrait: false }; // ориентация кадра (постер или ролик): вертикальный ролик не масштабируем
   function probePoster(done) {
     const im = new Image();
@@ -972,12 +982,16 @@ html:not(.motion) .blob{animation:none}
   /* ---------- Ролик ----------
      scrub  — кадр по прокрутке (fetch → Blob URL, перемотка без Range-запросов);
      loop   — перемотка тормозит (средний seeked > 250 мс на первых 10) → тихий зацикленный autoplay;
-     poster — saveData или сеть 2g/3g → ролик не качаем, мягкий наезд на постер ×1.0→×1.08 по прокрутке. */
+     poster — сеть 3g: ролик прокрутки не качаем, играет только петля;
+              saveData или 2g: не качаем ни ролик, ни петлю — постер с мягким наездом (по времени наверху, ×1.0→×1.08 по прокрутке). */
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  const lowData = !!(conn && (conn.saveData || /^(slow-2g|2g|3g)$/.test(conn.effectiveType || '')));
-  const film = w.__film = { ready: false, failed: false, mode: lowData ? 'poster' : 'scrub', phone: null, duration: 0, target: 0, url: '', mediaTime: -1, rvfc: false, progress: 0, seeks: [] };
-  let lastP = -1, solid = null, lastPhone = null, loadSeq = 0, seekT0 = 0, armed = false, unlocked = false;
-  const refit = () => { video.classList.toggle('is-portrait', media.portrait); lastP = -1; };
+  const net = conn ? conn.effectiveType || '' : '';
+  const noVideo = !!(conn && (conn.saveData || /^(slow-2g|2g)$/.test(net))); // ни петли, ни ролика
+  const noScrub = noVideo || net === '3g';                                    // петля можно, ролик прокрутки — нет
+  const film = w.__film = { ready: false, failed: false, mode: noScrub ? 'poster' : 'scrub', phone: null, duration: 0, target: 0, url: '', mediaTime: -1, rvfc: false, progress: 0, seeks: [] };
+  let lastP = -1, solid = null, lastPhone = null, loadSeq = 0, seekT0 = 0, armed = false, unlocked = false, kbOn = null;
+  const loopEl = $('#loop');
+  const refit = () => { video.classList.toggle('is-portrait', media.portrait); loopEl.classList.toggle('is-portrait', media.portrait); lastP = -1; };
   const unlock = () => { // iOS: без play() кадры при перемотке не рисуются
     if (unlocked || !film.ready || film.mode !== 'scrub') return;
     const pr = video.play();
@@ -994,7 +1008,7 @@ html:not(.motion) .blob{animation:none}
     video.poster = posterFor(phone);
     probePoster(refit);
     try {
-      const res = await fetch(phone ? 'assets/film-mobile.mp4?v=3' : 'assets/film.mp4?v=3');
+      const res = await fetch(phone ? 'assets/film-mobile.mp4?v=4' : 'assets/film.mp4?v=4');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const blob = await res.blob();
       if (seq !== loadSeq) return;
@@ -1050,6 +1064,58 @@ html:not(.motion) .blob{animation:none}
     video.requestVideoFrameCallback(onFrame);
   }
 
+  /* ---------- Живая петля первого экрана ----------
+     Играет сама сразу после загрузки (на телефоне ~1 МБ качается сразу, ролик прокрутки — позже).
+     Начали крутить и ролик прокрутки готов → петля гаснет за 350 мс и встаёт на паузу;
+     вернулись наверх → с кадра 0 (он же первый кадр ролика прокрутки) проявляется и снова играет.
+     Autoplay запрещён (энергосбережение iOS) → постер с мягким наездом, петля стартует с первого касания. */
+  const loop = w.__loop = { el: loopEl, allowed: !noVideo, ready: false, failed: false, blocked: false, phone: null, want: true, pauseT: 0, seq: 0, url: '' };
+  const loopSrcFor = phone => (phone ? 'assets/loop-mobile.mp4?v=4' : 'assets/loop.mp4?v=4');
+  const loopShown = () => loop.want && loop.ready && !loop.blocked;
+  const syncLoop = () => { loopEl.classList.toggle('is-on', loopShown()); };
+  function playLoop() {
+    if (!loop.allowed || w.__recDrive) return; // __recDrive: при записи превью петлёй управляет record.mjs
+    const pr = loopEl.play();
+    if (pr && pr.then) pr.then(() => { loop.blocked = false; syncLoop(); }).catch(err => { if (err && err.name === 'NotAllowedError') { loop.blocked = true; syncLoop(); } });
+  }
+  // Петля 0,25–0,5 МБ: качаем целиком (fetch → Blob URL) — возврат к кадру 0 и перемотка надёжны на любом хостинге.
+  async function loadLoop() {
+    if (!loop.allowed) return;
+    const phone = mqPhone.matches;
+    if (loop.phone === phone) return;
+    loop.phone = phone;
+    loop.ready = false;
+    const seq = ++loop.seq;
+    loopEl.poster = posterFor(phone);
+    try {
+      const res = await fetch(loopSrcFor(phone));
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const url = URL.createObjectURL(await res.blob());
+      if (seq !== loop.seq) { URL.revokeObjectURL(url); return; }
+      if (loop.url) URL.revokeObjectURL(loop.url);
+      loop.url = url;
+      loopEl.src = url;
+      if (loop.want) playLoop();
+    } catch (err) {
+      if (seq === loop.seq) { loop.failed = true; loop.allowed = false; syncLoop(); } // остаётся постер с наездом
+    }
+  }
+  function setLoopWant(on) {
+    if (loop.want === on) return;
+    loop.want = on;
+    clearTimeout(loop.pauseT);
+    if (on) {
+      if (!w.__recDrive) { try { loopEl.currentTime = 0; } catch (e) { /* ещё нет данных */ } }
+      playLoop();
+    } else loop.pauseT = setTimeout(() => { if (!loop.want) loopEl.pause(); }, 400);
+    syncLoop();
+  }
+  loopEl.addEventListener('loadeddata', () => { loop.ready = true; syncLoop(); });
+  loopEl.addEventListener('error', () => { loop.failed = true; loop.allowed = false; syncLoop(); });
+  const retryLoop = () => { if (loop.blocked && loop.want) playLoop(); };
+  ['touchstart', 'pointerdown'].forEach(ev => w.addEventListener(ev, retryLoop, { passive: true }));
+  loadLoop();
+
   /* ---------- Главы: прозрачность и сдвиг от прогресса прокрутки ---------- */
   const chapters = [
     { id: 'ch1', a: 0.00, b: 0.22, fin: false, fout: true, side: 0 },
@@ -1094,7 +1160,7 @@ html:not(.motion) .blob{animation:none}
     const zoom = phone && !media.portrait ? (film.mode === 'poster' ? 1.13 : 1 + 0.13 * (1 - p)) : 1;
     const push = film.mode === 'poster' ? 1 + 0.08 * p : 1;
     const k = Math.round(zoom * push * 1000) / 1000;
-    if (video.__k !== k) { video.style.transform = k === 1 ? '' : `scale(${k})`; video.__k = k; }
+    if (video.__k !== k) { const tf = k === 1 ? '' : `scale(${k})`; video.style.transform = tf; loopEl.style.transform = tf; video.__k = k; }
     renderSeq(p, phone);
   }
 
@@ -1145,6 +1211,12 @@ html:not(.motion) .blob{animation:none}
       // Не копим очередь перемоток: следующая — только когда закончилась предыдущая.
       if (!video.seeking && Math.abs(video.currentTime - t) > 1 / 60) { seekT0 = performance.now(); video.currentTime = t; }
     }
+    // Петля видна наверху (прогресс < 0,01) и везде, пока ролику прокрутки нечем её подменить (не загружен, сеть 3g).
+    const takeover = film.ready && film.mode !== 'poster';
+    setLoopWant(!takeover || (loop.want ? p < 0.012 : p < 0.008));
+    // Наезд на постер — только на первом экране и только пока петля не видна.
+    const kb = p < 0.01 && !loopShown();
+    if (kb !== kbOn) { kbOn = kb; video.classList.toggle('kb-run', kb); }
     const phone = mqPhone.matches;
     if (p !== lastP || phone !== lastPhone) { lastP = p; lastPhone = phone; renderChapters(p); }
     const s = y > geo.top + geo.h - geo.vh * 0.6;
@@ -1155,7 +1227,7 @@ html:not(.motion) .blob{animation:none}
   let rT = 0;
   w.addEventListener('resize', () => {
     clearTimeout(rT);
-    rT = setTimeout(() => { measure(); lastP = -1; placeThumb(); if (armed) loadFilm(); }, 120);
+    rT = setTimeout(() => { measure(); lastP = -1; placeThumb(); if (armed) loadFilm(); loadLoop(); }, 120);
   }, { passive: true });
   w.addEventListener('load', () => { measure(); lastP = -1; });
   measure();
