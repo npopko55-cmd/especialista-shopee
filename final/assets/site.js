@@ -13,12 +13,6 @@
     html.setAttribute('data-b2', v === 'faces' ? 'faces' : 'a');
   } catch (e) { html.setAttribute('data-b2', 'a'); }
 
-  /* ---------- Вариант первого экрана: ?hero=1|2|3 → <html data-hero="N">, иначе 1 («Обложка») ---------- */
-  try {
-    const h = new URLSearchParams(location.search).get('hero');
-    html.setAttribute('data-hero', h === '2' || h === '3' ? h : '1');
-  } catch (e) { html.setAttribute('data-hero', '1'); }
-
   /* Ссылок ещё нет (кассы Hotmart, документы) — кнопки с href="#" никуда не уводят */
   d.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('a[href="#"]');

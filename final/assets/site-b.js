@@ -1,33 +1,26 @@
-/* Especialista em Shopee — поведение блоков 6А–12 (исполнитель B). Без библиотек.
-   Тарифы: лента [data-carousel] в #tariffs. Прокрутку по сегменту ([data-carousel-goto]) и подсветку
-   активной кнопки (aria-current) делает общий код карусели в site.js; здесь — только старт на
-   центральной карточке «Специалист по Shopee» и удержание выбранной карточки при повороте экрана. */
+/* Especialista em Shopee — поведение блоков 6А–12 (исполнитель B), раунд 4. Без библиотек.
+   Тарифы больше не карусель (три карточки друг под другом) — скрипт для них не нужен.
+   Блок 7: восемь карточек модулей одной высоты в закрытом виде. Высоту берём по самой высокой
+   закрытой карточке и ставим всем как min-height; открытая карточка просто растёт вниз. */
 (() => {
   'use strict';
-  const track = document.querySelector('#tariffs .t8-track');
-  if (!track) return;
-  const cards = track.querySelectorAll('.carousel__card');
+  const cards = Array.from(document.querySelectorAll('#b7 .b7-card'));
   if (cards.length < 2) return;
-  const START = 1;
-  const offset = i => cards[i].offsetLeft - cards[0].offsetLeft;
-  const current = () => {
-    const b = document.querySelector('#tariffs [data-carousel-goto][aria-current="true"]');
-    return b ? Number(b.getAttribute('data-carousel-goto')) : START;
+  const fit = () => {
+    cards.forEach(c => { c.style.minHeight = ''; });
+    const closed = cards.filter(c => !c.querySelector('details[open]'));
+    const h = Math.max(0, ...closed.map(c => c.getBoundingClientRect().height));
+    if (h > 0) cards.forEach(c => { c.style.minHeight = Math.ceil(h) + 'px'; });
   };
-  let touched = false;
-  const jump = i => { track.scrollLeft = offset(Math.max(0, Math.min(cards.length - 1, i))); };
-
-  jump(START);
-  ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(ev =>
-    track.addEventListener(ev, () => { touched = true; }, { passive: true, once: true }));
-  document.querySelectorAll('#tariffs [data-carousel-goto]').forEach(b =>
-    b.addEventListener('click', () => { touched = true; }));
-  window.addEventListener('load', () => { if (!touched) jump(START); }, { once: true });
-
-  let rt = 0;
+  fit();
+  window.addEventListener('load', fit, { once: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit).catch(() => {});
+  let t = 0;
+  let w = window.innerWidth;
   window.addEventListener('resize', () => {
-    clearTimeout(rt);
-    const i = current();
-    rt = setTimeout(() => jump(i), 120);
+    if (window.innerWidth === w) return;
+    w = window.innerWidth;
+    clearTimeout(t);
+    t = setTimeout(fit, 150);
   });
 })();
