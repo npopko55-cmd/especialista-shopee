@@ -33,11 +33,27 @@
 <!-- ================= Блок 1 — оффер (первый экран): Эрика → оффер → подоффер → кнопка → плашки → видео ================= -->
 <section class="blk bg-hero hero" id="b1">
   <header class="hero__bar"><span class="hero__mark">Especialista em Shopee</span></header>
-  <figure class="hero__arch">
-    <img src="assets/img/hero-erika.webp" width="640" height="853" alt="Эрика Маркес" fetchpriority="high" decoding="async">
-  </figure>
-  <p class="eyebrow hero__eyebrow">Специалист по Shopee&nbsp;— метод Эрики Маркес</p>
-  <h1 class="hero__title">Научу зарабатывать на <span class="hero__az">Shopee без&nbsp;вложений</span> <span class="hero__title-sub">— с&nbsp;нуля до <span class="hero__wave">первых реалов</span>, с&nbsp;телефона и&nbsp;из&nbsp;дома</span></h1>
+  <!-- Раскладка: ?hero=1 «Обложка» (по умолчанию) · ?hero=2 «Арка-сцена» · ?hero=3 «Сторис» → <html data-hero="N"> (site.js) -->
+  <div class="hero__stage">
+    <figure class="hero__photo">
+      <span class="hero__frame">
+        <img src="assets/img/hero-erika-l.webp" width="1050" height="1400" alt="Эрика Маркес" fetchpriority="high" decoding="async">
+      </span>
+      <span class="hero__tint" aria-hidden="true"></span>
+      <span class="hero__bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </figure>
+    <div class="hero__decor" aria-hidden="true">
+      <img class="hero__3d hero__3d--phone" src="assets/3d/phone.webp" width="199" height="360" alt="" decoding="async">
+      <img class="hero__3d hero__3d--stars" src="assets/3d/hstars.webp" width="420" height="361" alt="" decoding="async">
+      <img class="hero__3d hero__3d--coin" src="assets/3d/hcoin.webp" width="420" height="401" alt="" decoding="async">
+      <img class="hero__3d hero__3d--heart" src="assets/3d/hheart.webp" width="420" height="374" alt="" decoding="async">
+    </div>
+    <p class="hero__chip" aria-hidden="true"><b>5&nbsp;млн+</b> <span>подписчиков</span></p>
+    <div class="hero__head">
+      <p class="eyebrow hero__eyebrow">Специалист по Shopee&nbsp;— метод Эрики Маркес</p>
+      <h1 class="hero__title">Научу зарабатывать на <span class="hero__az">Shopee без&nbsp;вложений</span> <span class="hero__title-sub">— с&nbsp;нуля до <span class="hero__wave">первых реалов</span>, с&nbsp;телефона и&nbsp;из&nbsp;дома</span></h1>
+    </div>
+  </div>
   <p class="hero__sub">Получи востребованную профессию в&nbsp;интернете и&nbsp;выйди на доход от <b>R$&nbsp;4&nbsp;000</b> до <b>R$&nbsp;15&nbsp;000</b> в&nbsp;месяц</p>
   <div class="cta">
     <a class="btn" id="cta-b1" href="#tariffs">Получить доступ</a>
@@ -665,8 +681,8 @@
     <div class="cd t8-cd" data-countdown="2026-10-05T02:59:00Z">
       <div class="cd__tile"><b data-cd="d">05</b><span>дней</span></div>
       <div class="cd__tile"><b data-cd="h">14</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">29</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">52</b><span>секунд</span></div>
+      <div class="cd__tile"><b data-cd="m">05</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">03</b><span>секунд</span></div>
     </div>
   </div>
   <div class="cta">
@@ -782,8 +798,8 @@
     <div class="cd b10-cd" data-countdown="2026-10-05T02:59:00Z">
       <div class="cd__tile"><b data-cd="d">05</b><span>дней</span></div>
       <div class="cd__tile"><b data-cd="h">14</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">29</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">52</b><span>секунд</span></div>
+      <div class="cd__tile"><b data-cd="m">05</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">03</b><span>секунд</span></div>
     </div>
     <p class="b10-bonus">Оплатишь до этого срока — получишь бонусы: удвоение доступа, вдвое больше учебных заказов, чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
   </div>
@@ -887,10 +903,11 @@
   </div>
 </div>
 
-<!-- Окно видео: заглушка, пока монтируется продающая презентация (MP4, свой плеер, португальские субтитры) -->
+<!-- Окно видео: продающая презентация Эрики (MP4, свой плеер; файл подгружается только при открытии окна) -->
 <div class="vmodal" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-t" hidden>
-  <div class="vmodal__box">
-    <p id="video-modal-t">Видео появится здесь до старта продаж</p>
+  <div class="vmodal__box vmodal__box--video">
+    <p id="video-modal-t" class="sr-only">Продающая презентация Эрики</p>
+    <video id="sales-video" class="vmodal__video" controls playsinline preload="none" poster="assets/img/video-cover.webp" data-src="assets/video/sales-720.mp4"></video>
     <button class="vmodal__x" type="button" data-video-close aria-label="Закрыть"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-x"/></svg></button>
   </div>
 </div>

@@ -13,6 +13,12 @@
     html.setAttribute('data-b2', v === 'faces' ? 'faces' : 'a');
   } catch (e) { html.setAttribute('data-b2', 'a'); }
 
+  /* ---------- Вариант первого экрана: ?hero=1|2|3 → <html data-hero="N">, иначе 1 («Обложка») ---------- */
+  try {
+    const h = new URLSearchParams(location.search).get('hero');
+    html.setAttribute('data-hero', h === '2' || h === '3' ? h : '1');
+  } catch (e) { html.setAttribute('data-hero', '1'); }
+
   /* Ссылок ещё нет (кассы Hotmart, документы) — кнопки с href="#" никуда не уводят */
   d.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('a[href="#"]');
@@ -164,9 +170,11 @@
   /* ---------- Окно видео: [data-video-open] → #video-modal ---------- */
   const modal = d.getElementById('video-modal');
   let opener = null;
+  const vid = modal ? modal.querySelector('video') : null;
   const closeModal = () => {
     if (!modal || modal.hidden) return;
     modal.hidden = true;
+    if (vid) { try { vid.pause(); } catch (e) { /* нет плеера */ } }
     html.classList.remove('is-locked');
     st.modal = false; applyBar();
     if (opener && opener.focus) opener.focus();
@@ -177,6 +185,10 @@
     modal.hidden = false;
     html.classList.add('is-locked');
     st.modal = true; applyBar();
+    if (vid) {
+      if (!vid.getAttribute('src') && vid.dataset.src) vid.src = vid.dataset.src;   /* 91 МБ грузим только по нажатию */
+      const pr = vid.play(); if (pr && pr.catch) pr.catch(() => { /* iOS: пользователь нажмёт play сам */ });
+    }
     const x = modal.querySelector('[data-video-close]');
     if (x) x.focus();
   };
@@ -192,7 +204,10 @@
     if (e.key === 'Tab') {            /* фокус не уходит из окна */
       e.preventDefault();
       const x = modal.querySelector('[data-video-close]');
-      if (x) x.focus();
+      const order = vid ? [vid, x] : [x];
+      const i = order.indexOf(d.activeElement);
+      const nxt = order[(i + (e.shiftKey ? order.length - 1 : 1)) % order.length];
+      if (nxt) nxt.focus();
     }
   });
 
