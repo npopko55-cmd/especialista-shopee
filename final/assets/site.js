@@ -1,10 +1,17 @@
 /* Especialista em Shopee — поведение страницы (исполнитель A). Без библиотек.
-   Карусели · вкладки · таймер · окно видео · баннер cookies. */
+   Вариант блока 2 · карусели · вкладки · таймер · окно видео · закреплённая панель · баннер cookies. */
 (() => {
   'use strict';
   const d = document;
+  const html = d.documentElement;
   const $$ = (s, c = d) => Array.from(c.querySelectorAll(s));
   const reduce = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------- Вариант блока 2: ?b2=faces → <html data-b2="faces">, иначе вариант A ---------- */
+  try {
+    const v = new URLSearchParams(location.search).get('b2');
+    html.setAttribute('data-b2', v === 'faces' ? 'faces' : 'a');
+  } catch (e) { html.setAttribute('data-b2', 'a'); }
 
   /* Ссылок ещё нет (кассы Hotmart, документы) — кнопки с href="#" никуда не уводят */
   d.addEventListener('click', e => {
@@ -119,20 +126,57 @@
   };
   if (timers.length) { tick(); setInterval(tick, 1000); }
 
+  /* ---------- Закреплённая панель #sticky-cta: full ↔ compact ----------
+     compact (только круглая WhatsApp) — если в кадре хоть краем любая кнопка блока (.cta .btn, [data-cta]),
+     открыт баннер cookies, открыто окно видео или на экране тарифы (#tariffs ≥ половины экрана). */
+  const bar = d.getElementById('sticky-cta');
+  const st = { cta: new Set(), cookie: false, modal: false, tariffs: false };
+  const applyBar = () => {
+    if (!bar) return;
+    const compact = st.cta.size > 0 || st.cookie || st.modal || st.tariffs;
+    bar.classList.toggle('is-compact', compact);
+    bar.setAttribute('data-state', compact ? 'compact' : 'full');
+  };
+  if (bar && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (e.isIntersecting && e.intersectionRatio > 0) st.cta.add(e.target);
+        else st.cta.delete(e.target);
+      });
+      applyBar();
+    }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+    $$('.cta .btn, [data-cta]').filter(el => !bar.contains(el)).forEach(el => io.observe(el));
+    const tar = d.getElementById('tariffs');
+    if (tar) {
+      const th = [];
+      for (let i = 0; i <= 40; i++) th.push(i / 40);
+      new IntersectionObserver(es => {
+        es.forEach(e => {
+          const vh = (e.rootBounds && e.rootBounds.height) || window.innerHeight;
+          st.tariffs = e.isIntersecting && e.intersectionRect.height >= vh * 0.5;
+        });
+        applyBar();
+      }, { threshold: th }).observe(tar);
+    }
+  }
+  applyBar();
+
   /* ---------- Окно видео: [data-video-open] → #video-modal ---------- */
   const modal = d.getElementById('video-modal');
   let opener = null;
   const closeModal = () => {
     if (!modal || modal.hidden) return;
     modal.hidden = true;
-    d.documentElement.classList.remove('is-locked');
+    html.classList.remove('is-locked');
+    st.modal = false; applyBar();
     if (opener && opener.focus) opener.focus();
   };
   const openModal = btn => {
     if (!modal) return;
     opener = btn;
     modal.hidden = false;
-    d.documentElement.classList.add('is-locked');
+    html.classList.add('is-locked');
+    st.modal = true; applyBar();
     const x = modal.querySelector('[data-video-close]');
     if (x) x.focus();
   };
@@ -152,7 +196,9 @@
     }
   });
 
-  /* ---------- Cookies: выбор в localStorage; пиксель Meta — только после согласия (трекеров пока нет) ---------- */
+  /* ---------- Cookies: нижний лист; выбор в localStorage; пиксель Meta — только после согласия ----------
+     При первом заходе лист появляется после первой прокрутки (или через 10 с), чтобы не закрывать
+     первый экран: Эрика, оффер и кнопка видны сразу. Пока лист открыт — панель compact. */
   const KEY = 'es_cookies_v1';
   const readCk = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
   const saveCk = v => { try { localStorage.setItem(KEY, JSON.stringify({ v, at: new Date().toISOString() })); } catch (e) { /* приватный режим */ } };
@@ -162,9 +208,24 @@
     const setBox = ck.querySelector('.cookie__set');
     const cfg = ck.querySelector('[data-ck="config"]');
     const cfgLabel = cfg ? cfg.textContent : '';
+    const show = () => { ck.hidden = false; st.cookie = true; applyBar(); };
     const openCfg = () => { if (setBox) setBox.hidden = false; if (cfg) cfg.textContent = 'Сохранить'; };
-    const close = () => { ck.hidden = true; if (setBox) setBox.hidden = true; if (cfg) cfg.textContent = cfgLabel; };
-    if (!readCk()) ck.hidden = false;
+    const close = () => {
+      ck.hidden = true; if (setBox) setBox.hidden = true; if (cfg) cfg.textContent = cfgLabel;
+      st.cookie = false; applyBar();
+    };
+    if (!readCk()) {
+      let done = false;
+      const first = () => {
+        if (done || readCk()) return;
+        done = true;
+        window.removeEventListener('scroll', onScroll);
+        show();
+      };
+      const onScroll = () => { if (window.scrollY > 80) first(); };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      setTimeout(first, 10000);
+    }
     ck.addEventListener('click', e => {
       const b = e.target.closest && e.target.closest('[data-ck]');
       if (!b) return;
@@ -182,7 +243,7 @@
       const r = readCk();
       const ads = ck.querySelector('#ck-ads');
       if (ads) ads.checked = !!r && r.v === 'all';
-      ck.hidden = false;
+      show();
       openCfg();
     });
   }
