@@ -1,0 +1,69 @@
+/* Страница «Спасибо за покупку» (после оплаты в Hotmart). Общие токены и кнопки — из site.css.
+   Правила те же, что у всего сайта: один акцент на блок, ровные карточки, тень мягкая, рамка 1 px. */
+body.ty { background: var(--sky-1); }
+.ty .blk { padding-top: 40px; }
+.ty h1, .ty h2 { margin: 0; font-family: var(--serif); font-weight: 400; color: var(--ink); text-align: center; letter-spacing: -.005em; }
+.ty h1 { font-size: 34px; line-height: 1.12; }
+.ty h2 { font-size: 28px; line-height: 1.15; }
+.ty p { margin: 0; }
+
+/* Шапка и первый экран */
+.ty-bar { display: flex; align-items: center; justify-content: center; height: 48px; font-family: var(--serif); font-size: 17px; color: var(--ink); }
+.ty-hero { text-align: center; padding-bottom: 28px; }
+.ty-badge { display: grid; place-items: center; width: 84px; height: 84px; margin: 6px auto 18px; border-radius: 50%; background: #fff; color: var(--azure-sm); box-shadow: var(--shadow); }
+.ty-badge svg { width: 40px; height: 40px; stroke-width: 2.2; }
+.ty-lead { max-width: 24em; margin: 14px auto 0; font-size: 17px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.ty-facts { display: grid; gap: 10px; margin: 24px 0 0; padding: 0; list-style: none; }
+.ty-facts li { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 16px; border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); font-size: 16px; font-weight: 600; text-align: left; }
+.ty-facts svg { width: 24px; height: 24px; color: var(--azure-sm); }
+
+/* Шаги */
+.ty-steps { position: relative; display: grid; gap: 18px; margin: 26px 0 0; padding: 0; list-style: none; counter-reset: st; }
+.ty-step { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; }
+.ty-step::before { content: ""; position: absolute; left: 21px; top: 48px; bottom: -18px; width: 2px; background: var(--line); }
+.ty-step:last-child::before { display: none; }
+.ty-num { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); font-family: var(--serif); font-size: 22px; color: var(--ink); }
+.ty-card { padding: 18px 18px 16px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.ty-card h3 { margin: 0 0 8px; font-size: 19px; font-weight: 700; line-height: 1.25; color: var(--ink); }
+.ty-card p { font-size: 16px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.ty-card p + p { margin-top: 8px; }
+.ty-tip { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; margin-top: 12px; padding: 12px 14px; border-radius: 16px; background: #FFF8F1; font-size: 15px; line-height: 1.45; color: var(--ink); }
+.ty-tip svg { width: 22px; height: 22px; margin-top: 1px; color: var(--muted); }
+.ty-tip b { font-weight: 700; }
+.ty-card .btn, .ty-card .btn--wa { margin-top: 12px; }
+.ty-btn2 { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; margin-top: 12px; border-radius: 999px; background: #fff; border: 1px solid rgba(31, 42, 51, .18); font-weight: 700; font-size: 16px; color: var(--ink); text-decoration: none; }
+.ty-btn2 svg { width: 22px; height: 22px; color: var(--azure-sm); }
+
+/* Тарифы и подарки — три равные строки */
+.ty-list { display: grid; gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; }
+.ty-list li { padding: 14px 16px; border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); font-size: 15px; line-height: 1.45; color: var(--ink); }
+.ty-list b { display: block; margin-bottom: 2px; font-size: 17px; color: var(--ink); }
+.ty-note { max-width: 26em; margin: 16px auto 0; font-size: 15px; line-height: 1.5; text-align: center; color: var(--muted); text-wrap: pretty; }
+.ty-gifts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 22px; }
+.ty-gift { padding: 14px 12px; border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); text-align: center; font-size: 15px; line-height: 1.35; }
+.ty-gift img { display: block; width: 56px; height: 56px; margin: 0 auto 8px; object-fit: contain; }
+
+/* Помощь */
+.ty-help { margin: 22px 0 0; padding: 4px 18px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.ty-q { padding: 14px 0; }
+.ty-q + .ty-q { border-top: 1px solid var(--line); }
+.ty-q b { display: block; margin-bottom: 4px; font-size: 16px; color: var(--ink); }
+.ty-q p { font-size: 15px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+.ty-support { margin-top: 18px; padding: 18px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); text-align: center; }
+.ty-support p { font-size: 16px; line-height: 1.5; color: var(--ink); }
+.ty-support .ty-mail { margin-top: 12px; font-size: 15px; color: var(--muted); }
+.ty-support a:not(.btn) { color: var(--azure-sm); }
+
+/* Гарантия */
+.ty-guar { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; align-items: start; margin-top: 22px; padding: 18px; border-radius: var(--r-lg); background: #FFF8F1; border: 1px solid var(--line); }
+.ty-guar svg { width: 40px; height: 40px; color: var(--ink); }
+.ty-guar h3 { margin: 0 0 6px; font-size: 19px; font-weight: 700; color: var(--ink); }
+.ty-guar p { font-size: 16px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.ty-guar ol { margin: 8px 0 0; padding-left: 22px; list-style: decimal; font-size: 15px; line-height: 1.5; color: var(--ink); }
+
+/* Подвал */
+.ty-foot { padding: 30px 20px 48px; text-align: center; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.ty-foot a { display: inline-block; margin: 4px 8px; color: var(--ink); }
+@media (max-width: 359px) { .ty h1 { font-size: 29px; } .ty-gifts { grid-template-columns: minmax(0, 1fr); } }
+
+.ty-guar li + li { margin-top: 4px; }

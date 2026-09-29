@@ -165,13 +165,13 @@
   const modal = d.getElementById('video-modal');
   let opener = null;
   const vid = modal ? modal.querySelector('video') : null;
-  const closeModal = () => {
+  const closeModal = byKey => {
     if (!modal || modal.hidden) return;
     modal.hidden = true;
     if (vid) { try { vid.pause(); } catch (e) { /* нет плеера */ } }
     html.classList.remove('is-locked');
     st.modal = false; applyBar();
-    if (opener && opener.focus) opener.focus();
+    if (byKey && opener && opener.focus) opener.focus({ preventScroll: true });   /* мышью закрыли — рамку фокуса не рисуем */
   };
   const openModal = btn => {
     if (!modal) return;
@@ -194,7 +194,7 @@
   });
   d.addEventListener('keydown', e => {
     if (!modal || modal.hidden) return;
-    if (e.key === 'Escape') { closeModal(); return; }
+    if (e.key === 'Escape') { closeModal(true); return; }
     if (e.key === 'Tab') {            /* фокус не уходит из окна */
       e.preventDefault();
       const x = modal.querySelector('[data-video-close]');
