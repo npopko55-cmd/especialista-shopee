@@ -190,6 +190,18 @@
     topBar(); window.addEventListener('scroll', topBar, { passive: true });
   }
 
+  /* ---------- План Б: плашка «Напиши мне в WhatsApp» (#pb-wa) ----------
+     Показываем тем, кто пришёл через форму сбора данных (cadastro.html добавляет ?lead=1); запоминаем на сессию.
+     ?planb=1 — то же вручную, для просмотра. Для плана А (без формы) плашки нет. */
+  (function () {
+    const el = d.getElementById('pb-wa');
+    if (!el) return;
+    let on = false;
+    try { const q = new URLSearchParams(location.search); on = q.get('lead') === '1' || q.get('planb') === '1'; } catch (e) { /* старый браузер */ }
+    try { if (on) sessionStorage.setItem('em_planb', '1'); else on = sessionStorage.getItem('em_planb') === '1'; } catch (e) { /* приватный режим */ }
+    if (on) el.hidden = false;
+  })();
+
   /* ---------- Окно видео: [data-video-open] → #video-modal ---------- */
   const modal = d.getElementById('video-modal');
   let opener = null;

@@ -1,0 +1,8 @@
+/* obrigado-ru.html — русский обратный перевод obrigado.html для сверки текста.
+   Только жёлтая полоска-предупреждение вверху; остальная вёрстка — site.css + spasibo.css + obrigado.css. */
+.ru-note {
+  margin: 0; padding: 7px 16px;
+  background: #FFE45C; border-bottom: 1px solid #E0B800;
+  font: 600 13px/1.4 var(--sans); color: var(--ink);
+  text-align: center; overflow-wrap: anywhere;
+}
