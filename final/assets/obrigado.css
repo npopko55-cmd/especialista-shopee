@@ -1,26 +1,106 @@
-/* obrigado.html — португальская страница «Спасибо после оплаты».
-   Основа — assets/spasibo.css (не менять). Здесь только недостающее для PT-версии. */
+/* obrigado.html — португальская страница «Obrigada» после оплаты (compra aprovada),
+   строго по документу «Мостик оплата → доступ» (разделы 05 и 06.1).
+   Основа — assets/site.css + assets/spasibo.css (не меняются). Здесь только отличия PT-страницы.
+   Правила простоты (TZ4): один акцент на блок, белые карточки 24/1 px/мягкая тень, текст ≥ 14 px, Prata без курсива. */
 
-/* Вторая спокойная кнопка «Não recebi o acesso»: иконка WhatsApp зелёная, как у .btn--wa */
-.ty-btn2--wa svg { color: var(--wa); }
+/* Закреплённой панели на этой странице нет — нижний запас из site.css не нужен */
+body.ty { padding-bottom: env(safe-area-inset-bottom); }
 
-/* Ссылка на страницу возврата Hotmart в шагах гарантии */
-.ty-guar a { color: var(--azure-sm); font-weight: 600; overflow-wrap: anywhere; }
+/* ---------- Первый экран ---------- */
+.ty-hero { padding-bottom: 36px; }
+/* H1 — одна фраза документа, показана в два яруса: «Pagamento confirmado!» одной строкой (на 390 — 29 px,
+   на 320 — 24 px, иначе переносится), продолжение — 2 строки. Итого не больше 3 строк на всех ширинах. */
+.ty h1 { font-size: clamp(24px, 7.5vw, 30px); line-height: 1.12; }
+.ty-h1-main, .ty-h1-sub { display: block; }
+.ty-h1-main { white-space: nowrap; }
+.ty-h1-sub { margin-top: 10px; font-size: clamp(19px, 5.4vw, 22px); line-height: 1.25; text-wrap: balance; }
+.ty-lead { margin-top: 22px; }
 
-/* Строка «Ou é só falar com a gente» под шагами возврата (в RU-черновике — inline-стиль) */
-.ty-guar .ty-guar-more { margin-top: 8px; }
+/* Заглушка видео «como entrar no curso» (16:9). Кадров нет — только спокойная карточка, play и подпись. */
+.ty-video {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; margin: 24px 0 0; padding: 16px; aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg); background: linear-gradient(160deg, var(--sky-1) 0%, var(--sky-2) 100%);
+  border: 1px solid var(--line); box-shadow: var(--shadow); text-align: center;
+}
+.ty-video__play {
+  display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%;
+  background: #fff; color: var(--ink); box-shadow: 0 8px 20px -8px rgba(31, 42, 51, .35);
+}
+/* треугольник #i-play: центр тяжести уже в центре viewBox — без сдвигов */
+.ty-video__play svg { width: 24px; height: 24px; }
+.ty-video__cap { max-width: 17em; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--ink); text-wrap: balance; }
+/* будущий настоящий плеер займёт ту же рамку */
+.ty-video--real { display: block; padding: 0; background: var(--ink); object-fit: contain; }
 
-/* Подарки: на 360–379 колонка текста была 131 px (4 строки по ~10 знаков) — ниже 380 в одну колонку.
-   В spasibo.css то же правило стоит только ниже 360. */
-@media (max-width: 379px) { .ty-gifts { grid-template-columns: minmax(0, 1fr); } }
+/* ---------- 3 шага ---------- */
+.ty-how h2 { text-wrap: balance; }
+.ty-steps { gap: 16px; margin: 24px 0 0; }
+.ty-step {
+  display: block; padding: 20px 18px 18px;
+  border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.ty-step::before { display: none; }           /* линия-связка из spasibo.css не нужна */
+.ty-step h3 { margin: 0 0 10px; font-size: 20px; font-weight: 700; line-height: 1.25; color: var(--ink); text-wrap: balance; }
+/* номер шага — тем же Raleway: у Prata «1» похожа на «l» */
+.ty-n { margin-right: 2px; font-variant-numeric: lining-nums; }
+.ty-step p { font-size: 16px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.ty-step p + p { margin-top: 10px; }
+/* Тема письма — единственный акцент карточки шага 1 */
+.ty-step .ty-subj {
+  display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start;
+  margin-top: 8px; padding: 12px 14px; border-radius: 16px; background: var(--sky-0); border: 1px solid var(--line);
+}
+.ty-subj svg { width: 22px; height: 22px; margin-top: 1px; color: var(--azure-sm); }
 
-/* 320–359: колонка текста подсказок была ~126 px (ТЗ: не уже 130), кнопки переносились на 2 строки.
-   Иконка подсказки обтекается текстом, поля карточки чуть уже, кнопки на 1 px мельче. */
+/* Слот скриншота с телефона: светлая «рамка телефона» с подписью. Реальные скрины — позже (Семён). */
+.ty-shot { display: flex; justify-content: center; margin: 18px 0 0; }
+.ty-phone {
+  width: min(168px, 62%); aspect-ratio: 9 / 19.5; padding: 7px;
+  border-radius: 30px; background: var(--sky-2); border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.ty-phone__screen {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  height: 100%; padding: 0 10px; border-radius: 23px; background: var(--sky-0); text-align: center;
+}
+.ty-phone__screen::before {        /* «динамик» сверху — только декор */
+  content: ""; position: absolute; top: 10px; left: 50%; width: 40px; height: 5px; margin-left: -20px;
+  border-radius: 3px; background: rgba(31, 42, 51, .12);
+}
+.ty-phone svg { width: 28px; height: 28px; color: var(--muted); }
+.ty-phone__cap { font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--muted); }
+/* будущий настоящий скрин: целиком, без обрезки */
+.ty-phone-img { display: block; width: min(220px, 72%); height: auto; border-radius: 22px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+
+/* ---------- Помощь ---------- */
+.ty-stuck {
+  margin-top: 20px; padding: 20px 18px; text-align: center;
+  border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.ty-stuck svg { display: block; width: 26px; height: 26px; margin: 0 auto 10px; color: var(--azure-sm); }
+.ty-stuck p { font-size: 16px; line-height: 1.55; color: var(--ink); text-wrap: pretty; }
+/* Ссылка на почту: крупная, жирная, подчёркнутая; вертикальные поля расширяют зону нажатия, строку не раздвигают */
+/* Адрес всегда отдельной строкой посреди фразы (на 320 «para» не повисает одно); не рвётся: 229 px, колонка на 320 — от 252 px.
+   Высота строки-ссылки 44 px — крупная зона нажатия. */
+.ty-link {
+  display: block; width: fit-content; margin: 0 auto; padding: 9px 0;
+  font-size: 17px; font-weight: 700; color: var(--azure-sm); white-space: nowrap;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;
+}
+.ty-end { padding-top: 32px; padding-bottom: 12px; }
+.ty-final { max-width: 25em; margin: 0 auto; font-size: 16px; line-height: 1.55; text-align: center; color: var(--ink); text-wrap: pretty; }
+
+/* ---------- Подвал ---------- */
+.ty-foot { padding: 24px 20px 36px; font-size: 14px; }
+.ty-foot__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 8px; margin-top: 6px; }
+.ty-foot .ty-foot__links a {
+  display: inline-flex; align-items: center; min-height: 44px; margin: 0; padding: 0 8px;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+}
+
+/* ---------- Узкие экраны ---------- */
 @media (max-width: 359px) {
-  .ty-card { padding: 16px 14px 14px; }
-  .ty-tip { display: block; padding: 12px; }
-  .ty-tip svg { float: left; margin: 1px 8px 0 0; }
-  .ty-btn2 { gap: 8px; font-size: 15px; }
-  .ty-support { padding: 18px 14px; }
-  .ty-support .btn { padding: 0 14px; font-size: 17px; }
+  .ty-step { padding: 18px 16px 16px; }
+  .ty-step .ty-subj { padding: 12px; }
+  .ty-stuck { padding: 18px 14px; }
 }
