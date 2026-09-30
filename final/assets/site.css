@@ -700,13 +700,17 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
 
 /* ---------- Блок 6 — что ты получаешь ---------- */
 #b6 { --from: var(--sunset); }
-/* три макета из презентации: слайды одной высоты, зона макета 190 px, макет ЦЕЛИКОМ (contain) */
-.b6__track { gap: 12px; padding-top: 4px; padding-bottom: 26px; }
-.b6__track .carousel__card { flex-basis: 84%; }
-.feat { display: flex; flex-direction: column; padding: 12px 12px 20px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
-.feat__media { display: flex; align-items: center; justify-content: center; height: 190px; padding: 12px; border-radius: 18px; background: var(--sky-0); }
-.feat__media img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.feat__txt { padding: 14px 8px 0; }
+/* три макета из презентации (раунд 8, Лёша: «платформу слабо видно, много пустого места»):
+   слайд 90 % ленты (следующий выглядывает), макет почти во всю ширину карточки — поле 6 + 2 = 8 px,
+   высота зоны макета по пропорциям самой картинки (width/height у <img>), макет ЦЕЛИКОМ, без обрезки.
+   Слайды выровнены по верху и своей высоты: под текстом только нижний отступ карточки (18 px);
+   точки и «1 / 3» стоят под самой высокой карточкой и не прыгают. */
+.b6__track { align-items: flex-start; gap: 12px; padding-top: 4px; padding-bottom: 26px; }
+.b6__track .carousel__card { flex-basis: 90%; }
+.feat { display: flex; flex-direction: column; padding: 6px 6px 18px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.feat__media { display: block; padding: 2px; border-radius: calc(var(--r-lg) - 6px); background: var(--sky-0); }
+.feat__media img { display: block; width: 100%; height: auto; }
+.feat__txt { padding: 12px 10px 0; }
 .feat__t { font-family: var(--serif); font-weight: 400; font-size: 21px; line-height: 1.2; letter-spacing: -.005em; color: var(--ink); text-wrap: balance; }
 .feat__p { margin-top: 8px; font-size: 15px; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
 .b6__nav { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: -14px; }
@@ -783,7 +787,9 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
 .b6__ip-p { margin-top: 6px; font-size: 15px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
 
 /* ---------- Блок 6 — раунд 5 (Лиза): сертификат, лицо Эрики у поддержки, три iPhone ---------- */
-#b6 .arrows { --arrows-top: 87px; }   /* середина макета */
+/* стрелки — по середине самого низкого макета (lessons 1100×549), считается от ширины ленты:
+   лента = min(100vw, 480) − 40, картинка = лента × .9 − 18 (рамка 2 + поля 16), центр зоны = 13 + h/2, кнопка 44 → −22 */
+#b6 .arrows { --arrows-top: calc(((min(100vw, 480px) - 40px) * .9 - 18px) * .2495 - 9px); }
 .mini__face {
   position: absolute; inset: 0; overflow: hidden; border-radius: 50%;
   background: radial-gradient(circle at 40% 30%, #F1F9FC, #BFE0EE); box-shadow: 0 0 0 2px #fff, var(--shadow-sm);

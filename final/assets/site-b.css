@@ -77,26 +77,35 @@
 #b7 .b7-meta__line { margin-top: 8px; font-size: 15px; line-height: 1.4; color: var(--tx2); }
 #b7 .b7-map { display: grid; gap: 12px; }
 #b7 .b7-mod { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 8px; align-items: start; }
-/* линия между узлами: от центра кружка (16 + 14 px) к центру следующего */
+/* раунд 8 (Лёша 30.09: «слишком скучно, всё чёрно-белое»): у каждого модуля свой мягкий цвет по кругу из 4 —
+   небо, персик, светло-жёлтый, мята. --m-tint — низ градиента карточки, --m-line — рамка 1 px чуть темнее,
+   --m-acc — насыщенный цвет кружка и рамки кнопки, --m-ink — затемнённый цвет текста (контраст ≥ 4,5:1 и на белом,
+   и на --m-tint, и на заливке --m-fill), --m-next — цвет следующего кружка (рельс — градиент между ними) */
+#b7 .b7-mod:nth-child(4n+1) { --m-tint: #E4F1F9; --m-line: #CBE3F2; --m-acc: #4FA3CF; --m-dot: #2E78A8; --m-dot-ink: #FFFFFF; --m-ink: #1B6E98; --m-fill: #DFEEF6; --m-next: #F7894B; }
+#b7 .b7-mod:nth-child(4n+2) { --m-tint: #FFF0E3; --m-line: #F9DCC4; --m-acc: #F7894B; --m-dot: #C24F16; --m-dot-ink: #FFFFFF; --m-ink: #B04A14; --m-fill: #FEEADF; --m-next: #E9B949; }
+#b7 .b7-mod:nth-child(4n+3) { --m-tint: #FFF6D9; --m-line: #F3E3AE; --m-acc: #E9B949; --m-dot: #E9B949; --m-dot-ink: #2B2200; --m-ink: #8A5F00; --m-fill: #FBF2DE; --m-next: #4DB58A; }
+#b7 .b7-mod:nth-child(4n+4) { --m-tint: #E6F6EE; --m-line: #C9EBD9; --m-acc: #4DB58A; --m-dot: #2A7D5C; --m-dot-ink: #FFFFFF; --m-ink: #1A714C; --m-fill: #DFF2EA; --m-next: #4FA3CF; }
+/* рельс между узлами: от центра кружка (16 + 14 px) к центру следующего, цвет перетекает в цвет следующего модуля */
 #b7 .b7-mod:not(:last-child)::before {
-  content: ""; position: absolute; left: 13.5px; top: 30px; width: 1px; height: calc(100% + 12px);
-  background: rgba(31, 42, 51, .15);
+  content: ""; position: absolute; left: 13px; top: 30px; width: 2px; height: calc(100% + 12px); border-radius: 2px;
+  background: linear-gradient(180deg, var(--m-acc) 0%, var(--m-next) 100%); opacity: .7;
 }
+/* кружок: заливка цветом модуля, белая цифра Raleway (в Prata «1» похожа на «l») */
 #b7 .b7-dot {
   position: relative; z-index: 1; display: grid; place-items: center; width: 28px; height: 28px; margin-top: 16px;
-  border-radius: 50%; background: #fff; border: 1px solid rgba(31, 42, 51, .15);
-  font: 400 15px/1 var(--serif); color: var(--ink);
+  border-radius: 50%; background: var(--m-dot); box-shadow: 0 0 0 3px #fff, 0 4px 10px -4px rgba(31, 42, 51, .3);
+  font: 700 15px/1 var(--sans); font-variant-numeric: lining-nums; color: var(--m-dot-ink);   /* цифра: контраст ≥ 4,5:1 на каждом цвете */
 }
 #b7 .b7-card {
   position: relative; display: flex; flex-direction: column; min-width: 0;
   padding: 14px 16px 0; border-radius: 20px;
-  background: #fff; border: 1px solid var(--b-line); box-shadow: var(--b-shadow-sm);
+  background: linear-gradient(180deg, #fff 0%, var(--m-tint) 100%); border: 1px solid var(--m-line); box-shadow: var(--b-shadow-sm);
 }
 #b7 .b7-card__obj { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; filter: drop-shadow(0 3px 4px rgba(31, 42, 51, .14)); }
 #b7 .b7-card__t { padding-right: 48px; font: 700 16px/1.3 var(--sans); font-variant-numeric: lining-nums; color: var(--ink); text-wrap: balance; }
 #b7 .b7-card__k { display: block; margin-bottom: 2px; font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--tx2); }
 #b7 .b7-card__res { margin: 6px 0 12px; font-size: 15px; line-height: 1.4; color: var(--tx2); text-wrap: pretty; }
-#b7 .b7-card__res b { color: var(--ink); }
+#b7 .b7-card__res b { color: var(--m-ink); }
 /* «Уроки (N) ＋» — строка внутри карточки внизу, во всю ширину, разделитель сверху */
 #b7 .b7-acc { margin-top: auto; }
 #b7 .b7-acc > summary {
@@ -110,9 +119,11 @@
 /* раунд 5 (Лиза: «не поймут, что за плюсики»): вместо «＋» — пилюля «Смотреть уроки ⌄» (декор, aria-hidden) */
 #b7 .b7-acc__go {
   display: inline-flex; flex: none; align-items: center; gap: 4px; min-height: 44px; margin-left: auto; padding: 0 10px 0 14px;
-  border-radius: 999px; background: var(--sky-0); border: 1px solid var(--b-line);
-  font: 700 14px/1 var(--sans); color: var(--azure-sm); white-space: nowrap;
+  border-radius: 999px; background: #fff; border: 1px solid var(--m-acc);
+  font: 700 14px/1 var(--sans); color: var(--m-ink); white-space: nowrap; transition: background-color .2s;
 }
+/* раунд 8: открытый модуль — кнопка «Свернуть» с лёгкой заливкой цветом модуля */
+#b7 .b7-acc[open] .b7-acc__go { background: var(--m-fill); }
 #b7 .b7-acc__go .i { width: 18px; height: 18px; stroke-width: 2.25; transition: transform .2s; }
 #b7 .b7-acc__less { display: none; }
 #b7 .b7-acc[open] .b7-acc__more { display: none; }
@@ -170,7 +181,29 @@
 #tariffs .t8-more[open] > summary .i { transform: rotate(180deg); }
 #tariffs .t8-more > summary:focus-visible { outline: 3px solid var(--azure-sm); outline-offset: 2px; }
 #tariffs .t8-more .t8-list { margin-top: 4px; }
-#tariffs .t8-offnote { margin-top: 10px; padding-left: 34px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--tx2); }
+/* раунд 8 (Лёша 30.09: «недоступное должно читаться сразу, а не мелким почерком»): у «Старта» недоступное —
+   отдельная светло-серая плашка; заголовок приглушённым красно-персиковым, под ним старая подпись ТЗ,
+   пункты серые (.55), зачёркнутые, значок «✕» в кружке вместо «—» */
+#tariffs .t8-off { margin-top: 16px; padding: 14px 14px 16px; border-radius: 18px; background: #F2F4F6; }
+#tariffs .t8-off__h { font: 700 16px/1.3 var(--sans); color: #B5482F; }
+#tariffs .t8-offnote { margin-top: 2px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--tx2); }
+#tariffs .t8-off__list { display: grid; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+#tariffs .t8-off__list li {
+  position: relative; min-height: 1.4em; padding-left: 34px; opacity: .55;
+  font-size: 15px; font-weight: 500; line-height: 1.4; color: var(--ink); text-align: left; text-wrap: pretty;
+  text-decoration: line-through; text-decoration-thickness: 1px;
+}
+#tariffs .t8-off__list li::before {
+  content: ""; position: absolute; left: 0; top: 0; width: 24px; height: 1.4em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F2A33' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9.5'/%3E%3Cpath d='m9 9 6 6M15 9l-6 6'/%3E%3C/svg%3E") center / 20px no-repeat;
+}
+/* места: маленькая плашка с иконкой людей под строкой цены («Специалист» и VIP), без анимации */
+#tariffs .t8-seats {
+  display: flex; align-items: center; gap: 6px; width: fit-content; margin: 10px auto 0; padding: 5px 12px 5px 10px;
+  border-radius: 999px; background: #fff; border: 1px solid var(--b-line);
+  font: 700 14px/1.2 var(--sans); font-variant-numeric: lining-nums; color: var(--ink); white-space: nowrap;
+}
+#tariffs .t8-seats .i { width: 16px; height: 16px; stroke-width: 2; color: var(--orange-sm); }
 /* бонусы (раунд 5, Лиза «продать вкуснее»; Лёша 30.09 — без «удвоения»): одна подарочная карточка —
    крупный подарок слева от заголовка, два подарка белыми строками, крупный таймер. Персиковая карточка — единственный акцент блока */
 #tariffs .t8-bonus {
@@ -191,12 +224,6 @@
 #tariffs .t8-bonus__ico { display: block; width: 56px; height: 56px; object-fit: contain; }
 #tariffs .t8-bonus__n { display: block; font: 700 12px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--tx2); }
 #tariffs .t8-bonus__name { margin-top: 3px; font: 700 16px/1.35 var(--sans); font-variant-numeric: lining-nums; color: var(--ink); text-wrap: pretty; }
-#tariffs .t8-cd { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
-#tariffs .t8-cd .cd__tile {
-  min-width: 0; padding: 12px 2px 10px; border-radius: 16px;
-  background: #fff; border: 1px solid var(--b-line); box-shadow: var(--b-shadow-sm);
-}
-#tariffs .t8-cd [data-cd] { font-size: clamp(32px, 10vw, 40px); line-height: 1.05; color: var(--ink); }
 @media (max-width: 419px) {
   #tariffs .t8-bonus__head { grid-template-columns: 88px minmax(0, 1fr); column-gap: 12px; }
   #tariffs .t8-bonus__gift, #tariffs .t8-bonus__gift img { width: 88px; height: 88px; }
@@ -205,7 +232,6 @@
 @media (max-width: 359px) {
   #tariffs .t8-bonus__head { grid-template-columns: minmax(0, 1fr); justify-items: center; row-gap: 6px; text-align: center; }
 }
-#tariffs .t8-cd .cd__tile span { margin-top: 4px; font-size: 14px; color: var(--tx2); }
 #tariffs .cta { margin-top: 24px; }
 
 /* ---------- 8А — давай посчитаем: цена дня, весы ---------- */
@@ -373,15 +399,21 @@
 /* кавычка — декор псевдоэлементом (не текст страницы) */
 #b10 .b10-quote::before { content: "\201C"; display: block; height: 36px; font: 400 64px/1 var(--serif); color: rgba(31, 42, 51, .22); }
 #b10 .b10-quote p { font: 400 28px/1.2 var(--serif); font-style: normal; letter-spacing: -.005em; color: var(--ink); text-wrap: balance; }
-#b10 .b10-deal {
+/* плашка срока с таймером — один компонент в блоке 10 и (раунд 8, Лёша 30.09) над карточками тарифов: таймер цены */
+#b10 .b10-deal, #tariffs .t8-deal {
   margin-top: 28px; padding: 18px 16px; border-radius: 24px;
   background: #fff; border: 1px solid var(--b-line); box-shadow: var(--b-shadow);
 }
-#b10 .b10-deadline { margin-bottom: 12px; font-size: 16px; font-weight: 700; line-height: 1.4; color: var(--ink); text-align: center; text-wrap: balance; }
-#b10 .b10-cd { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-#b10 .b10-cd .cd__tile { min-width: 0; padding: 10px 2px 8px; border-radius: 16px; background: var(--sky-0); border: 1px solid var(--b-line); box-shadow: none; }
-#b10 .b10-cd [data-cd] { font-size: clamp(30px, 9.4vw, 36px); line-height: 1.05; color: var(--ink); }
-#b10 .b10-cd .cd__tile span { margin-top: 4px; font-size: 14px; color: var(--tx2); }
+#tariffs .t8-deal { margin: 0 0 16px; }
+#b10 .b10-deadline, #tariffs .t8-deal__line { margin-bottom: 12px; font-size: 16px; font-weight: 700; line-height: 1.4; color: var(--ink); text-align: center; text-wrap: balance; }
+#b10 .b10-cd, #tariffs .t8-pcd { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+:is(#b10 .b10-cd, #tariffs .t8-pcd) .cd__tile { min-width: 0; padding: 10px 2px 8px; border-radius: 16px; background: var(--sky-0); border: 1px solid var(--b-line); box-shadow: none; }
+/* цифры — Raleway с «прямыми» моноширинными цифрами: в Prata «11» читается как «ll» (та же причина, что у кружков модулей) */
+:is(#b10 .b10-cd, #tariffs .t8-pcd) [data-cd] {
+  font-family: var(--sans); font-weight: 700; font-size: clamp(28px, 8.8vw, 34px); line-height: 1.1;
+  font-variant-numeric: lining-nums tabular-nums; letter-spacing: -.01em; color: var(--ink);
+}
+:is(#b10 .b10-cd, #tariffs .t8-pcd) .cd__tile span { margin-top: 4px; font-size: 14px; color: var(--tx2); }
 #b10 .b10-bonus { margin-top: 12px; font-size: 15px; line-height: 1.5; color: var(--tx2); text-align: center; text-wrap: pretty; }
 #b10 .cta { margin-top: 24px; }
 #b10 .b10-help { max-width: 26em; margin: 22px auto 10px; font-size: 15px; line-height: 1.45; color: var(--ink); text-align: center; text-wrap: balance; }
@@ -445,6 +477,8 @@
 #b12 .b12-h { margin-bottom: 6px; font: 700 16px/1.3 var(--sans); font-variant-numeric: lining-nums; color: var(--ink); }
 #b12 .b12-sec p + p { margin-top: 2px; }
 #b12 #b12-mail { color: var(--azure-sm); }
+/* раунд 8: почта и номер не рвутся посреди (иначе рамка ссылки на две строки накрывает соседнюю — overlap на 480 px) */
+#b12 :is(#b12-mail, #b12-wa) { white-space: nowrap; }
 #b12 .b12-sec .b12-hot { margin-top: 8px; color: var(--ink); }
 #b12 .b12-notes { display: grid; gap: 8px; }
 #b12 .b12-notes li { font-size: 13px; line-height: 1.5; }
@@ -458,8 +492,6 @@
 #b12 .b12-links .b12-chev { width: 16px; height: 16px; }
 #b12 .b12-copy { margin-top: 18px; font-size: 13px; color: var(--tx2); text-align: center; }
 
-/* Тарифы — списки показаны целиком; недоступные пункты идут после включённых, отделены пунктиром */
-#tariffs .t8-list li:not(.is-no) + li.is-no { margin-top: 10px; padding-top: 12px; border-top: 1px dashed var(--b-line); }
 
 /* ---------- раунд 5: подсказки в блоках B ----------
    Сами .hint / .hint--tap / .bob / .reveal — общие компоненты A (site.css). Здесь только раскладка:
@@ -501,10 +533,10 @@
 /* на узких экранах текст в две строки: выноска узкая (по тексту), а не во всю карточку */
 @media (max-width: 429px) { #b7 .b7-card .b7-hint { max-width: 212px; padding: 7px 10px 7px 14px; text-align: right; } }
 /* «Смотреть уроки ⌄» выглядит нажимаемой: обводка 1 px голубым; у модуля 0 (куда показывает рука) — мягкий пульс */
-#b7 .b7-acc__go { position: relative; border-color: rgba(11, 125, 176, .32); }
+#b7 .b7-acc__go { position: relative; }
 #b7 .b7-acc--first .b7-acc__go::after {
   content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
-  border: 1px solid var(--azure-sm); opacity: .5;
+  border: 1px solid var(--m-acc); opacity: .5;
   animation: bB-ring 2.2s ease-out infinite;
 }
 #b7 .b7-acc--first[open] .b7-acc__go::after { content: none; }

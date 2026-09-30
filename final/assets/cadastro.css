@@ -155,3 +155,89 @@ body.cad { padding-bottom: 0; background: var(--sky-1); }
   .cad-body { padding: 16px 24px 0; }
   .cad-card { padding: 20px 20px 16px; }
 }
+
+/* =====================================================================
+   Планшет и десктоп (раунд 9, 30.09): две колонки, контейнер до 1120 px по центру, фон — на всю ширину окна.
+   Телефон (до 767 px) не меняется: всё ниже — только внутри @media (min-width: 768px) и (min-width: 1024px).
+   Слева — панель неба с Эрикой (520–640 px, голова над панелью, ось лица — 50 % панели), плашка, заголовок, строка.
+   Справа — карточка формы во всю ширину колонки (поля 56 px, 17 px) и три пункта. Подвал — во всю ширину, по центру.
+   Колонки: 768–1023 — 45/55 %, от 1024 — 50/50. На 1440×900 страница целиком (с подвалом) помещается без прокрутки.
+   ===================================================================== */
+@media (min-width: 768px) {
+  .cad-page {
+    max-width: none; box-shadow: none;
+    display: grid;
+    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas: "top body" "foot foot";
+    column-gap: 28px; align-items: center;
+    padding: 16px max(24px, calc((100% - 1120px) / 2)) 0;   /* контент ≤ 1120 px по центру, фон — от края до края */
+    background:
+      radial-gradient(60% 55% at 22% 38%, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 70%),
+      linear-gradient(180deg, #F7FBFD 0, var(--sky-0) 42%, var(--sky-1) 100%);
+  }
+
+  /* слева: небо с Эрикой — панель выше, холст вырезки крупнее (лицо ≈ 190 px), макушка над панелью на --pop */
+  .cad-top { grid-area: top; align-self: center; min-width: 0; }
+  .cad-stage {
+    --ph: clamp(520px, calc(100svh - 380px), 560px);
+    --ih: calc(var(--ph) * 1.9);
+    --pop: 40px;
+    margin: calc(var(--pop) + 2px) 0 0;
+  }
+  /* крупный холст вырезки уходит ниже края панели: clip-path прячет его только визуально, а прокрутку он удлиняет.
+     Поэтому здесь рамка вырезки начинается на 40 px выше макушки и режет по-настоящему (overflow: hidden),
+     низ скругляется clip-path. Положение Эрики то же: макушка на --pop над панелью, ось лица — 50 %. */
+  .cad-stage .hero__cut {
+    top: calc(-1 * var(--pop) - 40px); overflow: hidden;
+    -webkit-clip-path: inset(0 round 0 0 32px 32px); clip-path: inset(0 round 0 0 32px 32px);
+  }
+  .cad-stage .hero__cut img { top: calc(40px - var(--ih) * .113); }
+  .cad-head { padding: 0; }
+  .cad-badge { min-height: 34px; margin-top: -20px; padding: 6px 16px 6px 12px; border-radius: 18px; font-size: 15px; }
+  .cad-badge svg { width: 18px; height: 18px; }
+  .cad-title { max-width: 14em; margin-top: 14px; font-size: 40px; line-height: 1.08; }
+  .cad-lead { max-width: 30em; margin-top: 8px; font-size: 17px; line-height: 1.4; }
+
+  /* справа: форма во всю колонку */
+  .cad-body { grid-area: body; align-self: center; min-width: 0; padding: 0; }
+  .cad-card { padding: 24px 20px 20px; }
+  .cad-card__title { max-width: 20em; margin-bottom: 14px; font-size: 22px; line-height: 1.2; }
+  .cad-field + .cad-field { margin-top: 12px; }
+  .cad-label { margin-bottom: 6px; font-size: 15px; }
+  .cad-input { height: 56px; padding: 0 16px; font-size: 17px; }
+  .cad-tel { height: 56px; }
+  .cad-tel .cad-input { height: 54px; padding: 0 10px 0 14px; }
+  .cad-tel__cc { padding: 0 14px 0 16px; font-size: 17px; }
+  .cad-err { font-size: 15px; }
+  .cad-consent { margin-top: 16px; }
+  .cad-check__text { font-size: 14px; line-height: 1.4; }
+  .cad-consent .cad-err { margin-left: 34px; }
+  .cad-submit { min-height: 60px; margin-top: 18px; }
+  .cad-note { margin-top: 12px; font-size: 14px; }
+  .cad-note svg { width: 15px; height: 15px; }
+  .cad-trust { max-width: 440px; margin-top: 18px; gap: 12px; }
+  .cad-trust > li { font-size: 15px; gap: 6px; }
+  .cad-trust svg { width: 22px; height: 22px; }
+
+  /* подвал: во всю ширину сетки, по центру внизу */
+  .cad-foot { grid-area: foot; margin-top: 0; padding: 18px 0 calc(16px + env(safe-area-inset-bottom)); font-size: 14px; }
+}
+
+@media (min-width: 1024px) {
+  .cad-page {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(48px, 5vw, 80px);
+    padding-inline: max(32px, calc((100% - 1120px) / 2));
+  }
+  /* панель 520 px на экране 900 px высотой, до 640 px на высоких экранах; лицо ≈ 200–245 px */
+  .cad-stage { --ph: clamp(520px, calc(100svh - 380px), 640px); --pop: 48px; }
+  .cad-stage .hero__spark--1 { left: calc(50% - 158px); top: 44px; }
+  .cad-stage .hero__spark--2 { left: calc(50% + 124px); top: 10px; }
+  .cad-stage .hero__spark--3 { left: calc(50% + 146px); top: 118px; }
+  .cad-title { font-size: clamp(40px, calc(2.2vw + 14px), 46px); }   /* 1024 → 40, 1440 → 45,7, 1920 → 46: везде 3 строки */
+
+  .cad-card { padding: 30px 32px 24px; }
+  .cad-card__title { font-size: 24px; margin-bottom: 18px; }
+  .cad-tel .cad-input::placeholder { font-size: 17px; }
+}

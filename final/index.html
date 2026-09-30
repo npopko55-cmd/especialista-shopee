@@ -424,6 +424,7 @@
   <symbol id="bi-wa" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path fill="currentColor" stroke="none" d="M9.3 7.6c.3-.5.8-.6 1.1-.2l.9 1.3c.2.3.2.7-.1 1l-.5.4c.5 1 1.3 1.8 2.3 2.3l.4-.5c.3-.3.7-.3 1-.1l1.3.9c.4.3.3.8-.2 1.1-1 .6-2.2.6-3.3 0a8.7 8.7 0 0 1-3-3c-.6-1.1-.6-2.3 0-3.2z"/></symbol>
   <symbol id="bi-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></symbol>
   <symbol id="bi-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
+  <symbol id="bi-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
   <symbol id="bi-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
   <symbol id="bi-bank" viewBox="0 0 24 24"><path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l8 5H4z"/></symbol>
   <symbol id="bi-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20M6 15h4"/></symbol>
@@ -599,36 +600,20 @@
   </div>
 </section>
 
-<!-- Блок 8 — тарифы: три одинаковые карточки друг под другом, бонусы, таймер -->
+<!-- Блок 8 — тарифы (раунд 8, Лёша 30.09): таймер цены над карточками; порядок Специалист → Старт → VIP;
+     у «Старта» недоступное — отдельной серой плашкой; места у «Специалиста» и VIP; бонусы без таймера (3 часа) -->
 <section id="tariffs" class="blk bg-golden" aria-labelledby="tariffs-title">
   <h2 class="blk__title" id="tariffs-title">Выбери свой тариф</h2>
+  <div class="t8-deal">
+    <p class="t8-deal__line">Цены действуют до 04.10, 23:59 (по Бразилиа)</p>
+    <div class="cd t8-pcd" data-countdown="2026-10-05T02:59:00Z">
+      <div class="cd__tile"><b data-cd="d">04</b><span>дней</span></div>
+      <div class="cd__tile"><b data-cd="h">06</b><span>часов</span></div>
+      <div class="cd__tile"><b data-cd="m">15</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">45</b><span>секунд</span></div>
+    </div>
+  </div>
   <div class="t8">
-      <article class="t8-card" id="plan-start" aria-labelledby="plan-start-name">
-        <h3 class="t8-name" id="plan-start-name">Старт</h3>
-        <p class="t8-sub">Начать с двух способов: карточки и картинки</p>
-        <div class="t8-price">
-          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">30,92</span></p>
-          <p class="t8-day">≈ R$&nbsp;1 в день</p>
-          <p class="t8-full">или R$&nbsp;299 одним платежом</p>
-        </div>
-        <a class="btn t8-pay" id="btn-pay-start" href="https://go.hotmart.com/U107829757Q?ap=25dd" rel="noopener" data-cta>Оплатить</a>
-        <ul class="t8-list list-check">
-          <li>Модули 0–3: 28 уроков, 2 способа</li>
-          <li>Домашние задания</li>
-          <li>Доступ 2 месяца</li>
-          <li>Гарантия 7 дней</li>
-
-            <li class="is-no">Учебный тренажёр</li>
-            <li class="is-no">Учебные заказы от Эрики</li>
-            <li class="is-no">Поддержка</li>
-            <li class="is-no">Готовые команды для ИИ</li>
-            <li class="is-no">Образцы, которые продают</li>
-            <li class="is-no">Именной сертификат</li>
-            <li class="is-no">Бонусные уроки</li>
-            <li class="is-no">iPhone трём лучшим</li>
-        </ul>
-        <p class="t8-offnote">— недоступно в этом тарифе</p>
-      </article>
       <article class="t8-card t8-card--best" id="plan-best" aria-labelledby="plan-best-name">
         <h3 class="t8-name" id="plan-best-name">Специалист по Shopee</h3>
         <span class="t8-badge">⭐ выбирают чаще всего</span>
@@ -637,6 +622,7 @@
           <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">41,27</span></p>
           <p class="t8-day">≈ R$&nbsp;1,36 в день</p>
           <p class="t8-full">или R$&nbsp;399 одним платежом</p>
+          <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Всего 70 мест</p>
         </div>
         <a class="btn t8-pay" id="btn-pay-specialist" href="https://go.hotmart.com/U107829757Q?ap=227b" rel="noopener" data-cta>Оплатить</a>
         <ul class="t8-list list-check">
@@ -654,6 +640,36 @@
             <li>Гарантия 7 дней</li>
         </ul>
       </article>
+      <article class="t8-card" id="plan-start" aria-labelledby="plan-start-name">
+        <h3 class="t8-name" id="plan-start-name">Старт</h3>
+        <p class="t8-sub">Начать с двух способов: карточки и картинки</p>
+        <div class="t8-price">
+          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">30,92</span></p>
+          <p class="t8-day">≈ R$&nbsp;1 в день</p>
+          <p class="t8-full">или R$&nbsp;299 одним платежом</p>
+        </div>
+        <a class="btn t8-pay" id="btn-pay-start" href="https://go.hotmart.com/U107829757Q?ap=25dd" rel="noopener" data-cta>Оплатить</a>
+        <ul class="t8-list list-check">
+          <li>Модули 0–3: 28 уроков, 2 способа</li>
+          <li>Домашние задания</li>
+          <li>Доступ 2 месяца</li>
+          <li>Гарантия 7 дней</li>
+        </ul>
+        <div class="t8-off">
+          <p class="t8-off__h">Не входит в этот тариф</p>
+          <p class="t8-offnote">— недоступно в этом тарифе</p>
+          <ul class="t8-off__list">
+            <li>Учебный тренажёр</li>
+            <li>Учебные заказы от Эрики</li>
+            <li>Поддержка</li>
+            <li>Готовые команды для ИИ</li>
+            <li>Образцы, которые продают</li>
+            <li>Именной сертификат</li>
+            <li>Бонусные уроки</li>
+            <li>iPhone трём лучшим</li>
+          </ul>
+        </div>
+      </article>
       <article class="t8-card" id="plan-vip" aria-labelledby="plan-vip-name">
         <h3 class="t8-name" id="plan-vip-name">VIP</h3>
         <p class="t8-sub">Всё из «Специалиста по Shopee» — и вдвое больше практики</p>
@@ -661,6 +677,7 @@
           <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">61,95</span></p>
           <p class="t8-day">≈ R$&nbsp;2,04 в день</p>
           <p class="t8-full">или R$&nbsp;599 одним платежом</p>
+          <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Всего 30 мест</p>
         </div>
         <a class="btn t8-pay" id="btn-pay-vip" href="https://go.hotmart.com/U107829757Q?ap=51de" rel="noopener" data-cta>Оплатить</a>
         <ul class="t8-list list-check">
@@ -675,7 +692,7 @@
     <div class="t8-bonus__head">
       <span class="t8-bonus__gift" aria-hidden="true"><img class="bob" src="assets/3d/gift.webp" alt="" width="110" height="110" loading="lazy" decoding="async"></span>
       <div class="t8-bonus__hd">
-        <h3 class="t8-bonus__title">Бонусы, если оплатишь до 04.10, 23:59 (по Бразилиа)</h3>
+        <h3 class="t8-bonus__title">Бонусы, если оплатишь в течение 3 часов</h3>
         <p class="t8-bonus__lead">Получает каждая, кто успеет:</p>
       </div>
     </div>
@@ -683,12 +700,6 @@
       <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/clipboard.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 1</span><p class="t8-bonus__name">Чек-лист «Первый клиент за 14 дней»</p></div></li>
       <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/calculator.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 2</span><p class="t8-bonus__name">Калькулятор цены + готовый прайс для клиентов</p></div></li>
     </ul>
-    <div class="cd t8-cd" data-countdown="2026-10-05T02:59:00Z">
-      <div class="cd__tile"><b data-cd="d">04</b><span>дней</span></div>
-      <div class="cd__tile"><b data-cd="h">07</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">04</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">29</b><span>секунд</span></div>
-    </div>
   </div>
   <div class="cta">
     <a class="btn" id="tariffs-cta" href="#tariffs" data-cta>Получить доступ</a>
@@ -824,11 +835,11 @@
     <p class="b10-deadline">Запись в этот поток открыта до 04.10, 23:59 (по Бразилиа)</p>
     <div class="cd b10-cd" data-countdown="2026-10-05T02:59:00Z">
       <div class="cd__tile"><b data-cd="d">04</b><span>дней</span></div>
-      <div class="cd__tile"><b data-cd="h">07</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">04</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">29</b><span>секунд</span></div>
+      <div class="cd__tile"><b data-cd="h">06</b><span>часов</span></div>
+      <div class="cd__tile"><b data-cd="m">15</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">45</b><span>секунд</span></div>
     </div>
-    <p class="b10-bonus">Оплатишь до этого срока — получишь бонусы: чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
+    <p class="b10-bonus">Оплатишь в течение 3 часов — получишь бонусы: чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
   </div>
   <div class="cta">
     <a class="btn" id="b10-cta" href="#tariffs" data-cta>Получить доступ</a>

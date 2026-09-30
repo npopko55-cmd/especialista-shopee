@@ -112,3 +112,83 @@ body.ty { padding-bottom: env(safe-area-inset-bottom); }
 .ty-hero .ty-badge { position: relative; z-index: 2; width: 60px; height: 60px; margin: -30px auto 12px; }
 .ty-hero .ty-badge svg { width: 30px; height: 30px; }
 
+/* =====================================================================
+   Планшет и десктоп (TZ9, 30.09). Телефон (до 767 px) не меняется: всё ниже — только внутри min-width 768 / 1024.
+   Страница на всю ширину окна (фон неба до краёв), содержимое — в контейнере до 1120 px по центру.
+   Первый экран — две колонки: слева панель неба с Эрикой (выходит головой над панелью, галочка на нижнем крае),
+   справа заголовок, абзац и видео 16:9 во всю колонку. Шаги: 768–1023 — одна колонка карточек (текст слева,
+   рамка телефона справа), от 1024 — три равные колонки (рамка телефона внизу по центру).
+   ===================================================================== */
+@media (min-width: 768px) {
+  body.ty .page { max-width: none; box-shadow: none; }
+  /* картинка неба секций: в site.css у неё aspect-ratio + max-height, и на широком окне она сжимается
+     в полосу ~390 px у левого края с резкой границей — растягиваем на всю секцию */
+  .ty .bg-hero::before, .ty .bg-section::before { bottom: 0; aspect-ratio: auto; max-height: none; }
+  /* поля секций: 32 px или столько, чтобы содержимое было не шире 1120 px */
+  .ty .blk { padding-left: max(32px, calc((100% - 1120px) / 2)); padding-right: max(32px, calc((100% - 1120px) / 2)); }
+
+  /* ---------- Первый экран ---------- */
+  .ty-hero, .ty-hero .ty-stage { --ph: 460px; --pop: 40px; }
+  .ty-hero {
+    display: grid; grid-template-columns: minmax(0, 45fr) minmax(0, 55fr); column-gap: 32px;
+    grid-template-rows: 1fr auto auto auto 1fr;
+    grid-template-areas: "stage ." "stage title" "stage lead" "stage video" "stage .";
+    padding-top: 8px; padding-bottom: 64px; text-align: left;
+  }
+  /* высота холста вырезки от ширины панели: фигура целиком по ширине, ось лица — по центру панели */
+  .ty-hero .ty-stage { --ih: calc((45vw - 43px) * 2.4); grid-area: stage; align-self: start; height: var(--ph); margin: calc(var(--pop) + 8px) 0 0; }
+  /* галочка — на нижнем крае панели, как на телефоне */
+  .ty-hero .ty-badge { grid-area: stage; align-self: start; justify-self: center; margin: calc(var(--pop) + 8px + var(--ph) - 30px) 0 0; }
+  .ty-hero h1 { grid-area: title; font-size: 32px; line-height: 1.12; text-align: left; }
+  .ty-h1-sub { margin-top: 12px; font-size: 22px; }
+  .ty-hero .ty-lead { grid-area: lead; max-width: 30em; margin: 20px 0 0; }
+  .ty-hero .ty-video { grid-area: video; margin: 26px 0 0; }
+
+  /* ---------- 3 шага ---------- */
+  .ty-how { padding-top: 64px; }
+  .ty-how h2 { font-size: 34px; }
+  .ty-steps { gap: 20px; margin-top: 32px; }
+
+  /* ---------- Помощь, последний абзац, подвал — по центру, текст до 640 px ---------- */
+  .ty-stuck { max-width: 640px; margin: 32px auto 0; padding: 24px 36px; }
+  .ty-end { padding-top: 40px; padding-bottom: 16px; }
+  .ty-end .ty-final { max-width: 640px; margin: 0 auto; }      /* .ty p из spasibo.css обнуляет поля — центрируем явно */
+  .ty-foot { padding: 28px max(32px, calc((100% - 1120px) / 2)) 44px; }
+}
+
+/* Планшет: шаги — одна колонка карточек; в карточке текст слева, рамка телефона справа по центру высоты */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .ty-steps { max-width: 720px; margin-left: auto; margin-right: auto; }
+  .ty-step {
+    display: grid; grid-template-columns: minmax(0, 1fr) 150px; grid-template-rows: repeat(4, auto) 1fr;
+    column-gap: 32px; align-content: start; padding: 26px 28px;
+  }
+  .ty-step > :not(.ty-shot) { grid-column: 1; }
+  .ty-step > .ty-shot { grid-column: 2; grid-row: 1 / -1; align-self: center; margin: 0; }
+  .ty-step .ty-phone { width: 100%; }
+  .ty-step .ty-phone-img { width: 100%; }
+}
+
+@media (min-width: 1024px) {
+  /* ---------- Первый экран: колонки 50/50 ---------- */
+  .ty-hero, .ty-hero .ty-stage { --ph: 500px; }
+  .ty-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 48px; padding-bottom: 72px; }
+  .ty-hero .ty-stage { --ih: calc(var(--ph) * 2.2); }
+  .ty-hero h1 { font-size: 40px; }
+  .ty-h1-sub { margin-top: 14px; font-size: 24px; }
+  .ty-hero .ty-lead { margin-top: 22px; font-size: 18px; }
+  .ty-hero .ty-video { margin-top: 28px; }
+
+  /* ---------- 3 шага в три колонки одной высоты; рамка телефона — внизу по центру ---------- */
+  .ty-how { padding-top: 72px; }
+  .ty-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 36px; }
+  .ty-step { display: flex; flex-direction: column; padding: 26px 24px 26px; }
+  .ty-step > .ty-shot { margin-top: auto; padding-top: 22px; }
+}
+
+@media (min-width: 1280px) {
+  .ty-hero, .ty-hero .ty-stage { --ph: 540px; }
+  .ty-hero h1 { font-size: 44px; }
+  .ty-h1-sub { font-size: 26px; }
+}
+
