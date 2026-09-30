@@ -9,7 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&amp;family=Raleway:wght@500;600;700&amp;display=swap">
-<link rel="preload" as="image" href="assets/img/hero-erika-l.webp" fetchpriority="high">
+<link rel="preload" as="image" href="assets/img/hero-erika-cut-hd.webp" fetchpriority="high">
+<script>/* раунд 5: вариант блока 2 по умолчанию — фото (?b2=a → диорамы); .reveal без вспышки */
+(function (h) {
+  try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
+  try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
+})(document.documentElement);</script>
 <link rel="stylesheet" href="assets/site.css">
 <link rel="stylesheet" href="assets/site-b.css">
 </head>
@@ -25,6 +30,11 @@
   <symbol id="i-cal" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M8 5.2v13.6a1 1 0 0 0 1.53.85l10.4-6.8a1 1 0 0 0 0-1.7L9.53 4.35A1 1 0 0 0 8 5.2z"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-checkc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m8 12.3 2.7 2.7L16 9.6"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></symbol>
   <symbol id="i-starfill" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2.8l2.8 5.7 6.3.9-4.55 4.43 1.07 6.27L12 17.1l-5.62 2.96 1.07-6.27L2.9 9.4l6.3-.9z"/></symbol>
   <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89a11.82 11.82 0 0 0-3.48-8.41z"/></symbol>
 </svg>
@@ -32,85 +42,90 @@
 
 <!-- ================= Блок 1 — оффер (первый экран): Эрика → оффер → подоффер → кнопка → плашки → видео ================= -->
 <section class="blk bg-hero hero" id="b1">
-  <!-- Раунд 4: одна спокойная раскладка. Фото во всю ширину (лицо по оси 50 %), сверху словесный знак;
-       текст — на белом листе, который заходит на низ фото. Никаких 3D и чипов поверх фото. -->
-  <figure class="hero__photo">
-    <img src="assets/img/hero-erika-cut.webp" width="820" height="1093" alt="Эрика Маркес" fetchpriority="high" decoding="async">
-    <header class="hero__bar"><span class="hero__mark">Especialista em Shopee</span></header>
-  </figure>
+  <!-- Раунд 5 (Лиза): сцена «вылезает из рамки». Небо — в скруглённой панели, вырезка Эрики (HD, настоящая альфа)
+       выходит макушкой над верхним краем панели; снизу обрезана краем панели. Лицо по оси 50 % (в холсте — 57,9 %).
+       Движение только фоновое: ленты неба «дышат», тёплый блик пульсирует. -->
+  <div class="hero__stage">
+    <div class="hero__photo" aria-hidden="true"><span class="hero__sky"></span><span class="hero__glow"></span></div>
+    <div class="hero__cut"><img src="assets/img/hero-erika-cut-hd.webp" width="1050" height="1400" alt="Эрика Маркес" fetchpriority="high" decoding="async"></div>
+    <span class="hero__floor" aria-hidden="true"></span>
+  </div>
   <div class="hero__sheet">
-    <p class="eyebrow hero__eyebrow">Специалист по Shopee&nbsp;— метод Эрики Маркес</p>
+    <p class="hero__eyebrow"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-starfill"/></svg><span>Специалист по Shopee&nbsp;— метод Эрики Маркес</span></p>
     <h1 class="hero__title">Научу зарабатывать на <span class="hero__az">Shopee без&nbsp;вложений</span> <span class="hero__title-sub">— с&nbsp;нуля до первых реалов, с&nbsp;телефона и&nbsp;из&nbsp;дома</span></h1>
     <p class="hero__sub">Получи востребованную профессию в&nbsp;интернете и&nbsp;выйди на доход от <b>R$&nbsp;4&nbsp;000</b> до <b>R$&nbsp;15&nbsp;000</b> в&nbsp;месяц</p>
     <div class="cta">
       <a class="btn" id="cta-b1" href="#tariffs">Получить доступ</a>
-      <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+      <ul class="hero__trust">
+        <li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-checkc"/></svg><span>Pix или карта</span></li><li class="hero__dot" aria-hidden="true">·</li><li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-zap"/></svg><span>Доступ сразу после оплаты</span></li><li class="hero__dot" aria-hidden="true">·</li><li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-shield"/></svg><span>Гарантия&nbsp;7&nbsp;дней</span></li>
+      </ul>
     </div>
     <ul class="hero__chips">
-      <li class="chip"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg> <span>Смартфон и интернет</span></li>
-      <li class="chip"><svg class="i" aria-hidden="true"><use href="#i-star"/></svg> <span>Без опыта</span></li>
-      <li class="chip"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg> <span>Без лица в кадре</span></li>
-      <li class="chip"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg> <span>От 1 до 4 часов в день</span></li>
+      <li class="hero__tile reveal"><img src="assets/3d/phone.webp" width="199" height="360" alt="" loading="lazy" decoding="async"><span>Смартфон и интернет</span></li>
+      <li class="hero__tile reveal"><img src="assets/3d/A26.webp" width="360" height="259" alt="" loading="lazy" decoding="async"><span>Без опыта</span></li>
+      <li class="hero__tile reveal"><img src="assets/3d/A19.webp" width="360" height="357" alt="" loading="lazy" decoding="async"><span>Без лица в кадре</span></li>
+      <li class="hero__tile reveal"><img src="assets/3d/A07.webp" width="360" height="347" alt="" loading="lazy" decoding="async"><span>От 1 до 4 часов в&nbsp;день</span></li>
     </ul>
     <button class="video-card" type="button" data-video-open aria-label="Смотреть видео">
       <img src="assets/img/video-poster.webp" width="1100" height="619" alt="" loading="lazy" decoding="async">
+      <span class="video-card__ring" aria-hidden="true"></span>
       <span class="video-card__play" aria-hidden="true"><svg class="i"><use href="#i-play"/></svg></span>
+      <span class="hint hint--tap video-card__hint" aria-hidden="true">Нажми, чтобы посмотреть</span>
     </button>
-    <p class="video-card__cap" aria-hidden="true">Смотреть видео</p>
   </div>
 </section>
 
 <!-- ================= Блок 2 — для кого: 7 ситуаций, два варианта (A — 3D-диорамы, B — фото-сцены: ?b2=faces) ================= -->
 <section class="blk bg-paper" id="b2">
   <h2 class="blk__title">Для кого подойдёт это обучение</h2>
-  <p class="chip b2__hint" aria-hidden="true">7 ситуаций · листай</p>
 
   <!-- Вариант A «без лиц» -->
   <div class="b2v b2v--a" data-carousel>
-    <div class="carousel b2__track">
-      <article class="carousel__card sit sit--a t1">
+    <div class="hint-row"><span class="hint" aria-hidden="true">листай</span></div>
+    <div class="arrows"><div class="carousel b2__track">
+      <article class="carousel__card sit sit--a reveal t1">
         <img class="sit__dio" src="assets/vignette/v1.webp" width="640" height="640" alt="" loading="lazy" decoding="async">
         <p class="sit__n" aria-hidden="true"><span>1</span> / 7</p>
         <h3 class="sit__t">Если ты мама в декрете или дома с детьми</h3>
         <p class="sit__p">Работаешь из дома, с телефона, когда удобно — пока малыш спит. Ты рядом с детьми, и у тебя свои деньги.</p>
       </article>
-      <article class="carousel__card sit sit--a t2">
+      <article class="carousel__card sit sit--a reveal t2">
         <img class="sit__dio" src="assets/vignette/v2.webp" width="640" height="717" alt="" loading="lazy" decoding="async">
         <p class="sit__n" aria-hidden="true"><span>2</span> / 7</p>
         <h3 class="sit__t">Если ты сейчас без работы</h3>
         <p class="sit__p">Не жди вакансию. Освой профессию, за которую платят магазины, и начни зарабатывать из дома.</p>
       </article>
-      <article class="carousel__card sit sit--a t3">
+      <article class="carousel__card sit sit--a reveal t3">
         <img class="sit__dio" src="assets/vignette/v3.webp" width="640" height="520" alt="" loading="lazy" decoding="async">
         <p class="sit__n" aria-hidden="true"><span>3</span> / 7</p>
         <h3 class="sit__t">Если ты дома и живёшь на деньги мужа</h3>
         <p class="sit__p">Свои деньги — без просьб и отчётов. Помогаешь семье и работаешь из дома, рядом с детьми.</p>
       </article>
-      <article class="carousel__card sit sit--a t4">
+      <article class="carousel__card sit sit--a reveal t4">
         <img class="sit__dio" src="assets/vignette/v4.webp" width="640" height="541" alt="" loading="lazy" decoding="async">
         <p class="sit__n" aria-hidden="true"><span>4</span> / 7</p>
         <h3 class="sit__t">Если растишь детей одна</h3>
         <p class="sit__p">Работаешь рядом с ребёнком — без садика, без няни и без чужих людей.</p>
       </article>
-      <article class="carousel__card sit sit--a t5">
+      <article class="carousel__card sit sit--a reveal t5">
         <img class="sit__dio" src="assets/vignette/v5.webp" width="640" height="640" alt="" loading="lazy" decoding="async">
         <p class="sit__n" aria-hidden="true"><span>5</span> / 7</p>
         <h3 class="sit__t">Если ты работаешь по найму и денег не хватает</h3>
         <p class="sit__p">Бросать работу не нужно. Начни рядом с ней — от 1 до 4 часов в день, вечером или в выходной. А потом сама решишь, уходить ли от начальника.</p>
       </article>
-      <article class="carousel__card sit sit--a t6">
+      <article class="carousel__card sit sit--a reveal t6">
         <img class="sit__dio" src="assets/vignette/v6.webp" width="640" height="605" alt="" loading="lazy" decoding="async">
         <p class="sit__n" aria-hidden="true"><span>6</span> / 7</p>
         <h3 class="sit__t">Если ты только начинаешь — без опыта и без своих денег</h3>
         <p class="sit__p">Диплом, связи и опыт не нужны. Если умеешь переписываться и фотографировать на телефон — основа уже есть. Остальному научу с нуля.</p>
       </article>
-      <article class="carousel__card sit sit--a t7">
+      <article class="carousel__card sit sit--a reveal t7">
         <img class="sit__dio" src="assets/vignette/v7.webp" width="640" height="640" alt="" loading="lazy" decoding="async">
         <p class="sit__n" aria-hidden="true"><span>7</span> / 7</p>
         <h3 class="sit__t">И для всех, кто хочет освоить удалённую профессию и работать из дома</h3>
         <p class="sit__p">Без начальника, без дороги на работу, в своём графике — с одного телефона.</p>
       </article>
-    </div>
+    </div></div>
     <div class="goto" role="group" aria-label="Ситуации">
       <button class="goto__b" type="button" data-carousel-goto="0" aria-label="Ситуация 1"><img src="assets/vignette/v1.webp" width="640" height="640" alt="" loading="lazy" decoding="async"></button>
       <button class="goto__b" type="button" data-carousel-goto="1" aria-label="Ситуация 2"><img src="assets/vignette/v2.webp" width="640" height="717" alt="" loading="lazy" decoding="async"></button>
@@ -121,45 +136,46 @@
       <button class="goto__b" type="button" data-carousel-goto="6" aria-label="Ситуация 7"><img src="assets/vignette/v7.webp" width="640" height="640" alt="" loading="lazy" decoding="async"></button>
     </div>
   </div>
-  <!-- Вариант B «с лицами»: фото-сцены — иллюстрации, не отзывы (без имён и цитат) -->
+  <!-- Вариант B «с лицами» (раунд 5 — по умолчанию; ?b2=a → диорамы): фото-сцены — иллюстрации, не отзывы (без имён и цитат) -->
   <div class="b2v b2v--b" data-carousel>
-    <div class="carousel b2__track">
-      <article class="carousel__card sit sit--b">
+    <div class="hint-row"><span class="hint" aria-hidden="true">листай</span></div>
+    <div class="arrows"><div class="carousel b2__track">
+      <article class="carousel__card sit sit--b reveal">
         <div class="sit__ph"><img src="assets/people/p1.webp" width="900" height="502" alt="" loading="lazy" decoding="async" style="object-position:50% 40%"><span class="sit__badge" aria-hidden="true">1 / 7</span></div>
         <div class="sit__body"><h3 class="sit__t">Если ты мама в декрете или дома с детьми</h3>
         <p class="sit__p">Работаешь из дома, с телефона, когда удобно — пока малыш спит. Ты рядом с детьми, и у тебя свои деньги.</p></div>
       </article>
-      <article class="carousel__card sit sit--b">
+      <article class="carousel__card sit sit--b reveal">
         <div class="sit__ph"><img src="assets/people/p2.webp" width="640" height="857" alt="" loading="lazy" decoding="async" style="object-position:50% 30%"><span class="sit__badge" aria-hidden="true">2 / 7</span></div>
         <div class="sit__body"><h3 class="sit__t">Если ты сейчас без работы</h3>
         <p class="sit__p">Не жди вакансию. Освой профессию, за которую платят магазины, и начни зарабатывать из дома.</p></div>
       </article>
-      <article class="carousel__card sit sit--b">
+      <article class="carousel__card sit sit--b reveal">
         <div class="sit__ph"><img src="assets/people/p3.webp" width="640" height="857" alt="" loading="lazy" decoding="async" style="object-position:50% 30%"><span class="sit__badge" aria-hidden="true">3 / 7</span></div>
         <div class="sit__body"><h3 class="sit__t">Если ты дома и живёшь на деньги мужа</h3>
         <p class="sit__p">Свои деньги — без просьб и отчётов. Помогаешь семье и работаешь из дома, рядом с детьми.</p></div>
       </article>
-      <article class="carousel__card sit sit--b">
+      <article class="carousel__card sit sit--b reveal">
         <div class="sit__ph"><img src="assets/people/p4.webp" width="900" height="502" alt="" loading="lazy" decoding="async" style="object-position:45% 45%"><span class="sit__badge" aria-hidden="true">4 / 7</span></div>
         <div class="sit__body"><h3 class="sit__t">Если растишь детей одна</h3>
         <p class="sit__p">Работаешь рядом с ребёнком — без садика, без няни и без чужих людей.</p></div>
       </article>
-      <article class="carousel__card sit sit--b">
+      <article class="carousel__card sit sit--b reveal">
         <div class="sit__ph"><img src="assets/people/p5.webp" width="900" height="502" alt="" loading="lazy" decoding="async" style="object-position:45% 40%"><span class="sit__badge" aria-hidden="true">5 / 7</span></div>
         <div class="sit__body"><h3 class="sit__t">Если ты работаешь по найму и денег не хватает</h3>
         <p class="sit__p">Бросать работу не нужно. Начни рядом с ней — от 1 до 4 часов в день, вечером или в выходной. А потом сама решишь, уходить ли от начальника.</p></div>
       </article>
-      <article class="carousel__card sit sit--b">
+      <article class="carousel__card sit sit--b reveal">
         <div class="sit__ph"><img src="assets/people/p6.webp" width="640" height="857" alt="" loading="lazy" decoding="async" style="object-position:50% 30%"><span class="sit__badge" aria-hidden="true">6 / 7</span></div>
         <div class="sit__body"><h3 class="sit__t">Если ты только начинаешь — без опыта и без своих денег</h3>
         <p class="sit__p">Диплом, связи и опыт не нужны. Если умеешь переписываться и фотографировать на телефон — основа уже есть. Остальному научу с нуля.</p></div>
       </article>
-      <article class="carousel__card sit sit--b">
+      <article class="carousel__card sit sit--b reveal">
         <div class="sit__ph"><img src="assets/people/p7.webp" width="900" height="900" alt="" loading="lazy" decoding="async" style="object-position:50% 35%"><span class="sit__badge" aria-hidden="true">7 / 7</span></div>
         <div class="sit__body"><h3 class="sit__t">И для всех, кто хочет освоить удалённую профессию и работать из дома</h3>
         <p class="sit__p">Без начальника, без дороги на работу, в своём графике — с одного телефона.</p></div>
       </article>
-    </div>
+    </div></div>
     <div class="goto goto--ph" role="group" aria-label="Ситуации">
       <button class="goto__b" type="button" data-carousel-goto="0" aria-label="Ситуация 1"><img src="assets/people/p1.webp" width="900" height="502" alt="" loading="lazy" decoding="async" style="object-position:50% 40%"></button>
       <button class="goto__b" type="button" data-carousel-goto="1" aria-label="Ситуация 2"><img src="assets/people/p2.webp" width="640" height="857" alt="" loading="lazy" decoding="async" style="object-position:50% 25%"></button>
@@ -179,24 +195,24 @@
 <!-- ================= Блок 3 — Эрика: большое фото-путешествие + регалии текстом ================= -->
 <section class="blk bg-section" id="b3">
   <h2 class="blk__title">Меня зовут Эрика Маркес</h2>
-  <div class="b3__grid">
-    <div class="b3__ph"><figure class="b3__gal" data-carousel>
-      <div class="carousel b3__track">
-        <div class="carousel__card"><img class="b3__z" src="assets/img/travel-zurich.webp" width="800" height="1110" alt="Эрика Маркес в путешествии, Цюрих" loading="lazy" decoding="async"></div>
-        <div class="carousel__card"><img class="b3__p" src="assets/img/travel-paris.webp" width="800" height="916" alt="Эрика Маркес в путешествии, Париж" loading="lazy" decoding="async"></div>
-      </div>
-      <div class="carousel__dots b3__dots" data-carousel-dots></div>
-    </figure></div>
-    <ul class="list-check list-check--lines list-check--plain b3__list">
-      <li>Блогер — больше <b>5&nbsp;млн</b> подписчиков в&nbsp;соцсетях</li>
-      <li>Работаю с&nbsp;Shopee больше <b>2&nbsp;лет</b></li>
-      <li>Зарабатываю на Shopee <b class="nw">R$&nbsp;100&nbsp;000–120&nbsp;000</b> в&nbsp;месяц — с&nbsp;телефона, из&nbsp;дома</li>
-      <li>С&nbsp;первого же товара на Shopee получила <b class="nw">R$&nbsp;50&nbsp;000</b> комиссии</li>
-      <li>Предприниматель — два своих магазина косметики</li>
-      <li>Жена и мама двоих детей</li>
-    </ul>
+  <!-- Раунд 5 (Лиза): две арки в ряд — «тогда» (Баия, приглушённо) и «сейчас» (дорого-богато) -->
+  <div class="b3__pair">
+    <figure class="b3__col reveal">
+      <div class="b3__arch b3__arch--then"><img src="assets/img/bahia.webp" width="700" height="1142" alt="Эрика в юности, Баия" loading="lazy" decoding="async"></div>
+      <figcaption class="b3__origin">Я из Баии, из простой семьи. Моя первая работа&nbsp;— за R$&nbsp;500 в&nbsp;месяц.</figcaption>
+    </figure>
+    <figure class="b3__col reveal">
+      <div class="b3__arch b3__arch--now"><img src="assets/img/rich-pink.webp" width="900" height="1200" alt="Эрика Маркес сегодня" loading="lazy" decoding="async"></div>
+      <figcaption class="b3__blog">Блогер&nbsp;— больше <b>5&nbsp;млн</b> подписчиков в&nbsp;соцсетях</figcaption>
+    </figure>
   </div>
-  <p class="b3__origin">Я из Баии, из простой семьи. Моя первая работа — за R$&nbsp;500 в&nbsp;месяц.</p>
+  <ul class="list-check b3__list">
+    <li>Работаю с&nbsp;Shopee больше <b>2&nbsp;лет</b></li>
+    <li>Зарабатываю на Shopee <b class="nw">R$&nbsp;100&nbsp;000–120&nbsp;000</b> в&nbsp;месяц&nbsp;— с&nbsp;телефона, из&nbsp;дома</li>
+    <li>С&nbsp;первого же товара на Shopee получила <b class="nw">R$&nbsp;50&nbsp;000</b> комиссии</li>
+    <li>Предприниматель&nbsp;— два своих магазина косметики</li>
+    <li>Жена и мама двоих детей</li>
+  </ul>
   <div class="cta">
     <a class="btn" id="cta-b3" href="#tariffs">Получить доступ</a>
     <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
@@ -220,15 +236,24 @@
       <p class="b4__s1">На Shopee больше 3 миллионов продавцов из Бразилии, и многие не успевают всё делать сами.</p>
     </div>
     <span class="b4__dash" aria-hidden="true"></span>
-    <div class="b4__jobs" aria-hidden="true">
-      <div class="b4__job"><span class="num">7&nbsp;000+</span><span class="b4__src">LinkedIn</span></div>
-      <div class="b4__job"><span class="num">600+</span><span class="b4__src">Catho</span></div>
+    <!-- Раунд 5 (Лиза): пруфы — НАСТОЯЩИЕ скриншоты поиска вакансий (сняты 13.09.2026); цифры и подписи — декор (aria-hidden) -->
+    <div class="b4__proofs" aria-hidden="true">
+      <figure class="b4__proof reveal">
+        <p class="num b4__pn">7&nbsp;000+</p>
+        <div class="b4__shot"><img src="assets/img/proof-linkedin.webp" width="900" height="306" alt="" loading="lazy" decoding="async"></div>
+        <figcaption class="b4__cap">Скриншот поиска LinkedIn, Бразилия, сентябрь 2026</figcaption>
+      </figure>
+      <figure class="b4__proof reveal">
+        <p class="num b4__pn">600+</p>
+        <div class="b4__shot"><img src="assets/img/proof-catho.webp" width="900" height="510" alt="" loading="lazy" decoding="async"></div>
+        <figcaption class="b4__cap">Скриншот поиска Catho, сентябрь 2026</figcaption>
+      </figure>
     </div>
     <p class="b4__s2">Магазины уже ищут помощниц: на LinkedIn больше 7&nbsp;000 вакансий в&nbsp;интернет-торговле, на Catho — больше 600 вакансий <span class="nw">«ассистент e-commerce».</span></p>
     <span class="b4__dash" aria-hidden="true"></span>
     <div class="card card--warm b4__pay">
-      <svg class="b4__star" aria-hidden="true" focusable="false"><use href="#i-starfill"/></svg>
       <p>За эту работу магазины платят — это и есть твоя новая профессия.</p>
+      <span class="b4__money" aria-hidden="true"><img class="obj bob" src="assets/l5/money.webp" width="700" height="487" alt="" loading="lazy" decoding="async"></span>
     </div>
   </div>
 </section>
@@ -237,34 +262,34 @@
 <section class="blk bg-dawn" id="b4w">
   <h2 class="blk__title">5 способов заработка</h2>
   <div class="b4w__rail" data-carousel>
-    <p class="chip b4w__hint" aria-hidden="true"><span data-carousel-counter>1 / 5</span>&nbsp;· листай</p>
-    <div class="carousel">
-      <article class="carousel__card way w1">
-        <div class="way__top"><span class="way__n" aria-hidden="true">01</span><img class="obj obj--xl way__obj" src="assets/3d/A16.webp" width="307" height="360" alt="" loading="lazy" decoding="async"></div>
+    <div class="hint-row"><span class="hint" aria-hidden="true">листай</span></div>
+    <div class="arrows"><div class="carousel">
+      <article class="carousel__card way reveal w1">
+        <div class="way__top"><span class="way__n" aria-hidden="true">01</span><img class="way__phone bob" src="assets/l5/ex1.webp" width="420" height="853" alt="Пример работы: карточка товара" loading="lazy" decoding="async"></div>
         <div class="way__body"><h3 class="way__t">Карточки товаров</h3>
         <p class="way__p">Оформляешь страницу товара для магазина: фото, название, описание — так, чтобы покупательница всё поняла и захотела купить.</p></div>
       </article>
-      <article class="carousel__card way w2">
-        <div class="way__top"><span class="way__n" aria-hidden="true">02</span><img class="obj obj--xl way__obj" src="assets/3d/A17.webp" width="338" height="360" alt="" loading="lazy" decoding="async"></div>
+      <article class="carousel__card way reveal w2">
+        <div class="way__top"><span class="way__n" aria-hidden="true">02</span><img class="way__phone bob" src="assets/l5/ex2.webp" width="420" height="853" alt="Пример работы: дизайн карточки до и после" loading="lazy" decoding="async"></div>
         <div class="way__body"><h3 class="way__t">Дизайн карточек</h3>
         <p class="way__p">Делаешь яркие картинки товара с помощью ИИ — такие, на которых палец останавливается.</p></div>
       </article>
-      <article class="carousel__card way w3">
-        <div class="way__top"><span class="way__n" aria-hidden="true">03</span><img class="obj obj--xl way__obj" src="assets/3d/A18.webp" width="360" height="299" alt="" loading="lazy" decoding="async"></div>
+      <article class="carousel__card way reveal w3">
+        <div class="way__top"><span class="way__n" aria-hidden="true">03</span><img class="way__phone bob" src="assets/l5/ex3.webp" width="420" height="853" alt="Пример работы: переписка с покупателем" loading="lazy" decoding="async"></div>
         <div class="way__body"><h3 class="way__t">Чат-менеджер магазина</h3>
         <p class="way__p">Отвечаешь покупателям вместо хозяйки магазина: про размер, доставку, заказ.</p></div>
       </article>
-      <article class="carousel__card way w4">
-        <div class="way__top"><span class="way__n" aria-hidden="true">04</span><img class="obj obj--xl way__obj" src="assets/3d/A19.webp" width="360" height="357" alt="" loading="lazy" decoding="async"></div>
+      <article class="carousel__card way reveal w4">
+        <div class="way__top"><span class="way__n" aria-hidden="true">04</span><img class="way__phone bob" src="assets/l5/ex4.webp" width="420" height="853" alt="Пример работы: видео товара без лица" loading="lazy" decoding="async"></div>
         <div class="way__body"><h3 class="way__t">Видео без лица</h3>
         <p class="way__p">Снимаешь короткие видео товара: в кадре только руки и товар.</p></div>
       </article>
-      <article class="carousel__card way w5">
-        <div class="way__top"><span class="way__n" aria-hidden="true">05</span><img class="obj obj--xl way__obj" src="assets/3d/A20.webp" width="360" height="341" alt="" loading="lazy" decoding="async"></div>
+      <article class="carousel__card way reveal w5">
+        <div class="way__top"><span class="way__n" aria-hidden="true">05</span><img class="way__phone bob" src="assets/l5/ex5.webp" width="420" height="853" alt="Пример работы: партнёрская ссылка Shopee" loading="lazy" decoding="async"></div>
         <div class="way__body"><h3 class="way__t">Партнёрка Shopee</h3>
         <p class="way__p">Делишься ссылками на товары, а Shopee платит тебе комиссию с каждой покупки.</p></div>
       </article>
-    </div>
+    </div></div>
     <div class="carousel__dots" data-carousel-dots></div>
   </div>
   <div class="b4w__one">
@@ -283,13 +308,16 @@
   <h2 class="blk__title">Всё честно и по закону</h2>
   <div class="b5__stage" aria-hidden="true">
     <span class="b5__rays"></span>
-    <img class="b5__shield" src="assets/3d/A05.webp" width="355" height="360" alt="" loading="lazy" decoding="async">
+    <img class="b5__shield bob" src="assets/l5/shield_br.webp" width="578" height="700" alt="" loading="lazy" decoding="async">
     <p class="b5__seal"><span class="b5__seal-n">7</span><span class="b5__seal-d">дней</span></p>
   </div>
-  <p class="b5__g"><strong>Гарантия 7 дней.</strong> Если не подойдёт — вернём 100% денег, без объяснения причин.</p>
+  <div class="b5__g">
+    <svg class="i b5__gi" aria-hidden="true" focusable="false"><use href="#i-shield"/></svg>
+    <p><strong>Гарантия 7 дней.</strong> Если не подойдёт&nbsp;— <b class="b5__big">вернём 100% денег</b>, без объяснения причин.</p>
+  </div>
   <ul class="card b5__panel">
-    <li class="b5__row"><img class="obj obj--md" src="assets/3d/scales.webp" width="360" height="329" alt="" loading="lazy" decoding="async"> <p>Работаем по законам Бразилии. Твою покупку защищает Кодекс защиты прав потребителя.</p></li>
-    <li class="b5__row"><img class="obj obj--md" src="assets/3d/lock.webp" width="271" height="360" alt="" loading="lazy" decoding="async"> <p>Безопасная оплата — через платформу онлайн-обучения Hotmart.</p></li>
+    <li class="b5__row"><span class="b5__flag" aria-hidden="true"><svg viewBox="0 0 32 22" width="32" height="22" focusable="false"><rect width="32" height="22" rx="4" fill="#009B3A"/><path d="M16 2.6 29 11 16 19.4 3 11z" fill="#FEDF00"/><circle cx="16" cy="11" r="5.4" fill="#002776"/><path d="M10.9 10.3Q15.8 8.7 21.2 11.7" fill="none" stroke="#fff" stroke-width="1.1"/></svg></span> <p>Работаем по законам Бразилии. Твою покупку защищает Кодекс защиты прав потребителя.</p></li>
+    <li class="b5__row"><img class="obj obj--md" src="assets/3d/lock.webp" width="271" height="360" alt="" loading="lazy" decoding="async"> <p>Безопасная оплата — через платформу онлайн-обучения <b>Hotmart</b>.</p></li>
   </ul>
   <div class="b5__pay">
     <p class="b5__pl">Способы оплаты:</p>
@@ -308,7 +336,8 @@
 <section class="blk bg-paper" id="b6">
   <h2 class="blk__title">Что ты получаешь</h2>
   <div class="b6__rail" data-carousel>
-    <div class="carousel b6__track">
+    <div class="hint-row"><span class="hint" aria-hidden="true">листай</span></div>
+    <div class="arrows"><div class="carousel b6__track">
       <article class="carousel__card feat feat--pl">
         <div class="feat__media"><img src="assets/pres/platform.webp" width="1000" height="1041" alt="Платформа курса на планшете и телефоне" loading="lazy" decoding="async"></div>
         <div class="feat__txt">
@@ -330,39 +359,39 @@
           <p class="feat__p">Не только смотришь — сразу делаешь. После каждого урока — задание. На каждом способе — тренажёр и учебный заказ от меня.</p>
         </div>
       </article>
-    </div>
+    </div></div>
     <div class="b6__nav">
       <div class="carousel__dots" data-carousel-dots></div>
       <span class="b6__count" data-carousel-counter aria-hidden="true">1 / 3</span>
     </div>
   </div>
   <ul class="b6__grid">
-    <li class="card mini mini--wide">
-      <img class="obj mini__obj" src="assets/3d/wand.webp" width="342" height="360" alt="" loading="lazy" decoding="async">
+    <li class="card mini mini--wide reveal">
+      <img class="obj mini__obj bob" src="assets/3d/wand.webp" width="342" height="360" alt="" loading="lazy" decoding="async">
       <h3 class="mini__t">Готовые команды для ИИ</h3>
       <p class="mini__p">По всем 5 способам. Вставляешь команду — и ИИ делает работу за тебя: описание товара, картинку, ответ покупателю.</p>
     </li>
-    <li class="card mini">
+    <li class="card mini reveal">
       <img class="obj mini__obj" src="assets/3d/A16.webp" width="307" height="360" alt="" loading="lazy" decoding="async">
       <h3 class="mini__t">Образцы, которые продают</h3>
       <p class="mini__p">Готовые примеры работ по каждому способу. Сразу видно, как должно получиться.</p>
     </li>
-    <li class="card mini">
+    <li class="card mini reveal">
       <img class="obj mini__obj" src="assets/3d/play.webp" width="360" height="360" alt="" loading="lazy" decoding="async">
       <h3 class="mini__t">Эфиры со мной</h3>
       <p class="mini__p">Отвечаю на твои вопросы вживую.</p>
     </li>
-    <li class="card mini">
-      <img class="obj mini__obj" src="assets/3d/A18.webp" width="360" height="299" alt="" loading="lazy" decoding="async">
+    <li class="card mini mini--ava reveal">
+      <span class="mini__ava" aria-hidden="true"><span class="mini__face"><img src="assets/img/hero-erika-cut-hd.webp" width="1050" height="1400" alt="" loading="lazy" decoding="async"></span><span class="mini__bubble"><svg class="i"><use href="#i-chat"/></svg></span></span>
       <h3 class="mini__t">Поддержка</h3>
       <p class="mini__p">Застряла — задай вопрос, тебе ответят.</p>
     </li>
-    <li class="card mini">
-      <img class="obj mini__obj" src="assets/3d/A03.webp" width="222" height="360" alt="" loading="lazy" decoding="async">
+    <li class="card mini mini--cert reveal">
+      <span class="mini__cert" aria-hidden="true"><svg class="bob" style="--d:.35s" viewBox="0 0 68 90" width="68" height="90" focusable="false"><rect x=".6" y=".6" width="66.8" height="88.8" rx="3" fill="#fff" stroke="#E6DCC6" stroke-width="1.2"/><rect x="4.5" y="4.5" width="59" height="81" rx="1.5" fill="none" stroke="#E8C57C" stroke-width=".8"/><text x="34" y="20" text-anchor="middle" font-family="Prata, Georgia, serif" font-size="6.6" letter-spacing=".5" fill="#1F2A33">CERTIFICADO</text><path d="M24 24.5h20" stroke="#E8C57C" stroke-width=".8"/><text x="34" y="37.5" text-anchor="middle" font-family="Raleway, Arial, sans-serif" font-size="4.8" fill="#8A949B">Nome da aluna</text><path d="M13 41.5h42" stroke="#BCC4CA" stroke-width="1.3" stroke-linecap="round"/><path d="M17 49h34M21 54h26" stroke="#E1E5E8" stroke-width="1.3" stroke-linecap="round"/><path d="M29.5 75 25.5 87.5l4.6-2.4 2.6 3.6 1.9-11.6z" fill="#E08E1B"/><path d="M38.5 75l4 12.5-4.6-2.4-2.6 3.6-1.9-11.6z" fill="#C4760F"/><circle cx="34" cy="70" r="9.2" fill="#F2A93B"/><circle cx="34" cy="70" r="6.8" fill="none" stroke="#FFE3A0" stroke-width="1"/><path d="M34 65.6l1.35 2.75 3.05.45-2.2 2.15.5 3.05L34 72.55l-2.7 1.45.5-3.05-2.2-2.15 3.05-.45z" fill="#FFF3D6"/></svg></span>
       <h3 class="mini__t">Именной сертификат</h3>
       <p class="mini__p">Подтверждение, что ты освоила профессию.</p>
     </li>
-    <li class="card mini mini--wide">
+    <li class="card mini mini--wide reveal">
       <img class="obj mini__obj" src="assets/3d/gift.webp" width="281" height="360" alt="" loading="lazy" decoding="async">
       <h3 class="mini__t">Бонусные уроки</h3>
       <details class="more">
@@ -371,9 +400,9 @@
       </details>
     </li>
   </ul>
-  <div class="b6__ip">
+  <div class="b6__ip reveal">
     <div class="b6__ip-art" aria-hidden="true">
-      <img class="b6__ip-phone" src="assets/3d/phone.webp" width="199" height="360" alt="" loading="lazy" decoding="async">
+      <img class="b6__ip-phones bob" src="assets/l5/phones3.webp" width="700" height="657" alt="" loading="lazy" decoding="async">
     </div>
     <div class="b6__ip-txt">
       <h3 class="b6__ip-t">iPhone трём лучшим</h3>
@@ -386,7 +415,7 @@
   </div>
 </section>
 
-<!-- ===== Часть B: блоки 6А, 7, 8, 8А, 9, 10, 11, 12 (раунд 4 «Простота») ===== -->
+<!-- ===== Часть B: блоки 6А, 7, 8, 8А, 9, 10, 11, 12 (раунд 4 «Простота», раунд 5 «Правки Лизы») ===== -->
 <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
   <symbol id="bi-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="bi-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
@@ -418,35 +447,35 @@
   <div class="b6a-path">
     <ol class="b6a-steps">
       <li class="b6a-step">
-        <span class="b6a-step__ico"><img class="b6a-obj" src="assets/3d/play.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
+        <span class="b6a-step__ico"><img class="b6a-obj bob" style="--d:0.0s" src="assets/3d/play.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
         <div class="b6a-step__txt">
           <h3 class="b6a-step__h"><span class="b6a-step__n">1</span> Смотришь урок</h3>
           <p class="b6a-step__d">15–25 минут. Запись экрана телефона: видишь каждое нажатие и повторяешь за мной.</p>
         </div>
       </li>
       <li class="b6a-step">
-        <span class="b6a-step__ico"><img class="b6a-obj" src="assets/3d/notebook.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
+        <span class="b6a-step__ico"><img class="b6a-obj bob" style="--d:0.5s" src="assets/3d/notebook.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
         <div class="b6a-step__txt">
           <h3 class="b6a-step__h"><span class="b6a-step__n">2</span> Делаешь домашнее задание</h3>
           <p class="b6a-step__d">Сразу после урока, пока всё свежо в голове.</p>
         </div>
       </li>
       <li class="b6a-step">
-        <span class="b6a-step__ico"><img class="b6a-obj" src="assets/3d/target.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
+        <span class="b6a-step__ico"><img class="b6a-obj bob" style="--d:1.0s" src="assets/3d/target.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
         <div class="b6a-step__txt">
           <h3 class="b6a-step__h"><span class="b6a-step__n">3</span> Тренируешься на тренажёре</h3>
           <p class="b6a-step__d">Отрабатываешь на практике столько раз, сколько нужно. Ошибаться можно сколько угодно — никто не видит.</p>
         </div>
       </li>
       <li class="b6a-step">
-        <span class="b6a-step__ico"><img class="b6a-obj" src="assets/3d/A21.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
+        <span class="b6a-step__ico"><img class="b6a-obj bob" style="--d:1.5s" src="assets/3d/A21.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
         <div class="b6a-step__txt">
           <h3 class="b6a-step__h"><span class="b6a-step__n">4</span> Получаешь учебный заказ от меня</h3>
           <p class="b6a-step__d">Проходишь весь путь, как с настоящим магазином: задача, срок, готовая работа. Только без риска и без денег.</p>
         </div>
       </li>
       <li class="b6a-step b6a-step--goal">
-        <span class="b6a-step__ico"><img class="b6a-obj" src="assets/3d/flag.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
+        <span class="b6a-step__ico"><img class="b6a-obj bob" style="--d:2.0s" src="assets/3d/flag.webp" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
         <div class="b6a-step__txt">
           <h3 class="b6a-step__h"><span class="b6a-step__n">5</span> Идёшь за настоящим клиентом</h3>
           <p class="b6a-step__d">И приходишь к нему уже не новичком: ты это делала.</p>
@@ -454,7 +483,7 @@
       </li>
     </ol>
   </div>
-  <p class="b6a-every"><span class="b6a-every__lab">Так на каждом способе:</span> <span class="b6a-tag">карточки</span> <span class="b6a-tag">дизайн</span> <span class="b6a-tag">чат</span> <span class="b6a-tag">видео.</span></p>
+  <p class="b6a-every"><span class="b6a-every__lab">Так на каждом способе:</span> <span class="b6a-tag"><img src="assets/3d/A16.webp" alt="" width="28" height="28" loading="lazy" decoding="async">карточки</span> <span class="b6a-tag"><img src="assets/3d/A17.webp" alt="" width="28" height="28" loading="lazy" decoding="async">дизайн</span> <span class="b6a-tag"><img src="assets/3d/A18.webp" alt="" width="28" height="28" loading="lazy" decoding="async">чат</span> <span class="b6a-tag"><img src="assets/3d/A19.webp" alt="" width="28" height="28" loading="lazy" decoding="async">видео</span></p>
   <p class="b6a-quote">Твой первый клиент не будет для тебя первым.</p>
   <p class="b6a-legal">Учебный заказ — тренировка, а не оплачиваемая работа. Настоящих клиентов ты находишь сама.</p>
   <div class="cta">
@@ -470,91 +499,92 @@
     <p class="b7-meta__chips"><span class="b7-chip">8 модулей</span> <span class="b7-chip">более 55 уроков</span></p>
     <p class="b7-meta__line">от первого шага до своей системы заработка</p>
   </div>
+  <span class="hint hint--tap b7-hint" aria-hidden="true">Нажми на модуль, чтобы увидеть уроки</span>
   <ol class="b7-map">
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">0</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A14.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj b7-door obj obj--sm" src="assets/3d/A14.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 0 —</span> <span class="b7-card__name">Добро пожаловать</span></h3>
         <p class="b7-card__res"><b>Результат:</b> видишь весь путь от нуля до первого заказа и умеешь отличать настоящую работу от развода.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">6</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">6</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Ты внутри! Добро пожаловать</li><li>Как всё устроено: баллы, медали и сертификат</li><li>Дорожная карта: от нуля до первого заказа</li><li>Это не развод: как отличить настоящую работу от обмана</li><li>5 ошибок новичков в первую неделю</li><li>Итоги модуля</li></ul>
         </details>
       </div>
     </li>
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">1</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A12.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj obj obj--sm bob" style="--d:0.7s" src="assets/3d/A12.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 1 —</span> <span class="b7-card__name">Фундамент: Shopee изнутри</span></h3>
         <p class="b7-card__res"><b>Результат:</b> понимаешь, как устроена Shopee и за что здесь платят, и выбираешь свой способ.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">7</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">7</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Почему на Shopee есть работа для тебя</li><li>Пять дорог к деньгам</li><li>Экскурсия: приложение покупателя и кабинет продавца</li><li>Чего честно ждать от первого клиента</li><li>Комиссии Shopee: актуальные цифры</li><li>Где развод, а где настоящее ремесло</li><li>Итоги модуля</li></ul>
         </details>
       </div>
     </li>
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">2</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A16.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj obj obj--sm bob" style="--d:1.4s" src="assets/3d/A16.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 2 —</span> <span class="b7-card__name">Способ 1. Карточки товаров</span></h3>
         <p class="b7-card__res"><b>Результат:</b> делаешь карточки товаров и закрываешь первую сделку с магазином.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">9</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">9</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>За что на самом деле платят магазины</li><li>Первая карточка в кабинете продавца и приём оплаты</li><li>Тренажёр: учебный заказ</li><li>20 карточек за час</li><li>Где искать первого клиента: 10 мест и 10 готовых откликов</li><li>Правило первого клиента: только по предоплате</li><li>Почему проверка карточки не задерживает твою оплату</li><li>Первая сделка</li><li>Итоги модуля</li></ul>
         </details>
       </div>
     </li>
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">3</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A17.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj obj obj--sm bob" style="--d:2.1s" src="assets/3d/A17.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 3 —</span> <span class="b7-card__name">Способ 2. Дизайн карточек с ИИ</span></h3>
         <p class="b7-card__res"><b>Результат:</b> из обычного фото делаешь продающую картинку за минуты.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">6</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">6</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Почему красивая картинка продаёт</li><li>Canva и ИИ: студийный фон за 15 минут</li><li>Обложка и картинка с подписями одной командой</li><li>Надпись «бесплатная доставка»</li><li>Как продать дизайн тому же магазину</li><li>Итоги модуля</li></ul>
         </details>
       </div>
     </li>
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">4</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A18.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj obj obj--sm bob" style="--d:0.0s" src="assets/3d/A18.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 4 —</span> <span class="b7-card__name">Способ 3. <span class="nw">Чат-менеджер</span> магазина</span></h3>
         <p class="b7-card__res"><b>Результат:</b> ведёшь чат магазина и договариваешься о работе на месяц.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">7</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">7</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Почему магазин платит за чат</li><li>Ответы покупателям и возвраты без страха</li><li>40 готовых ответов и один телефон на четыре магазина</li><li>Где найти магазины и как предложить договор на месяц</li><li>Реклама внутри Shopee</li><li>Цифры магазина</li><li>Итоги модуля</li></ul>
         </details>
       </div>
     </li>
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">5</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A19.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj obj obj--sm bob" style="--d:0.7s" src="assets/3d/A19.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 5 —</span> <span class="b7-card__name">Способ 4. Видео без лица</span></h3>
         <p class="b7-card__res"><b>Результат:</b> снимаешь продающие видео без лица и без покупки товара.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">7</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">7</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Почему магазинам нужны короткие видео</li><li>Схема продающего видео</li><li>Как снимать без покупки товара</li><li>Монтаж и озвучка</li><li>Видео с цифровым ведущим</li><li>Как продавать видео магазинам</li><li>Итоги модуля</li></ul>
         </details>
       </div>
     </li>
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">6</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A20.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj obj obj--sm bob" style="--d:1.4s" src="assets/3d/A20.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 6 —</span> <span class="b7-card__name">Способ 5. Партнёрка Shopee</span></h3>
         <p class="b7-card__res"><b>Результат:</b> подключаешься к партнёрке и ведёшь свою страницу находок.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">10</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">10</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Почему один пост продаёт ещё долго</li><li>Вся правда про комиссии</li><li>Партнёрская ссылка по шагам</li><li>Как выбрать товар без покупки</li><li>Reels — главный инструмент</li><li>Одно видео — Shopee и TikTok Shop</li><li>Сколько партнёрка приносит на самом деле</li><li>Как часто публиковать</li><li>Своя страница находок</li><li>Итоги модуля</li></ul>
         </details>
       </div>
     </li>
     <li class="b7-mod">
       <span class="b7-dot" aria-hidden="true">7</span>
-      <div class="b7-card">
-        <img class="b7-card__obj obj obj--sm" src="assets/3d/A33.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+      <div class="b7-card reveal">
+        <img class="b7-card__obj obj obj--sm bob" style="--d:2.1s" src="assets/3d/A33.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 7 —</span> <span class="b7-card__name">Твоя система</span></h3>
         <p class="b7-card__res"><b>Результат:</b> собираешь 5 способов в одну систему и строишь план на 90 дней.</p>
-        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">9</span></summary>
+        <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">9</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Твоя система</li><li>Рабочая неделя под твой график</li><li>Какой способ станет главным</li><li>Простой учёт денег</li><li>MEI: официальный статус</li><li>Свой магазин на Shopee: когда пора</li><li>План на 90 дней</li><li>Куда расти дальше</li><li>Итоги: что дальше</li></ul>
         </details>
       </div>
@@ -641,19 +671,22 @@
       </article>
   </div>
   <div class="t8-bonus">
-    <h3 class="t8-bonus__title">Бонусы, если оплатишь до 04.10, 23:59 (по Бразилиа)</h3>
-    <p class="t8-bonus__lead">Получает каждая, кто успеет:</p>
+    <div class="t8-bonus__head">
+      <span class="t8-bonus__gift" aria-hidden="true"><img class="bob" src="assets/3d/gift.webp" alt="" width="110" height="110" loading="lazy" decoding="async"></span>
+      <div class="t8-bonus__hd">
+        <h3 class="t8-bonus__title">Бонусы, если оплатишь до 04.10, 23:59 (по Бразилиа)</h3>
+        <p class="t8-bonus__lead">Получает каждая, кто успеет:</p>
+      </div>
+    </div>
     <ul class="t8-bonus__list">
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/A38.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><p><b>Удвоение доступа:</b> в «Специалисте по Shopee» — 12 месяцев вместо 6, в VIP — 24 вместо 12</p></li>
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/A21.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><p><b>Учебных заказов от Эрики вдвое больше:</b> в «Специалисте по Shopee» — 8 вместо 4 (в VIP 8 входят всегда)</p></li>
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/clipboard.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><p><b>Чек-лист «Первый клиент за 14 дней»</b></p></li>
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/calculator.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><p><b>Калькулятор цены + готовый прайс для клиентов</b></p></li>
+      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/clipboard.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 1</span><p class="t8-bonus__name">Чек-лист «Первый клиент за 14 дней»</p></div></li>
+      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/calculator.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 2</span><p class="t8-bonus__name">Калькулятор цены + готовый прайс для клиентов</p></div></li>
     </ul>
     <div class="cd t8-cd" data-countdown="2026-10-05T02:59:00Z">
       <div class="cd__tile"><b data-cd="d">05</b><span>дней</span></div>
-      <div class="cd__tile"><b data-cd="h">09</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">46</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">33</b><span>секунд</span></div>
+      <div class="cd__tile"><b data-cd="h">04</b><span>часов</span></div>
+      <div class="cd__tile"><b data-cd="m">44</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">52</b><span>секунд</span></div>
     </div>
   </div>
   <div class="cta">
@@ -665,15 +698,18 @@
 <!-- Блок 8А — давай посчитаем: цена дня, весы -->
 <section id="b8a" class="blk bg-section" aria-labelledby="b8a-title">
   <h2 class="blk__title" id="b8a-title">Думаешь, не потянешь? <span class="b8a-az">Давай посчитаем</span></h2>
+  <div class="b8a-g b8a-g--day">
   <div class="b8a-day" aria-hidden="true"><span class="b8a-day__sum">R$&nbsp;1,36</span><span class="b8a-day__unit">в день</span></div>
   <div class="b8a-cmp" aria-hidden="true">
     <div class="b8a-cmp__i"><img class="b8a-cmp__obj" src="assets/3d/coffee.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><span>меньше половины чашки кофе</span></div>
     <div class="b8a-cmp__i"><img class="b8a-cmp__obj" src="assets/3d/bus.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><span>меньше четверти поездки</span></div>
   </div>
-  <div class="b8a-text">
+  </div>
+  <div class="b8a-g b8a-text">
     <p>«Специалист по Shopee» в рассрочку — R$&nbsp;1,36 в день. Это меньше половины чашки кофе и меньше четверти одной поездки на автобусе.</p>
     <p>Весь платёж за месяц — R$&nbsp;41,27: как 7 поездок на автобусе. «Старт» — около R$&nbsp;1 в день.</p>
   </div>
+  <div class="b8a-g b8a-g--scales">
   <h3 class="b8a-sub">А теперь другая сторона</h3>
   <div class="b8a-scales" aria-hidden="true">
     <img class="b8a-scales__img" src="assets/3d/scales.webp" alt="" width="360" height="329" loading="lazy" decoding="async">
@@ -683,9 +719,10 @@
     <span class="b8a-pan"><b>5 × R$&nbsp;10</b> карточки</span>
   </div>
   <p class="b8a-covered"><svg class="i" aria-hidden="true"><use href="#bi-check"/></svg>платёж покрыт</p>
-  <p class="b8a-p">По рыночным ценам магазин платит за одну карточку товара около R$&nbsp;10, а новичку за одну картинку — R$&nbsp;30–80. Пять карточек — и платёж «Специалиста» за месяц покрыт.</p>
-  <p class="b8a-quote">Это не трата. Это первый шаг, чтобы в доме были твои деньги.</p>
-  <ul class="b8a-qs">
+  <p class="b8a-p b8a-card">По рыночным ценам магазин платит за одну карточку товара около R$&nbsp;10, а новичку за одну картинку — R$&nbsp;30–80. Пять карточек — и платёж «Специалиста» за месяц покрыт.</p>
+  </div>
+  <p class="b8a-g b8a-quote">Это не трата. Это первый шаг, чтобы в доме были твои деньги.</p>
+  <ul class="b8a-g b8a-qs">
     <li class="b8a-q"><span class="b8a-q__ico" aria-hidden="true"><svg class="i"><use href="#bi-card"/></svg></span><div><h3 class="b8a-q__h">Нет кредитной карты?</h3><p class="b8a-q__a">Плати через Pix со своего банковского счёта. Кредитную историю никто не проверяет.</p></div></li>
     <li class="b8a-q"><span class="b8a-q__ico" aria-hidden="true"><svg class="i"><use href="#bi-wallet"/></svg></span><div><h3 class="b8a-q__h">Нет своих денег прямо сейчас?</h3><p class="b8a-q__a">Можно оплатить картой мужа или мамы — с их согласия. Доступ получаешь ты.</p></div></li>
     <li class="b8a-q"><span class="b8a-q__ico" aria-hidden="true"><svg class="i"><use href="#bi-shield"/></svg></span><div><h3 class="b8a-q__h">Боишься, что не подойдёт?</h3><p class="b8a-q__a">7 дней на возврат: не подойдёт — вернём 100% денег.</p></div></li>
@@ -699,11 +736,12 @@
 <!-- Блок 9 — как оплатить: вкладки, шаги, светлый телефон с кодом Pix -->
 <section id="b9" class="blk bg-paper" aria-labelledby="b9-title">
   <h2 class="blk__title" id="b9-title">Как оплатить</h2>
+  <span class="hint hint--tap b9-hint" aria-hidden="true">Выбери, как платишь — нажми на способ</span>
   <div class="b9" data-tabs>
     <div class="b9-seg" role="tablist" aria-label="Способ оплаты">
-      <button type="button" class="b9-seg__b is-active" role="tab" id="b9-tab-pix" data-tab-btn="pix" aria-selected="true" aria-controls="b9-pix">Pix</button>
-      <button type="button" class="b9-seg__b" role="tab" id="b9-tab-card" data-tab-btn="card" aria-selected="false" aria-controls="b9-card">Карта — <span class="b9-seg__sub">одним платежом</span></button>
-      <button type="button" class="b9-seg__b" role="tab" id="b9-tab-inst" data-tab-btn="inst" aria-selected="false" aria-controls="b9-inst">Рассрочка</button>
+      <button type="button" class="b9-seg__b is-active" role="tab" id="b9-tab-pix" data-tab-btn="pix" aria-selected="true" aria-controls="b9-pix"><svg class="i b9-seg__i" aria-hidden="true"><use href="#i-qr"/></svg><span class="b9-seg__t">Pix</span></button>
+      <button type="button" class="b9-seg__b" role="tab" id="b9-tab-card" data-tab-btn="card" aria-selected="false" aria-controls="b9-card"><svg class="i b9-seg__i" aria-hidden="true"><use href="#i-card"/></svg><span class="b9-seg__t">Карта — <span class="b9-seg__sub">одним платежом</span></span></button>
+      <button type="button" class="b9-seg__b" role="tab" id="b9-tab-inst" data-tab-btn="inst" aria-selected="false" aria-controls="b9-inst"><svg class="i b9-seg__i" aria-hidden="true"><use href="#i-cal"/></svg><span class="b9-seg__t">Рассрочка</span></button>
     </div>
     <div class="b9-panel is-active" id="b9-pix" role="tabpanel" aria-labelledby="b9-tab-pix" data-tab-panel="pix">
       <ol class="b9-steps">
@@ -741,7 +779,8 @@
     </div>
   </div>
   <ul class="b9-info">
-    <li class="b9-row"><img class="obj obj--sm" src="assets/3d/A24.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Карта отказала?</h3><p>Скорее всего, на ней не хватило лимита на всю сумму. Оплати через Pix или другой картой.</p></div></li>
+    <li class="b9-row"><img class="obj obj--sm" src="assets/3d/A24.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Карта отказала?</h3><p>Скорее всего, на ней не хватило лимита на всю сумму. Оплати через Pix или другой картой.</p></div>
+      <div class="b9-help"><a class="btn btn--wa b9-help__btn" id="b9-help" href="#whatsapp-help"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Получить помощь</a><p class="b9-help__note">ИИ-помощник ответит в WhatsApp</p></div></li>
     <li class="b9-row"><img class="obj obj--sm" src="assets/3d/A33.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Pix — без процентов</h3><p>Через Pix «Специалист» стоит R$&nbsp;399 одним платежом. В рассрочку проценты платит покупатель: 12 × R$&nbsp;41,27 ≈ R$&nbsp;495.</p></div></li>
     <li class="b9-row"><img class="obj obj--sm" src="assets/3d/gift.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Что будет после оплаты</h3><ul class="b9-after list-check"><li>Сразу на почту придёт письмо с доступом к курсу и номером покупки. Сохрани его.</li><li>Заходишь в приложение и начинаешь с первого урока.</li><li>Нет письма? Проверь папку «Спам» или напиши нам в WhatsApp.</li></ul></div></li>
   </ul>
@@ -756,24 +795,35 @@
   <h2 class="blk__title" id="b10-title">Новые действия — новый результат</h2>
   <p class="blk__lead b10-lead">Можно закрыть эту страницу — и завтра будет как вчера.</p>
   <p class="blk__lead b10-lead b10-lead--go">А можно сегодня вечером открыть первый урок.</p>
-  <div class="b10-fork"><img src="assets/bg/fork-road.webp" alt="" width="780" height="1379" loading="lazy" decoding="async"></div>
-  <div class="b10-ways">
-    <p class="b10-way b10-way--stay"><span class="b10-way__ico" aria-hidden="true"><svg class="i"><use href="#bi-loop"/></svg></span><span class="b10-way__txt"><b>Оставить всё как есть.</b> Та же работа, те же деньги. Свой дом, помощь маме, чистое имя — так и остаются мечтой в заметках телефона.</span></p>
-    <p class="b10-way b10-way--go"><span class="b10-way__ico" aria-hidden="true"><svg class="i"><use href="#bi-go"/></svg></span><span class="b10-way__txt"><b>Начать.</b> Через неделю ты понимаешь Shopee изнутри и знаешь, с какого способа начнёшь. Дальше — первая карточка и первый клиент.</span></p>
+  <div class="b10-split">
+    <div class="b10-side b10-side--stay">
+      <div class="b10-pane">
+        <span class="b10-pane__tag" aria-hidden="true"><svg class="i"><use href="#bi-loop"/></svg>Оставить всё как есть</span>
+        <img class="b10-pane__img" src="assets/l5/fork-left.webp" alt="" width="760" height="1017" loading="lazy" decoding="async">
+      </div>
+      <p class="b10-way b10-way--stay"><b>Оставить всё как есть.</b> Та же работа, те же деньги. Свой дом, помощь маме, чистое имя — так и остаются мечтой в заметках телефона.</p>
+    </div>
+    <div class="b10-side b10-side--go">
+      <div class="b10-pane">
+        <span class="b10-pane__tag" aria-hidden="true"><svg class="i"><use href="#bi-go"/></svg>Начать</span>
+        <img class="b10-pane__img" src="assets/l5/fork-right.webp" alt="" width="760" height="1017" loading="lazy" decoding="async">
+      </div>
+      <p class="b10-way b10-way--go"><b>Начать.</b> Через неделю ты понимаешь Shopee изнутри и знаешь, с какого способа начнёшь. Дальше — первая карточка и первый клиент.</p>
+    </div>
   </div>
   <figure class="b10-erika">
-    <div class="b10-arch"><img src="assets/img/travel-porto.webp" alt="Эрика Маркес" width="800" height="1009" loading="lazy" decoding="async"></div>
+    <div class="b10-arch"><img src="assets/img/rich-pink.webp" alt="Эрика Маркес" width="900" height="1200" loading="lazy" decoding="async"></div>
     <blockquote class="b10-quote"><p>У женщины должны быть свои деньги. Давай начнём с твоих.</p></blockquote>
   </figure>
   <div class="b10-deal">
     <p class="b10-deadline">Запись в этот поток открыта до 04.10, 23:59 (по Бразилиа)</p>
     <div class="cd b10-cd" data-countdown="2026-10-05T02:59:00Z">
       <div class="cd__tile"><b data-cd="d">05</b><span>дней</span></div>
-      <div class="cd__tile"><b data-cd="h">09</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">46</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">33</b><span>секунд</span></div>
+      <div class="cd__tile"><b data-cd="h">04</b><span>часов</span></div>
+      <div class="cd__tile"><b data-cd="m">44</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">52</b><span>секунд</span></div>
     </div>
-    <p class="b10-bonus">Оплатишь до этого срока — получишь бонусы: удвоение доступа, вдвое больше учебных заказов, чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
+    <p class="b10-bonus">Оплатишь до этого срока — получишь бонусы: чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
   </div>
   <div class="cta">
     <a class="btn" id="b10-cta" href="#tariffs" data-cta>Получить доступ</a>
@@ -793,7 +843,7 @@
     <details class="b11-q"><summary>Нужен компьютер?</summary><div class="b11-a"><p>Нет, хватит телефона с интернетом.</p></div></details>
     <details class="b11-q"><summary>Сколько времени нужно?</summary><div class="b11-a"><p>От 1 до 4 часов в день — в своём графике.</p></div></details>
     <details class="b11-q"><summary>Когда и куда придёт доступ?</summary><div class="b11-a"><p>Сразу после оплаты — на почту, которую ты указала. Поэтому указывай её внимательно.</p></div></details>
-    <details class="b11-q"><summary>Сколько длится доступ?</summary><div class="b11-a"><p>Зависит от тарифа: «Старт» — 2 месяца, «Специалист по Shopee» — 6 месяцев, VIP — 12 месяцев. Оплатишь до 04.10 — доступ удвоим (кроме «Старта»): 12 и 24 месяца.</p></div></details>
+    <details class="b11-q"><summary>Сколько длится доступ?</summary><div class="b11-a"><p>Зависит от тарифа: «Старт» — 2 месяца, «Специалист по Shopee» — 6 месяцев, VIP — 12 месяцев.</p></div></details>
     <details class="b11-q"><summary>У меня нет кредитной карты. Смогу оплатить?</summary><div class="b11-a"><p>Да, через Pix со своего банковского счёта.</p></div></details>
     <details class="b11-q"><summary>У меня «грязное имя» (долги в Serasa). Смогу оплатить?</summary><div class="b11-a"><p>Да. Pix — это перевод с твоего банковского счёта, кредитную историю никто не проверяет.</p></div></details>
     <details class="b11-q"><summary>Своих денег прямо сейчас нет. Что делать?</summary><div class="b11-a"><p>Можно оплатить картой мужа или мамы — с их согласия, доступ получаешь ты. Или разбить оплату до 12 платежей: «Специалист по Shopee» — R$&nbsp;41,27 в месяц.</p></div></details>
@@ -859,6 +909,11 @@
 <div class="sticky-cta is-compact" id="sticky-cta" data-state="compact">
   <a class="btn" id="sticky-cta-btn" href="#tariffs">Получить доступ</a>
   <a class="sticky-cta__wa" id="sticky-cta-wa" href="#whatsapp" aria-label="Написать в WhatsApp"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg></a>
+  <!-- Раунд 5: пузырь-подсказка у WhatsApp (служебный текст; логика показа — site.js, .wa-pop) -->
+  <div class="wa-pop" id="wa-pop">
+    <a class="wa-pop__link" id="wa-pop-link" href="#whatsapp">Есть вопрос? Напиши нам в&nbsp;<b>WhatsApp</b></a>
+    <button class="wa-pop__x" type="button" data-wa-pop-x aria-label="Закрыть подсказку"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-x"/></svg></button>
+  </div>
 </div>
 
 <!-- Cookies: при первом заходе; выбор хранится в localStorage. Пиксель Meta — только после согласия (сейчас трекеров нет). -->
@@ -879,7 +934,7 @@
 <div class="vmodal" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-t" hidden>
   <div class="vmodal__box vmodal__box--video">
     <p id="video-modal-t" class="sr-only">Продающая презентация Эрики</p>
-    <video id="sales-video" class="vmodal__video" controls playsinline preload="none" poster="assets/img/video-poster.webp" data-src="assets/video/sales-720.mp4"></video>
+    <video id="sales-video" class="vmodal__video" controls playsinline preload="none" data-poster="assets/img/video-poster.webp" data-src="assets/video/sales-720.mp4"></video>
     <button class="vmodal__x" type="button" data-video-close aria-label="Закрыть"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-x"/></svg></button>
   </div>
 </div>

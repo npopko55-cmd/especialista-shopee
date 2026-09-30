@@ -7,11 +7,11 @@
   const $$ = (s, c = d) => Array.from(c.querySelectorAll(s));
   const reduce = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 
-  /* ---------- Вариант блока 2: ?b2=faces → <html data-b2="faces">, иначе вариант A ---------- */
+  /* ---------- Вариант блока 2 (раунд 5, Лиза): по умолчанию фото — <html data-b2="faces">; ?b2=a → диорамы ---------- */
   try {
     const v = new URLSearchParams(location.search).get('b2');
-    html.setAttribute('data-b2', v === 'faces' ? 'faces' : 'a');
-  } catch (e) { html.setAttribute('data-b2', 'a'); }
+    html.setAttribute('data-b2', v === 'a' ? 'a' : 'faces');
+  } catch (e) { html.setAttribute('data-b2', 'faces'); }
 
   /* Ссылок ещё нет (кассы Hotmart, документы) — кнопки с href="#" никуда не уводят */
   d.addEventListener('click', e => {
@@ -32,10 +32,30 @@
     const gotos = $$('[data-carousel-goto]', scope);
     const dotsBox = scope.querySelector('[data-carousel-dots]');
     const dots = [];
+    /* Раунд 5: .arrows — кнопки ‹ › по краям ленты (создаём, если их нет в разметке) */
+    const arrowsBox = track.closest('.arrows') || scope.querySelector('.arrows');
+    if (arrowsBox && n > 1 && !arrowsBox.querySelector('[data-carousel-prev]')) {
+      [['prev', 'Предыдущая карточка', 'M15 5l-7 7 7 7'], ['next', 'Следующая карточка', 'M9 5l7 7-7 7']].forEach(([k, lab, p]) => {
+        const b = d.createElement('button');
+        b.type = 'button';
+        b.className = 'arrows__btn arrows__btn--' + k;
+        b.setAttribute('data-carousel-' + k, '');
+        b.setAttribute('aria-label', lab);
+        b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="' + p + '"/></svg>';
+        arrowsBox.appendChild(b);
+      });
+    }
+    const prevB = (arrowsBox || scope).querySelector('[data-carousel-prev]');
+    const nextB = (arrowsBox || scope).querySelector('[data-carousel-next]');
+    const hints = $$('.hint', scope);
     let cur = -1;
     const set = i => {
       if (i === cur) return;
       cur = i;
+      if (prevB) prevB.classList.toggle('is-off', i <= 0);
+      if (nextB) nextB.classList.toggle('is-off', i >= n - 1);
+      if (i > 0) hints.forEach(h => h.classList.add('is-seen'));   /* уже листали — подсказка замирает */
+      cards.forEach((c, k) => c.classList.toggle('is-cur', k === i));   /* 4w: покачивается только телефон активной карточки */
       if (counter) counter.textContent = (i + 1) + ' / ' + n;
       gotos.forEach(b => {
         const on = Number(b.getAttribute('data-carousel-goto')) === i;
@@ -64,6 +84,8 @@
       });
     }
     gotos.forEach(b => b.addEventListener('click', () => go(Number(b.getAttribute('data-carousel-goto')))));
+    if (prevB) prevB.addEventListener('click', () => go(cur - 1));
+    if (nextB) nextB.addEventListener('click', () => go(cur + 1));
     const step = () => (n > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth) || 1;
     let raf = 0;
     track.addEventListener('scroll', () => {
@@ -160,6 +182,11 @@
     }
   }
   applyBar();
+  /* На самом верху страницы круглая WhatsApp закрывала бы третий пункт под кнопкой первого экрана — появляется после небольшой прокрутки */
+  if (bar) {
+    const topBar = () => bar.classList.toggle('is-top', (window.scrollY || d.documentElement.scrollTop || 0) < 48);
+    topBar(); window.addEventListener('scroll', topBar, { passive: true });
+  }
 
   /* ---------- Окно видео: [data-video-open] → #video-modal ---------- */
   const modal = d.getElementById('video-modal');
@@ -180,6 +207,7 @@
     html.classList.add('is-locked');
     st.modal = true; applyBar();
     if (vid) {
+      if (!vid.getAttribute('poster') && vid.dataset.poster) vid.poster = vid.dataset.poster;   /* постер — тоже только при открытии */
       if (!vid.getAttribute('src') && vid.dataset.src) vid.src = vid.dataset.src;   /* 91 МБ грузим только по нажатию */
       const pr = vid.play(); if (pr && pr.catch) pr.catch(() => { /* iOS: пользователь нажмёт play сам */ });
     }
@@ -255,5 +283,56 @@
       show();
       openCfg();
     });
+  }
+
+  /* ---------- Раунд 5: .reveal — появление один раз при первом попадании в кадр ----------
+     Класс html.js-rv ставит скрипт в <head> (чтобы не было вспышки). Нет IO / reduce → всё видно сразу. */
+  const rv = $$('.reveal');
+  if (!('IntersectionObserver' in window) || reduce()) {
+    html.classList.remove('js-rv');
+  } else if (rv.length) {
+    html.classList.add('js-rv');
+    const rio = new IntersectionObserver(es => {
+      const ins = es.filter(e => e.isIntersecting).map(e => e.target);
+      const pos = el => { const r = el.getBoundingClientRect(); return r.top * 4 + r.left; };
+      ins.sort((a, b) => pos(a) - pos(b));
+      ins.forEach((el, k) => {
+        if (!el.style.getPropertyValue('--rd')) el.style.setProperty('--rd', Math.min(k, 6) * 90 + 'ms');
+        el.classList.add('is-in');
+        rio.unobserve(el);
+      });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.08 });
+    rv.forEach(el => rio.observe(el));
+  }
+
+  /* ---------- Раунд 5: .wa-pop — пузырь «Есть вопрос? Напиши нам в WhatsApp» ----------
+     Через 15 с после загрузки, потом каждые 60 с, не более 3 раз за сессию; держится 9 с.
+     Только когда панель в полном виде: не открыто видео, нет листа cookies, нет кнопки блока в кадре, не тарифы.
+     Крестик — больше не показываем в этой сессии (sessionStorage в try/catch). */
+  const pop = d.getElementById('wa-pop');
+  if (pop && bar) {
+    const SK = 'es_wapop_v1';
+    let ss = {};
+    try { ss = JSON.parse(sessionStorage.getItem(SK) || '{}') || {}; } catch (e) { ss = {}; }
+    ss.n = ss.n || 0;
+    const save = () => { try { sessionStorage.setItem(SK, JSON.stringify(ss)); } catch (e) { /* приватный режим */ } };
+    const free = () => !st.modal && !st.cookie && st.cta.size === 0 && !st.tariffs && !d.hidden;
+    let nextAt = Date.now() + 15000, hideAt = 0, on = false, timer = 0;
+    const hidePop = () => { on = false; pop.classList.remove('is-on'); };
+    const showPop = () => {
+      on = true; pop.classList.add('is-on');
+      ss.n += 1; save();
+      hideAt = Date.now() + 9000; nextAt = Date.now() + 60000;
+    };
+    const loop = () => {
+      if (on) { if (Date.now() >= hideAt || !free() || ss.off) hidePop(); return; }
+      if (ss.off || ss.n >= 3) { clearInterval(timer); return; }
+      if (Date.now() >= nextAt && free()) showPop();
+    };
+    if (!ss.off && ss.n < 3) timer = setInterval(loop, 500);
+    const x = pop.querySelector('[data-wa-pop-x]');
+    if (x) x.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); ss.off = true; save(); hidePop(); });
+    const link = pop.querySelector('a');
+    if (link) link.addEventListener('click', () => hidePop());
   }
 })();

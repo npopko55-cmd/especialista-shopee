@@ -340,7 +340,9 @@ b, strong { font-weight: 700; }
   transform: translateY(calc(100% + 30px)); opacity: 0; visibility: hidden; pointer-events: none;
   transition: transform .2s ease, opacity .2s ease, visibility 0s linear .2s;
 }
-@media (prefers-reduced-motion: reduce) { .sticky-cta .btn, .sticky-cta.is-compact .btn { transition: none; } }
+.sticky-cta__wa { transition: opacity .25s ease, transform .25s ease, visibility 0s linear 0s; }
+.sticky-cta.is-top .sticky-cta__wa { opacity: 0; visibility: hidden; transform: scale(.8); pointer-events: none; transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s; }
+@media (prefers-reduced-motion: reduce) { .sticky-cta .btn, .sticky-cta.is-compact .btn, .sticky-cta__wa, .sticky-cta.is-top .sticky-cta__wa { transition: none; } }
 
 /* ---------- Окно видео ---------- */
 .vmodal {
@@ -394,45 +396,101 @@ b, strong { font-weight: 700; }
    БЛОКИ 1–6 (исполнитель A)
    ===================================================================== */
 
-/* ---------- Блок 1 — первый экран (раунд 4 «Простота») ----------
-   Фото во всю ширину (440–480 px), лицо строго по оси 50 %; сверху словесный знак на мягком градиенте.
-   Ниже — белый лист (радиус 32 сверху), заходит на фото на 28 px. Единственный акцент — «Shopee без вложений». */
-#b1 { padding: 0; text-align: center; background: #fff; }
-#b1::before { display: none; }                 /* без картинки неба и лент */
+/* ---------- Блок 1 — первый экран (раунд 5, Лиза: «амплитуда», Эрика вылезает из рамки) ----------
+   Небо — в скруглённой панели (радиус 32, 14 px от краёв экрана, высота --ph). Вырезка HD выходит макушкой на --pop
+   над верхним краем панели (на светлом фоне страницы), низ обрезан краем панели (clip-path со скруглением 32).
+   Ось лица в холсте 1050×1400 — 57,9 % ширины → ровно 50 % панели. Макушка — на 11,3 % высоты холста.
+   Высота панели зависит от высоты экрана: на 390×844 кнопка первого экрана не должна уйти под закреплённую панель. */
+#b1 { display: flow-root; padding: 0; text-align: center; background: linear-gradient(180deg, #F3F9FC 0, #fff 72%); }   /* flow-root: отступ сцены не схлопывается с секцией */
+#b1::before { display: none; }
+.hero__stage {
+  --ph: clamp(280px, calc(100svh - 506px), 460px);          /* высота панели с небом (на 390×844 — 338) */
+  --ih: clamp(600px, calc(var(--ph) * 2.05), 820px);         /* высота холста вырезки: лицо ≈ 100–120 px */
+  --pop: 36px;                                                /* макушка над краем панели */
+  position: relative; height: var(--ph); margin: calc(var(--pop) + 4px) 14px 0;
+}
 .hero__photo {
-  position: relative; margin: 0; overflow: hidden;
-  height: clamp(330px, 46svh, 440px);   /* низкие экраны: кнопка первого экрана не уходит под панель */
-  background: #CFE4F2 url("bg/sky-hero.webp") center 62% / cover no-repeat;   /* небо (Higgsfield) за вырезкой */
+  position: absolute; inset: 0; overflow: hidden; border-radius: 32px; isolation: isolate;
+  background: #CFE4F2; box-shadow: var(--shadow);
 }
-/* Ось лица Эрики в исходнике (1050×1400) — 57,1 % ширины. Картинка шире рамки в 1,3 раза и сдвинута:
-   left = 50 % − 0,571 × 130 % = −24,2 % → ось лица ровно на 50 % рамки на любой ширине. */
-.hero__photo img { position: absolute; left: -24.2%; top: 0; width: 130%; max-width: none; height: auto; }
-.hero__photo::after {
-  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 120px; pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .55) 0, rgba(255, 255, 255, .18) 55%, rgba(255, 255, 255, 0) 100%);
+.hero__sky {                  /* шёлковые ленты неба медленно «дышат» */
+  position: absolute; inset: -16px;
+  background: url("bg/sky-hero.webp") center 58% / cover no-repeat;
+  animation: hero-breathe 9s ease-in-out infinite;
 }
-.hero__bar { position: absolute; z-index: 1; left: 0; right: 0; top: 0; display: flex; align-items: center; justify-content: center; height: 48px; }
-.hero__mark { font-family: var(--serif); font-size: 17px; line-height: 1.1; letter-spacing: -.005em; color: var(--ink); }
-.hero__sheet {
-  position: relative; z-index: 1; margin-top: -28px; padding: 16px 20px 36px;
-  border-radius: 32px 32px 0 0; background: #fff;
+.hero__glow {                 /* лёгкий тёплый блик слева */
+  position: absolute; left: -28%; top: 6%; width: 86%; height: 74%; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 216, 176, .95), rgba(255, 216, 176, 0));
+  opacity: .55; animation: hero-glow 6s ease-in-out infinite;
 }
-.hero__eyebrow { margin: 0 auto 8px; font-size: 12px; letter-spacing: .04em; color: var(--muted); }
+@keyframes hero-breathe { 0%, 100% { transform: translate3d(-8px, 0, 0); } 50% { transform: translate3d(8px, -5px, 0); } }
+@keyframes hero-glow { 0%, 100% { opacity: .55; } 50% { opacity: .8; } }
+.hero__cut {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  -webkit-clip-path: inset(calc(-1 * var(--pop) - 40px) 0 0 0 round 0 0 32px 32px);
+          clip-path: inset(calc(-1 * var(--pop) - 40px) 0 0 0 round 0 0 32px 32px);
+}
+.hero__cut img {
+  position: absolute; display: block; max-width: none; width: auto; height: var(--ih);
+  left: calc(50% - var(--ih) * .75 * .579);
+  top: calc(-1 * (var(--ih) * .113 + var(--pop)));
+}
+.hero__floor {                /* мягкая контактная тень под нижним краем */
+  position: absolute; z-index: -1; left: 14%; right: 14%; bottom: -16px; height: 26px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(31, 42, 51, .2), rgba(31, 42, 51, 0));
+}
+.hero__sheet { position: relative; z-index: 1; padding: 16px 20px 36px; }
+/* (а) eyebrow — пилюля со звездой; сидит на нижнем крае панели (половина — на небе), экономит высоту первого экрана */
+.hero__eyebrow {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 6px; width: max-content; max-width: min(calc(100% - 12px), 290px);
+  min-height: 30px; margin: -36px auto 0; padding: 5px 14px 5px 10px; border-radius: 16px;
+  background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+  font-size: 14px; font-weight: 600; line-height: 1.25; letter-spacing: 0; color: var(--ink); text-align: center; text-wrap: balance;
+}
+.hero__eyebrow svg { width: 16px; height: 16px; color: var(--gold); }
+/* (б) оффер */
 .hero__title {
-  font-family: var(--serif); font-weight: 400;
-  font-size: clamp(28px, 8.2vw, 32px); line-height: 1.1; letter-spacing: -.005em; color: var(--ink);
+  margin-top: 12px; font-family: var(--serif); font-weight: 400;
+  font-size: clamp(29px, 8.7vw, 34px); line-height: 1.08; letter-spacing: -.01em; color: var(--ink);
   text-wrap: balance;
 }
 .hero__az { color: var(--azure); }
-.hero__title-sub { display: block; margin-top: 6px; font-size: 20px; line-height: 1.25; color: var(--ink); }
-.hero__sub { max-width: 23em; margin: 10px auto 0; font-size: 16px; font-weight: 500; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
-.hero__sub b { font-weight: 700; white-space: nowrap; }
+/* (в) продолжение — отдельная светлая плашка с тонкими линиями сверху и снизу */
+.hero__title-sub {
+  position: relative; display: block; margin: 15px 0 0; padding: 8px 14px 9px;
+  border-radius: 14px; background: #EAF5FA;
+  font-size: 19px; line-height: 1.25; letter-spacing: 0; color: var(--ink); text-wrap: balance;
+}
+.hero__title-sub::before, .hero__title-sub::after {
+  content: ""; position: absolute; left: 18%; right: 18%; height: 1px; background: rgba(31, 42, 51, .14);
+}
+.hero__title-sub::before { top: -8px; }
+.hero__title-sub::after { bottom: -8px; }
+/* (г) подоффер: суммы в светлых пилюлях (исключение из правил простоты по просьбе Лизы) */
+.hero__sub { max-width: 24em; margin: 15px auto 0; font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.hero__sub b { display: inline-block; padding: 0 6px; border-radius: 8px; background: #E6F3FA; font-weight: 700; line-height: 1.4; white-space: nowrap; }
 #b1 .cta { margin-top: 14px; }
+/* (е) три пункта под кнопкой в один ряд: иконка сверху, текст 13 px */
+.hero__trust { display: flex; justify-content: center; align-items: stretch; gap: 6px; max-width: 360px; margin: 12px auto 0; }
+.hero__trust > li:not(.hero__dot) {
+  flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-size: 13px; font-weight: 600; line-height: 1.25; color: var(--ink); text-align: center; text-wrap: balance;
+}
+.hero__trust > li:nth-child(3) { flex-grow: 1.45; }   /* «Доступ сразу после оплаты» — самый длинный */
+.hero__trust svg { width: 20px; height: 20px; color: var(--azure-sm); }
+.hero__dot { flex: none; width: 1px; margin: 4px 0; overflow: hidden; background: var(--line); color: transparent; font-size: 0; }
+/* 4 плитки: 2×2, 64 px, 3D 40 px слева */
 .hero__chips { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 24px; }
-.hero__chips .chip { display: flex; min-height: 48px; padding: 8px 12px; border-radius: 16px; font-size: 14px; line-height: 1.25; text-align: left; }
-.hero__chips .chip svg { width: 20px; height: 20px; }
+.hero__tile {
+  display: flex; align-items: center; gap: 9px; min-width: 0; min-height: 64px; padding: 10px 10px 10px 9px;
+  border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+  font-size: 14.5px; font-weight: 600; line-height: 1.25; color: var(--ink); text-align: left; text-wrap: balance;
+}
+.hero__tile img { flex: none; width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 5px 6px rgba(40, 110, 150, .22)); }
+@media (max-width: 389px) { .hero__tile { gap: 7px; padding: 8px 8px 8px 7px; } .hero__tile img { width: 36px; height: 36px; } }
 @media (max-width: 359px) { .hero__chips { grid-template-columns: minmax(0, 1fr); } }
-/* Видео: реальный кадр 0:03 ролика (титульный слайд, Эрика с открытыми глазами); play — белый круг 64 px строго по центру */
+/* Видео: реальный кадр ролика; play — белый круг 64 px строго по центру, пульс-кольцо и рука «нажми» ниже play */
 .video-card {
   position: relative; display: block; width: 100%; margin: 20px 0 0; padding: 0;
   aspect-ratio: 1100 / 619; border: 0; border-radius: var(--r-lg); overflow: hidden;
@@ -442,21 +500,24 @@ b, strong { font-weight: 700; }
 .video-card:focus { outline: none; }
 .video-card:focus-visible { outline: 2px solid rgba(31, 42, 51, .35); outline-offset: 3px; }
 .video-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.video-card__play {
-  position: absolute; left: 50%; top: 50%; display: grid; place-items: center;
-  width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%;
-  background: #fff; color: var(--ink); box-shadow: 0 8px 20px -8px rgba(31, 42, 51, .35);
+.video-card__play, .video-card__ring {
+  position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%;
 }
+.video-card__play { display: grid; place-items: center; background: #fff; color: var(--ink); box-shadow: 0 8px 20px -8px rgba(31, 42, 51, .35); }
+.video-card__ring { background: rgba(255, 255, 255, .95); opacity: 0; animation: vc-ring 2.2s ease-out infinite; }
+@keyframes vc-ring { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.35); opacity: 0; } }
 /* у треугольника #i-play центр тяжести уже в центре viewBox (x ≈ 12,1 из 24) — без сдвигов */
 .video-card__play svg { width: 26px; height: 26px; }
-.video-card__cap { margin-top: 10px; font-size: 14px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+.video-card__hint { position: absolute; left: 50%; top: calc(50% + 38px); transform: translateX(-50%); }
 
 /* ---------- Блок 2 — для кого: 7 ситуаций, два варианта (A — диорамы, B — фото: ?b2=faces) ----------
    Раунд 4: все карточки 284 px и одной высоты (лента растягивает), зона картинки 190 px ВНУТРИ карточки
    (белая подложка, отступ 16 px, contain, без поворотов и mix-blend-mode). Тон карточек — два светлых в чередовании. */
-html[data-b2="faces"] .b2v--a, html:not([data-b2="faces"]) .b2v--b { display: none; }
+/* раунд 5: по умолчанию — фото (вариант B); диорамы — только ?b2=a */
+html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
 #b2 { --from: #fff; padding-bottom: 96px; }   /* пауза: кнопки блоков 2 и 3 не попадают в один кадр */
-.b2__hint { display: flex; width: max-content; max-width: 100%; margin: -2px auto 0; }
+#b2 .hint-row { margin: -2px 0 0; }
+#b2 .arrows { --arrows-top: 101px; }   /* середина фото карточки */
 .b2__track { gap: 12px; padding-top: 16px; padding-bottom: 26px; }
 .b2__track .carousel__card { flex: 0 0 284px; }
 .sit {
@@ -490,38 +551,28 @@ html[data-b2="faces"] .b2v--a, html:not([data-b2="faces"]) .b2v--b { display: no
 .goto__b[aria-current="true"] { box-shadow: 0 0 0 2px var(--ink); }
 @media (max-width: 359px) { .goto__b { width: 40px; height: 40px; } }
 
-/* ---------- Блок 3 — Эрика: арка во всю свою колонку + регалии строками ---------- */
+/* ---------- Блок 3 — Эрика (раунд 5, Лиза): две арки в ряд «тогда / сейчас» + регалии с галочками ---------- */
 #b3 { padding-top: 50px; padding-bottom: 32px; }
-.b3__grid { display: grid; grid-template-columns: minmax(0, 40%) minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 8px; }
-.b3__ph { container-type: inline-size; min-width: 0; }
-.b3__gal {
-  position: relative; height: 280px; margin: 0; overflow: hidden;
-  border-radius: 50cqw 50cqw 18px 18px; background: var(--sky-2); box-shadow: var(--shadow);
+.b3__pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; max-width: 400px; margin: 10px auto 0; }
+.b3__col { min-width: 0; margin: 0; text-align: center; }
+.b3__arch {
+  height: 272px; overflow: hidden; border: 4px solid #fff; border-radius: 999px 999px 18px 18px;
+  background: var(--sky-2); box-shadow: var(--shadow);
 }
-.b3__track { position: absolute; inset: 0; margin: 0; padding: 0; gap: 0; scroll-padding-inline: 0; }
-.b3__track::after { display: none; }
-.b3__track .carousel__card { flex: 0 0 100%; height: 100%; overflow: hidden; }
-.b3__track img { display: block; width: 100%; height: 100%; object-fit: cover; }
-/* лицо — по оси 50 %: Цюрих (лицо на 51 % × 58 % кадра) — крупнее и чуть выше; Париж (49 % × 43 %) — как есть */
-.b3__track .b3__z { object-position: 54% 50%; transform: scale(1.5); transform-origin: 50% 80%; }
-.b3__track .b3__p { object-position: 48% 50%; }
-/* точки: видимые 8 px, тап-зона 40 × 40 */
-.b3__dots { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; }
-.b3__dots button::before { width: 8px; height: 8px; border: 0; background: rgba(255, 255, 255, .6); box-shadow: 0 1px 3px rgba(0, 0, 0, .3); }
-.b3__dots button[aria-current="true"]::before { width: 18px; border-radius: 4px; background: #fff; border: 0; }
-.b3__list > li:first-child { padding-top: 0; }
-.b3__list > li:last-child { padding-bottom: 0; }
-.b3__origin {
-  max-width: 20em; margin: 22px auto 0;
-  font-family: var(--serif); font-weight: 400; font-style: normal; font-size: 20px; line-height: 1.3;
-  color: var(--ink); text-align: center; text-wrap: balance;
-}
-#b3 .cta { margin-top: 18px; }
-@media (max-width: 379px) {
-  .b3__grid { grid-template-columns: minmax(0, 1fr); }
-  .b3__gal { height: 240px; border-radius: var(--r-lg); }
-  .b3__track .b3__z { transform: none; object-position: 50% 85%; }
-  .b3__track .b3__p { object-position: 50% 35%; }
+.b3__arch img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.b3__arch--then img { filter: saturate(.7); object-position: 50% 24%; }
+.b3__arch--now img { object-position: 50% 22%; }
+.b3__origin { margin: 12px 2px 0; font-family: var(--serif); font-weight: 400; font-style: normal; font-size: 17px; line-height: 1.3; color: var(--ink); text-wrap: balance; }
+.b3__blog { margin: 12px 2px 0; font-size: 16px; font-weight: 700; line-height: 1.35; color: var(--ink); text-wrap: balance; }
+.b3__list { max-width: 360px; margin: 26px auto 0; }
+.b3__list > li { font-size: 15px; }
+.b3__list b { color: var(--ink); }
+#b3 .cta { margin-top: 26px; }
+@media (max-width: 359px) {
+  .b3__pair { gap: 10px; }
+  .b3__arch { height: 244px; }
+  .b3__origin { font-size: 15.5px; }
+  .b3__blog { font-size: 14.5px; }
 }
 
 /* ---------- Блок 4 — что за обучение: продавцы → вакансии → профессия ---------- */
@@ -535,25 +586,36 @@ html[data-b2="faces"] .b2v--a, html:not([data-b2="faces"]) .b2v--b { display: no
 .b4__shops { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
 .b4__shops .obj { width: 60px; height: 60px; }
 .b4__s1 { margin-top: 12px; font-size: 16px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
-.b4__jobs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
-.b4__job {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 0;
-  padding: 16px 8px 14px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
-}
-.b4__job .num { font-size: clamp(30px, 9.4vw, 40px); white-space: nowrap; }
-.b4__src { font-size: 14px; font-weight: 600; color: var(--muted); }
-.b4__s2 { margin: 14px 2px 0; font-size: 16px; line-height: 1.5; color: var(--ink); text-align: center; text-wrap: pretty; }
-.b4__pay { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: center; gap: 12px; padding: 18px 20px; }
-.b4__star { width: 24px; height: 24px; color: var(--gold); }
+/* раунд 5 (Лиза): пруфы — крупная цифра Prata над НАСТОЯЩИМ скриншотом в белой рамке (всё — aria-hidden декор) */
+.b4__proofs { display: grid; gap: 20px; margin-top: 2px; }
+.b4__proof { min-width: 0; margin: 0; text-align: center; }
+.b4__pn { font-size: clamp(38px, 11vw, 46px); color: var(--azure); white-space: nowrap; }
+.b4__shot { margin-top: 8px; padding: 6px; border-radius: 16px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.b4__shot img { display: block; width: 100%; height: auto; border-radius: 11px; }
+.b4__cap { margin-top: 8px; font-size: 12.5px; font-weight: 500; line-height: 1.35; color: var(--muted); }
+.b4__s2 { margin: 18px 2px 0; font-size: 16px; line-height: 1.5; color: var(--ink); text-align: center; text-wrap: pretty; }
+/* итог — единственный акцент блока: персиковая заливка + 3D деньги (покачиваются) */
+.b4__pay { display: grid; grid-template-columns: minmax(0, 1fr) 118px; align-items: center; gap: 12px; padding: 18px 14px 18px 20px; }
 .b4__pay p { font-size: 18px; line-height: 1.35; font-weight: 700; color: var(--ink); text-wrap: pretty; }
+.b4__money { display: block; }
+.b4__money img { display: block; width: 118px; height: 82px; object-fit: contain; filter: drop-shadow(0 10px 12px rgba(160, 95, 20, .25)); }
+@media (max-width: 379px) {
+  .b4__pay { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .b4__money { order: -1; }
+}
 
 /* ---------- 5 способов заработка: пять одинаковых карточек одного тона ---------- */
 #b4w { padding-top: 52px; }
-.b4w__hint { display: flex; gap: 0; width: max-content; margin: -2px auto 2px; }
-.b4w__hint [data-carousel-counter] { font-family: var(--sans); font-weight: 700; color: var(--ink); }
+#b4w .arrows { --arrows-top: 128px; }   /* середина экрана-примера */
 .b4w__rail .carousel { padding-top: 14px; }
 .way { display: flex; flex-direction: column; padding: 12px 12px 20px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
-.way__top { position: relative; height: 190px; border-radius: 18px; background: var(--peach-2); }
+.way__top { position: relative; height: 248px; border-radius: 18px; background: var(--peach-2); }
+/* раунд 5 (Лиза): настоящий экран телефона из презентации — целиком, 220 px; покачивается только у активной карточки */
+.way .way__phone {
+  position: absolute; left: 0; right: 0; top: 14px; display: block; width: 109px; height: 220px; margin: 0 auto;
+  object-fit: contain; filter: drop-shadow(0 14px 16px rgba(160, 90, 40, .24));
+}
+.way:not(.is-cur) .way__phone.bob { animation: none; }
 .way .way__obj { position: absolute; left: 16px; top: 16px; width: calc(100% - 32px); height: calc(100% - 32px); object-fit: contain; }   /* целиком внутри плашки, любой пропорции */
 .way__n { position: absolute; left: 14px; top: 12px; font: 400 20px/1 var(--serif); color: var(--muted); }
 .way__body { padding: 14px 8px 0; }
@@ -569,10 +631,12 @@ html[data-b2="faces"] .b2v--a, html:not([data-b2="faces"]) .b2v--b { display: no
 
 /* ---------- Блок 5 — гарантия: щит и печать «7 дней» (единственный акцент) ---------- */
 #b5 { padding-bottom: 40px; }
+/* высокие экраны (768×1024): блок не ниже окна — кнопки блоков 4w и 5 не встают в один кадр */
+#b5 { min-height: calc(100svh + 60px); display: flex; flex-direction: column; justify-content: center; }
 /* щит слева, печать справа-внизу ЗА пределами картинки щита — значок-лупа щита открыт */
-.b5__stage { position: relative; width: 280px; max-width: 100%; height: 226px; margin: 4px auto 0; }
+.b5__stage { position: relative; width: 300px; max-width: 100%; height: 236px; margin: 4px auto 0; }
 .b5__shield {
-  position: absolute; left: 0; top: 0; display: block; width: 196px; height: 199px; object-fit: contain;
+  position: absolute; left: 6px; top: 0; display: block; width: 190px; height: 230px; object-fit: contain;   /* щит с флагом Бразилии */
   filter: drop-shadow(0 16px 20px rgba(160, 110, 50, .22));
 }
 .b5__seal {
@@ -585,8 +649,18 @@ html[data-b2="faces"] .b2v--a, html:not([data-b2="faces"]) .b2v--b { display: no
 .b5__seal::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, .9); }
 .b5__seal-n { font: 400 40px/.95 var(--serif); color: var(--ink); }
 .b5__seal-d { margin-top: 2px; font: 400 14px/1 var(--serif); color: var(--ink); }
-.b5__g { max-width: 19em; margin: 12px auto 18px; font-size: 18px; line-height: 1.45; color: var(--ink); text-align: center; text-wrap: balance; }
+/* раунд 5 (Лиза): гарантия — отдельная золотистая полоса, «вернём 100% денег» жирно 20 px */
+.b5__g {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 12px;
+  max-width: 400px; margin: 16px auto 18px; padding: 16px 18px 16px 14px; border-radius: var(--r-lg);
+  background: #FFF3D6; box-shadow: var(--shadow-sm); text-align: left;
+}
+.b5__gi { width: 34px; height: 34px; color: #A8671A; stroke-width: 1.6; }
+.b5__g p { font-size: 16px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
 .b5__g strong { font-weight: 700; }
+.b5__big { font-size: 20px; font-weight: 700; line-height: 1.3; }
+.b5__flag { display: grid; place-items: center; width: 56px; height: 56px; }
+.b5__flag svg { display: block; width: 32px; height: 22px; border-radius: 4px; box-shadow: 0 4px 10px -4px rgba(31, 42, 51, .35); }
 .b5__panel { padding: 4px 18px; }
 .b5__row { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: center; gap: 14px; padding: 14px 0; }
 .b5__row + .b5__row { border-top: 1px solid var(--line); }
@@ -624,10 +698,7 @@ html[data-b2="faces"] .b2v--a, html:not([data-b2="faces"]) .b2v--b { display: no
 .mini__t { grid-column: 2; font-weight: 700; font-size: 15px; line-height: 1.3; color: var(--ink); text-wrap: balance; }
 .mini__p { font-size: 14.5px; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
 .mini > .mini__p, .mini > .more { grid-column: 2; }
-@media (min-width: 470px) {
-  .b6__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .mini--wide { grid-column: 1 / -1; }
-}
+/* раунд 5: плитки в одну колонку на любой ширине (в 2 колонках на 480 заголовки рвались на 3–4 строки по слову) */
 .more > summary {
   display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px;
   list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
@@ -646,3 +717,129 @@ html[data-b2="faces"] .b2v--a, html:not([data-b2="faces"]) .b2v--b { display: no
 .b6__ip-phone { display: block; width: 56px; height: 100px; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(160, 80, 30, .2)); }
 .b6__ip-t { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.15; color: var(--ink); }
 .b6__ip-p { margin-top: 6px; font-size: 15px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
+
+/* ---------- Блок 6 — раунд 5 (Лиза): сертификат, лицо Эрики у поддержки, три iPhone ---------- */
+#b6 .arrows { --arrows-top: 87px; }   /* середина макета */
+.mini--ava { grid-template-columns: 56px minmax(0, 1fr); }
+.mini--cert { grid-template-columns: 72px minmax(0, 1fr); }
+.mini__ava, .mini__cert { position: relative; display: block; grid-row: 1 / span 2; align-self: start; }
+.mini__ava { width: 56px; height: 56px; }
+.mini__face {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 50%;
+  background: radial-gradient(circle at 40% 30%, #F1F9FC, #BFE0EE); box-shadow: 0 0 0 2px #fff, var(--shadow-sm);
+}
+.mini__face img { position: absolute; display: block; max-width: none; width: auto; height: 250px; left: calc(28px - 250px * .75 * .579); top: -24px; }
+.mini__bubble {
+  position: absolute; right: -5px; bottom: -4px; display: grid; place-items: center; width: 24px; height: 24px;
+  border-radius: 50%; background: #fff; box-shadow: var(--shadow-sm); color: var(--azure-sm);
+}
+.mini__bubble svg { width: 14px; height: 14px; }
+.mini__cert { width: 68px; height: 90px; margin-top: 2px; transform: rotate(-3deg); }
+.mini__cert svg { display: block; width: 68px; height: 90px; filter: drop-shadow(0 8px 10px rgba(31, 42, 51, .16)); }
+.b6__ip { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 8px; padding: 14px 20px 20px; text-align: center; }
+.b6__ip-phones { display: block; width: 172px; height: 161px; object-fit: contain; filter: drop-shadow(0 12px 14px rgba(160, 80, 30, .22)); }
+@media (min-width: 470px) { .b6__ip { grid-template-columns: 172px minmax(0, 1fr); justify-items: start; text-align: left; gap: 16px; } }
+
+/* =====================================================================
+   РАУНД 5 (правки Лизы) — ОБЩИЕ КОМПОНЕНТЫ «живости». Делает A, B пользуется по имени.
+   Жизнь даёт движение и подсказки, а не новые плашки: всё одноцветное, без свечений и рамок 2 px.
+   Все анимации выключаются при prefers-reduced-motion: reduce (правило в конце раздела).
+
+   .hint          <span class="hint" aria-hidden="true">листай</span>
+                  белая пилюля 32 px, текст 13.5 px, справа стрелка 16 px (SVG-маска), стрелка покачивается ±5 px, 2.4 s.
+   .hint--tap     <span class="hint hint--tap" aria-hidden="true">Нажми на модуль, чтобы увидеть уроки</span>
+                  слева рука-палец 16 px с мягким пульсом 1 → 1.12; стрелки справа нет.
+                  .hint.is-seen — статичная (site.js ставит, когда карусель в том же [data-carousel] уже листали).
+   .arrows        обёртка карусели: <div class="arrows"><div class="carousel">…</div></div> внутри [data-carousel].
+                  site.js сам добавит кнопки ‹ › (44 px, [data-carousel-prev]/[data-carousel-next]) и спрячет их на краях.
+                  Высота кнопок по умолчанию — середина ленты; поправить: style="--arrows-top: 120px".
+   .reveal        плавное появление при первом попадании в кадр (opacity 0 → 1, translateY 14 → 0, 500 ms, один раз).
+                  Без JS и при reduce — видно сразу. Пачка элементов, вошедших вместе, появляется по очереди (шаг 90 мс);
+                  своя задержка — style="--rd:.2s". НЕ вешай .reveal и .bob на один элемент (оба двигают transform) — оберни.
+   .bob           покачивание 3D: translateY 0 → −6 px → 0, 4.2 s, задержка style="--d:.6s".
+   .wa-pop        пузырь у круглой WhatsApp-кнопки панели (разметка в parts/tail.html, логика в site.js).
+   ===================================================================== */
+.hint {
+  display: inline-flex; align-items: center; gap: 7px; vertical-align: middle;
+  height: 32px; padding: 0 12px 0 14px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+  font: 600 13.5px/1 var(--sans); color: var(--ink); white-space: nowrap;
+  -webkit-user-select: none; user-select: none;
+}
+.hint::after, .hint--tap::before {
+  content: ""; flex: none; width: 16px; height: 16px; background: currentColor;
+  -webkit-mask: var(--hint-i) center / 16px 16px no-repeat; mask: var(--hint-i) center / 16px 16px no-repeat;
+}
+.hint {
+  --hint-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+.hint::after { animation: hint-nudge 2.4s ease-in-out infinite; }
+.hint--tap {
+  padding: 0 14px 0 10px;
+  --hint-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 14a8 8 0 0 1-8 8'/%3E%3Cpath d='M18 11v-1a2 2 0 0 0-4 0'/%3E%3Cpath d='M14 10V9a2 2 0 0 0-4 0v1'/%3E%3Cpath d='M10 9.5V4a2 2 0 0 0-4 0v10'/%3E%3Cpath d='M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15'/%3E%3C/svg%3E");
+}
+.hint--tap::after { content: none; animation: none; }
+.hint--tap::before { transform-origin: 50% 70%; animation: hint-pulse 1.6s ease-in-out infinite; }
+.hint.is-seen::after, .hint.is-seen::before { animation: none; }
+@keyframes hint-nudge { 0%, 100% { transform: translateX(-3px); } 50% { transform: translateX(5px); } }
+@keyframes hint-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+/* строка «заголовок … подсказка справа» над каруселью */
+.hint-row { display: flex; justify-content: flex-end; margin: 0 0 8px; }
+
+/* ---------- .arrows: круглые кнопки ‹ › по краям карусели ---------- */
+.arrows { position: relative; }
+.arrows__btn {
+  position: absolute; z-index: 3; top: var(--arrows-top, calc(50% - 34px));
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 1px solid var(--line); border-radius: 50%; cursor: pointer;
+  background: rgba(255, 255, 255, .96); color: var(--ink); box-shadow: var(--shadow-sm);
+  -webkit-tap-highlight-color: transparent; transition: opacity .2s ease, visibility 0s linear 0s;
+}
+.arrows__btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.arrows__btn--prev, [data-carousel-prev].arrows__btn { left: -12px; }
+.arrows__btn--next, [data-carousel-next].arrows__btn { right: -12px; }
+.arrows__btn.is-off { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .2s ease, visibility 0s linear .2s; }
+.arrows__btn:active { transform: scale(.96); }
+
+/* ---------- .reveal: появление один раз (класс js-rv ставит скрипт в <head>) ---------- */
+.js-rv .reveal { transition: opacity .5s ease, transform .5s ease; transition-delay: var(--rd, 0s); }
+.js-rv .reveal:not(.is-in) { opacity: 0; transform: translate3d(0, 14px, 0); }
+
+/* ---------- .bob: покачивание 3D ---------- */
+.bob { animation: bob 4.2s ease-in-out var(--d, 0s) infinite both; }
+@keyframes bob { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -6px, 0); } }
+
+/* ---------- .wa-pop: пузырь над круглой WhatsApp-кнопкой панели ---------- */
+.wa-pop {
+  position: absolute; right: 12px; bottom: calc(100% + 4px);
+  display: flex; align-items: center; gap: 0;
+  width: max-content; max-width: min(272px, calc(100vw - 24px));
+  padding: 4px 2px 4px 16px; border-radius: 20px;
+  background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+  opacity: 0; visibility: hidden; transform: translate3d(0, 8px, 0);
+  transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s;
+}
+.wa-pop.is-on { opacity: 1; visibility: visible; transform: none; transition: opacity .25s ease, transform .25s ease, visibility 0s linear 0s; }
+.wa-pop::after {        /* хвостик к центру круглой кнопки (56 px) */
+  content: ""; position: absolute; right: 21px; bottom: -7px; width: 14px; height: 14px;
+  background: #fff; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  transform: rotate(45deg); border-bottom-right-radius: 3px;
+}
+.wa-pop__link {
+  display: flex; align-items: center; min-height: 44px; padding: 4px 0;
+  font-size: 14.5px; font-weight: 600; line-height: 1.3; color: var(--ink); text-decoration: none; text-wrap: balance;
+}
+.wa-pop__link b { color: #128C4B; }
+.wa-pop__x {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px; margin-left: 2px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.wa-pop__x svg { width: 18px; height: 18px; }
+
+/* ---------- reduce motion: выключаем ВСЕ анимации страницы (и у B тоже) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; }
+  .js-rv .reveal, .js-rv .reveal:not(.is-in) { opacity: 1; transform: none; transition: none; }
+  .wa-pop, .arrows__btn { transition: none; }
+}
