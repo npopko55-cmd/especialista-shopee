@@ -553,3 +553,7 @@
 /* замер WebKit: «Можно закрыть…» при 15 px — 418 px, при 14 px и −0.01em — 383 px; «А можно…» (700) — 363 / 333 px.
    Колонка текста 350 px на 390: вторая строка встаёт в одну строку при 14 px, первая — только от ширины 423 px */
 @media (min-width: 380px) and (max-width: 458px) { #b10 .b10-lead { font-size: 14px; letter-spacing: -.01em; } }
+
+/* карточка модуля нажимается целиком (site-b.js) */
+#b7 .b7-card { cursor: pointer; }
+#b7 .b7-lessons { cursor: default; }

@@ -32,3 +32,19 @@
     t = setTimeout(fit, 150);
   });
 })();
+
+/* Раунд 6 (Лиза 30.09): подсказка говорит «Нажми на модуль», и люди жмут на слово или на карточку, а не на кнопку «Уроки».
+   Карточка модуля целиком раскрывает и сворачивает список уроков; кнопка «Уроки», ссылки и сам список работают как раньше. */
+(() => {
+  'use strict';
+  document.querySelectorAll('#b7 .b7-card').forEach(card => {
+    const d = card.querySelector('details');
+    if (!d) return;
+    card.addEventListener('click', e => {
+      if (e.target.closest('summary, a, button, .b7-lessons')) return;   /* summary откроет себя сам */
+      const sel = window.getSelection && window.getSelection();
+      if (sel && String(sel).length > 0) return;                        /* выделяют текст — не трогаем */
+      d.open = !d.open;
+    });
+  });
+})();
