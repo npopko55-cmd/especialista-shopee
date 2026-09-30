@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Especialista em Shopee — Método da Erica Marques</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="em-page" content="planb-cadastro">
+<!-- Куда вести после заявки (продающий сайт). Сейчас — соседняя страница; боевой адрес Никита подставит сюда.
+     Скрипт допишет к адресу метки из текущей ссылки (utm_*, fbclid и др.) и lead=1. -->
+<meta name="em-next" content="index.html">
+<meta name="theme-color" content="#EAF5FA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&amp;family=Raleway:wght@500;600;700&amp;display=swap">
+<link rel="preload" as="image" href="assets/img/hero-erika-cut-hd.webp" fetchpriority="high">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/cadastro.css">
+</head>
+<body class="cad">
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-starfill" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2.8l2.8 5.7 6.3.9-4.55 4.43 1.07 6.27L12 17.1l-5.62 2.96 1.07-6.27L2.9 9.4l6.3-.9z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect width="12" height="20" x="6" y="2" rx="2.5"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect width="16" height="11" x="4" y="11" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+</svg>
+
+<main class="page cad-page">
+  <!-- Верх: небо в скруглённой панели, Эрика выходит головой над панелью (классы сцены — общие, из site.css) -->
+  <section class="cad-top" aria-labelledby="cad-title">
+    <div class="hero__stage cad-stage">
+      <div class="hero__photo" aria-hidden="true"><span class="hero__sky"></span><span class="hero__glow"></span></div>
+      <div class="hero__cut"><img src="assets/img/hero-erika-cut-hd.webp" width="1050" height="1400" alt="Erica Marques" fetchpriority="high" decoding="async"></div>
+      <span class="hero__sparks" aria-hidden="true"><i class="hero__spark hero__spark--1"></i><i class="hero__spark hero__spark--2"></i><i class="hero__spark hero__spark--3"></i></span>
+    </div>
+    <div class="cad-head">
+      <p class="cad-badge"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-starfill"/></svg><span>Método da Erica Marques</span></p>
+      <h1 class="cad-title" id="cad-title">Vou te ensinar a ganhar dinheiro na Shopee sem investir nada</h1>
+      <p class="cad-lead">Do zero até os primeiros reais, pelo celular e de casa.</p>
+    </div>
+  </section>
+
+  <!-- Форма. data-optin-required="1": галочка обязательна; "0" — необязательна и уходит только в whatsapp_optin. -->
+  <section class="cad-body" aria-labelledby="cad-form-title">
+    <form class="card cad-card" id="lead-form" data-optin-required="1" novalidate>
+      <h2 class="cad-card__title" id="cad-form-title">Deixe seus dados e veja como funciona o curso</h2>
+
+      <div class="cad-field">
+        <label class="cad-label" for="f-name">Nome</label>
+        <input class="cad-input" id="f-name" name="name" type="text" autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="Como você se chama" maxlength="100" required aria-describedby="err-name">
+        <p class="cad-err" id="err-name" aria-live="polite"></p>
+      </div>
+
+      <div class="cad-field">
+        <label class="cad-label" for="f-whatsapp">Número do WhatsApp</label>
+        <div class="cad-tel">
+          <label class="cad-tel__cc" for="f-whatsapp">+55</label>
+          <input class="cad-input" id="f-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="DDD + número, ex.: 11 91234-5678" maxlength="24" required aria-describedby="err-whatsapp">
+        </div>
+        <p class="cad-err" id="err-whatsapp" aria-live="polite"></p>
+      </div>
+
+      <div class="cad-field">
+        <label class="cad-label" for="f-email">E-mail</label>
+        <input class="cad-input" id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="Seu e-mail" maxlength="160" required aria-describedby="err-email">
+        <p class="cad-err" id="err-email" aria-live="polite"></p>
+      </div>
+
+      <div class="cad-hp" aria-hidden="true">
+        <label for="f-website">Website</label>
+        <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="cad-consent">
+        <label class="cad-check">
+          <input class="cad-check__box" id="f-consent" name="whatsapp_optin" type="checkbox" value="1" aria-describedby="err-consent">
+          <span class="cad-check__text">Aceito receber mensagens da Erica Marques por WhatsApp e e-mail sobre o curso e concordo com a <a href="https://curso.ericamarques.com/privacidade/" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+        </label>
+        <p class="cad-err" id="err-consent" aria-live="polite"></p>
+      </div>
+
+      <button class="btn is-shine cad-submit" type="submit"><span class="cad-submit__label">Quero ver o curso</span></button>
+      <p class="cad-note"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-lock"/></svg><span>Seus dados não são repassados a ninguém.</span></p>
+    </form>
+
+    <ul class="cad-trust">
+      <li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-phone"/></svg><span>Pelo celular</span></li>
+      <li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-sprout"/></svg><span>Sem experiência</span></li>
+      <li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-shield"/></svg><span>Garantia de 7 dias</span></li>
+    </ul>
+  </section>
+
+  <footer class="cad-foot">
+    <p class="cad-foot__links"><a href="https://curso.ericamarques.com/privacidade/">Política de Privacidade</a> · <a href="https://curso.ericamarques.com/termos/">Termos de Uso</a></p>
+    <p class="cad-foot__copy">© Erica Marques</p>
+  </footer>
+</main>
+
+<script src="assets/cadastro.js" defer></script>
+</body>
+</html>

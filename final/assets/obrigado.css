@@ -1,0 +1,26 @@
+/* obrigado.html — португальская страница «Спасибо после оплаты».
+   Основа — assets/spasibo.css (не менять). Здесь только недостающее для PT-версии. */
+
+/* Вторая спокойная кнопка «Não recebi o acesso»: иконка WhatsApp зелёная, как у .btn--wa */
+.ty-btn2--wa svg { color: var(--wa); }
+
+/* Ссылка на страницу возврата Hotmart в шагах гарантии */
+.ty-guar a { color: var(--azure-sm); font-weight: 600; overflow-wrap: anywhere; }
+
+/* Строка «Ou é só falar com a gente» под шагами возврата (в RU-черновике — inline-стиль) */
+.ty-guar .ty-guar-more { margin-top: 8px; }
+
+/* Подарки: на 360–379 колонка текста была 131 px (4 строки по ~10 знаков) — ниже 380 в одну колонку.
+   В spasibo.css то же правило стоит только ниже 360. */
+@media (max-width: 379px) { .ty-gifts { grid-template-columns: minmax(0, 1fr); } }
+
+/* 320–359: колонка текста подсказок была ~126 px (ТЗ: не уже 130), кнопки переносились на 2 строки.
+   Иконка подсказки обтекается текстом, поля карточки чуть уже, кнопки на 1 px мельче. */
+@media (max-width: 359px) {
+  .ty-card { padding: 16px 14px 14px; }
+  .ty-tip { display: block; padding: 12px; }
+  .ty-tip svg { float: left; margin: 1px 8px 0 0; }
+  .ty-btn2 { gap: 8px; font-size: 15px; }
+  .ty-support { padding: 18px 14px; }
+  .ty-support .btn { padding: 0 14px; font-size: 17px; }
+}

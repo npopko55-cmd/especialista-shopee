@@ -1,0 +1,157 @@
+/* =====================================================================
+   Especialista em Shopee — страница сбора данных плана Б (cadastro.html), 30.09.
+   Подключается ПОСЛЕ assets/site.css (токены, .card, .btn, сцена .hero__* — оттуда, не меняем).
+   Здесь — только своё с префиксом .cad-*. Цель: на 390×844 без прокрутки видно всё до кнопки включительно.
+   Движение (3 штуки): «дыхание» неба (.hero__sky), блик на кнопке (.btn.is-shine), мерцание искр (.hero__spark).
+   prefers-reduced-motion: всё выключает общее правило в конце site.css.
+   ===================================================================== */
+
+body.cad { padding-bottom: 0; background: var(--sky-1); }
+.cad-page {
+  display: flex; flex-direction: column;
+  min-height: 100vh; min-height: 100svh;
+  background: linear-gradient(180deg, #F7FBFD 0, var(--sky-0) 42%, var(--sky-1) 100%);
+}
+
+/* ---------- Верх: панель неба с Эрикой ----------
+   Высота панели зависит от высоты экрана: 390×844 → 230 px (кнопка целиком в первом экране с запасом ~14 px),
+   экран выше → до 280 px, ниже → не меньше 200 px. Холст вырезки --ih: лицо ≈ 90 px, видны голова и плечи.
+   Ось лица — 50 % панели (расчёт в site.css). */
+.cad-stage {
+  --ph: clamp(200px, calc(100svh - 614px), 280px);
+  --ih: clamp(560px, calc(var(--ph) * 2.3), 660px);
+  --pop: 26px;
+  margin-top: calc(var(--pop) + 2px);
+}
+.cad-stage .hero__glow { animation: none; }   /* блик неба — статичный: движений на экране не больше трёх */
+.cad-stage .hero__spark--1 { left: calc(50% - 116px); top: 30px; }
+.cad-stage .hero__spark--2 { left: calc(50% + 92px); top: 8px; }
+.cad-stage .hero__spark--3 { left: calc(50% + 108px); top: 84px; }
+
+.cad-head { position: relative; z-index: 2; padding: 0 20px; text-align: center; }
+/* плашка со звездой сидит на нижнем крае панели: половина на небе */
+.cad-badge {
+  display: flex; align-items: center; gap: 6px; width: max-content; max-width: calc(100% - 12px);
+  min-height: 30px; margin: -22px auto 0; padding: 5px 14px 5px 10px; border-radius: 16px;
+  background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+  font-size: 14px; font-weight: 600; line-height: 1.25; color: var(--ink);
+}
+.cad-badge svg { width: 16px; height: 16px; color: var(--gold); }
+.cad-title {
+  margin: 10px auto 0; max-width: 16em;
+  font-family: var(--serif); font-weight: 400; font-style: normal;
+  font-size: clamp(24px, 6.6vw, 30px); line-height: 1.08; letter-spacing: -.01em; color: var(--ink);
+  text-wrap: balance;
+}
+.cad-lead {
+  max-width: 26em; margin: 6px auto 0;
+  font-size: 14px; font-weight: 500; line-height: 1.35; color: var(--muted); text-wrap: balance;
+}
+
+/* ---------- Карточка формы ---------- */
+.cad-body { padding: 12px 16px 0; }
+.cad-card { padding: 14px 16px 14px; text-align: left; }
+.cad-card__title {
+  margin: 0 auto 8px; max-width: 18em;
+  font-family: var(--serif); font-weight: 400; font-style: normal;
+  font-size: 18.5px; line-height: 1.18; color: var(--ink); text-align: center; text-wrap: balance;
+}
+.cad-field + .cad-field { margin-top: 8px; }
+.cad-label {
+  display: block; margin: 0 0 4px 2px;
+  font-size: 14px; font-weight: 700; line-height: 1.15; color: var(--ink);
+}
+.cad-input {
+  display: block; width: 100%; min-width: 0; height: 52px; margin: 0; padding: 0 14px;
+  border: 1px solid rgba(31, 42, 51, .14); border-radius: 14px; background: #F4F8FB;
+  font: 500 16px/1.25 var(--sans); color: var(--ink);   /* 16 px: iOS не увеличивает страницу при фокусе */
+  -webkit-appearance: none; appearance: none; box-shadow: none;
+  transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.cad-input::placeholder { color: #5F6B74; opacity: 1; }
+.cad-input:focus { outline: none; border-color: var(--azure-sm); background: #fff; box-shadow: 0 0 0 1px var(--azure-sm); }
+.cad-input:focus-visible { outline: none; }
+/* телефон: неизменяемая метка +55 слева, общая рамка вокруг метки и поля */
+.cad-tel {
+  display: flex; align-items: stretch; height: 52px;
+  border: 1px solid rgba(31, 42, 51, .14); border-radius: 14px; background: #F4F8FB;
+  transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.cad-tel__cc {
+  flex: none; display: flex; align-items: center; padding: 0 12px 0 14px;
+  border-right: 1px solid rgba(31, 42, 51, .12);
+  font-size: 16px; font-weight: 600; line-height: 1; color: var(--ink); cursor: text;
+  -webkit-user-select: none; user-select: none;
+}
+.cad-tel .cad-input { flex: 1 1 auto; height: 50px; padding: 0 8px 0 12px; border: 0; border-radius: 0 13px 13px 0; background: transparent; }
+/* длинная подсказка «DDD + número, ex.: 11 91234-5678» (≈ 15,5 px ширины на 1 px кегля) должна влезать целиком:
+   кегль подсказки = свободное место / 15,5, от 16 px (≥ 400 px экрана) до 12,5 px (320 px). Вводимый текст — всегда 16 px. */
+.cad-tel .cad-input::placeholder { font-size: clamp(12.5px, calc((100vw - 146px) / 15.5), 16px); }
+.cad-tel .cad-input:focus { box-shadow: none; background: transparent; }
+.cad-tel:focus-within { border-color: var(--azure-sm); background: #fff; box-shadow: 0 0 0 1px var(--azure-sm); }
+/* ошибка поля */
+.cad-field.is-bad > .cad-input, .cad-field.is-bad > .cad-tel { border-color: #B42318; background: #FFF8F7; }
+.cad-field.is-bad > .cad-input:focus, .cad-field.is-bad > .cad-tel:focus-within { box-shadow: 0 0 0 1px #B42318; background: #fff; }
+.cad-err { margin: 6px 2px 0; font-size: 14px; font-weight: 700; line-height: 1.35; color: #B42318; }
+.cad-err:empty { display: none; }
+
+/* скрытая ловушка для ботов */
+.cad-hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- Галочка согласия ---------- */
+.cad-consent { margin-top: 12px; }
+.cad-check { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; align-items: start; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cad-check__box {
+  display: block; width: 24px; height: 24px; margin: 0; flex: none; cursor: pointer;
+  border: 1.5px solid rgba(31, 42, 51, .42); border-radius: 7px; background: #fff center / 16px no-repeat;
+  -webkit-appearance: none; appearance: none;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.cad-check__box:checked {
+  border-color: var(--ink); background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+.cad-check__box:focus { outline: none; }
+.cad-check__box:focus-visible { outline: 2px solid var(--azure-sm); outline-offset: 2px; }
+.cad-consent.is-bad .cad-check__box { border-color: #B42318; }
+.cad-check__text { padding-top: 2px; font-size: 13px; font-weight: 500; line-height: 1.36; color: var(--muted); text-wrap: pretty; }
+.cad-check__text a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.cad-consent .cad-err { margin-left: 34px; }
+
+/* ---------- Кнопка и подпись ---------- */
+.cad-submit { margin-top: 12px; }
+.cad-submit[disabled] { cursor: progress; opacity: .88; }
+.cad-submit[disabled]::after { content: none; }
+.cad-note {
+  margin-top: 10px;
+  font-size: 13px; font-weight: 500; line-height: 1.35; color: var(--muted); text-align: center; text-wrap: balance;
+}
+.cad-note svg { display: inline-block; width: 14px; height: 14px; margin-right: 5px; vertical-align: -2px; }
+
+/* три пункта в строку: иконка сверху, подпись под ней */
+.cad-trust { display: flex; justify-content: center; gap: 8px; max-width: 400px; margin: 16px auto 0; }
+.cad-trust > li {
+  flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-size: 14px; font-weight: 600; line-height: 1.25; color: var(--ink); text-align: center; text-wrap: balance;
+}
+.cad-trust svg { width: 20px; height: 20px; color: var(--azure-sm); }
+
+/* ---------- Подвал ---------- */
+.cad-foot {
+  margin-top: auto; padding: 24px 20px calc(22px + env(safe-area-inset-bottom));
+  font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--muted); text-align: center;
+}
+.cad-foot a { color: inherit; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.cad-foot__copy { margin-top: 2px; }
+
+/* узкие телефоны: больше места полям (подсказка телефона целиком) */
+@media (max-width: 359px) {
+  .cad-body { padding: 12px 12px 0; }
+  .cad-card { padding: 14px 12px 14px; }
+  .cad-tel__cc { padding: 0 10px 0 12px; }
+}
+@media (min-width: 520px) {
+  .cad-stage { --ph: clamp(200px, calc(100svh - 640px), 280px); }   /* колонка шире, форма выше: 1440×900 → 260 px */
+  .cad-body { padding: 16px 24px 0; }
+  .cad-card { padding: 20px 20px 16px; }
+}
