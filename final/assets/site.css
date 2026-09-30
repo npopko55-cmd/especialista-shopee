@@ -943,3 +943,197 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
 .pb-wa__t { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.15; letter-spacing: -.005em; color: var(--ink); text-wrap: balance; }
 .pb-wa__p { margin: 4px 0 0; font-size: 15px; line-height: 1.4; color: var(--muted); text-wrap: pretty; }
 .pb-wa__btn { grid-column: 1 / -1; margin-top: 12px; }
+
+/* =====================================================================
+   РАУНД 9 — АДАПТАЦИЯ: планшет 768–1023 и десктоп ≥ 1024 (исполнитель A: каркас + блоки 1–6).
+   Телефон (≤ 767 px) НЕ меняется: всё ниже — только внутри @media (min-width: 768px) / (min-width: 1024px).
+
+   КАРКАС (общий, B пользуется им же):
+     .page      на ≥ 768 — во всю ширину окна, без рамки и тени; каждая .blk — на всю ширину (фон неба до краёв окна).
+     --pad-x    боковое поле секции = max(var(--gut), calc((100% - 1120px) / 2)) → содержимое в контейнере до 1120 px.
+                --gut: 32 px на планшете, 48 px на десктопе. .blk уже получает padding-inline: var(--pad-x);
+                если у своей секции задаёшь padding шорткатом на id — допиши padding-inline: var(--pad-x).
+     --wrap     1120px (ширина контейнера), --measure 36em (комфортная строка ≈ 60–72 знака).
+     Типографика ≥ 1024: .blk__title Prata 44 px, .blk__lead 18 px (≤ 36em); на планшете 36 / 17 px.
+     .cta       на ≥ 768 — кнопка не шире 360 px, по центру своего блока.
+     Небо (.bg-hero/.bg-section/.bg-warm/.bg-golden ::before) на ≥ 768 — на всю секцию от края до края (cover), без полосы слева.
+     .sticky-cta на ≥ 768 — кнопка по центру, ширина до 560 px, круглая WhatsApp справа от неё.
+   ===================================================================== */
+@media (min-width: 768px) {
+  :root { --gut: 32px; --wrap: 1120px; --measure: 36em; --pad-x: max(var(--gut), calc((100% - var(--wrap)) / 2)); }
+  .page { max-width: none; box-shadow: none; }
+  .blk, .pb-wa { padding-inline: var(--pad-x); }
+
+  /* ошибка неба: aspect-ratio + max-height сжимали картинку в полосу ~390 px у левого края → на всю секцию, cover */
+  .bg-hero::before, .bg-section::before, .bg-warm::before, .bg-golden::before {
+    bottom: 0; width: auto; height: auto; aspect-ratio: auto; max-height: none;
+    background-position: center top; background-size: cover;
+  }
+
+  .blk__title { font-size: 36px; max-width: 22em; margin-inline: auto; }
+  .blk__lead { max-width: var(--measure); font-size: 17px; }
+  .cta { max-width: 360px; }
+
+  /* закреплённая панель: кнопка по центру (до 560 px), WhatsApp — справа от неё */
+  .sticky-cta { max-width: 560px; padding: 0 0 calc(16px + env(safe-area-inset-bottom)); }
+  .sticky-cta__wa { position: absolute; left: calc(100% + 12px); bottom: calc(16px + env(safe-area-inset-bottom)); margin-left: 0; }
+  .wa-pop { right: -68px; }
+}
+@media (min-width: 1024px) {
+  :root { --gut: 48px; }
+  .blk__title { font-size: 44px; margin-bottom: 18px; }
+  .blk__lead { font-size: 18px; margin-bottom: 32px; }
+}
+
+/* ---------- Раунд 9 · БЛОКИ 1–6 на планшете (768–1023) ----------
+   Одна колонка по центру, как на телефоне, но просторнее: панель неба до 560 px, Эрика крупнее,
+   плитки первого экрана — 4 в ряд; карусели показывают по 2 карточки; стрелки — за краем карточек. */
+@media (min-width: 768px) {
+  /* блок 1 */
+  #b1 { padding-inline: var(--pad-x); }
+  .hero__stage { --ph: 440px; --ih: 920px; --pop: 44px; max-width: 560px; margin: calc(var(--pop) + 28px) auto 0; }
+  .hero__sheet { padding: 16px 0 64px; }
+  .hero__title { max-width: 640px; margin-inline: auto; font-size: 44px; }
+  .hero__title-sub { max-width: 540px; margin-inline: auto; font-size: 22px; }
+  .hero__sub { max-width: 30em; font-size: 18px; }
+  .hero__chips { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 40px; }
+  .hero__tile { min-height: 72px; font-size: 15px; }
+  .video-card { max-width: 640px; margin: 24px auto 0; }
+  /* искры — у головы, пропорционально высоте холста вырезки (на телефоне: 128/100/120 px от оси при холсте 693 px) */
+  .hero__spark--1 { left: calc(50% - var(--ih) * .185); top: calc(var(--ih) * .1135 - var(--pop) - 9px); width: 22px; height: 22px; }
+  .hero__spark--2 { left: calc(50% + var(--ih) * .144); top: calc(var(--ih) * .076 - var(--pop) - 7px); width: 17px; height: 17px; }
+  .hero__spark--3 { left: calc(50% + var(--ih) * .173); top: calc(var(--ih) * .199 - var(--pop) - 6px); width: 14px; height: 14px; }
+  .pb-wa { padding-bottom: 32px; }
+  .pb-wa__card { max-width: 640px; margin-inline: auto; }
+
+  /* общие стрелки каруселей: за краем ленты, не на тексте карточки */
+  .arrows__btn--prev, [data-carousel-prev].arrows__btn { left: -22px; }
+  .arrows__btn--next, [data-carousel-next].arrows__btn { right: -22px; }
+
+  /* блок 2: 2 карточки в кадре, одной высоты (лента растягивает) */
+  .b2__track { gap: 20px; }
+  .b2__track .carousel__card { flex: 0 0 calc((100% - 20px) / 2); }
+  .sit__ph, .sit__dio { height: 220px; }
+  #b2 .arrows { --arrows-top: 116px; }   /* середина фото: 16 + 12 + 110 − 22 */
+  .sit__p { font-size: 16px; }
+
+  /* блок 3: арки и регалии друг под другом, крупнее */
+  .b3__pair { max-width: 560px; gap: 20px; }
+  .b3__arch { height: 360px; }
+  .b3__cap { font-size: 16px; }
+  .b3__list { max-width: 560px; padding: 22px 26px 22px 24px; }
+  .b3__list > li { font-size: 16px; }
+
+  /* блок 4: «3 млн+» по центру, пруфы в 2 колонки одной высоты, итог — на всю ширину контейнера */
+  .b4__sellers { width: 100%; max-width: 720px; margin-inline: auto; padding: 28px 32px; }
+  .b4__s1 { max-width: 34em; margin-inline: auto; font-size: 17px; }
+  .b4__proofs { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
+  .b4__proof { display: flex; flex-direction: column; }
+  .b4__shot { flex: 1 1 auto; display: flex; align-items: center; }
+  .b4__cap { font-size: 13px; }
+  .b4__s2 { max-width: var(--measure); margin-inline: auto; font-size: 17px; }
+  .b4__pay { grid-template-columns: minmax(0, 1fr) 150px; gap: 24px; padding: 22px 32px 22px 36px; }
+  .b4__pay p { font-size: 21px; }
+  .b4__money img { width: 150px; height: 104px; }
+
+  /* блок 4w: 2 карточки в кадре */
+  .b4w__rail .carousel { gap: 20px; }
+  .b4w__rail .carousel__card { flex-basis: calc((100% - 20px) / 2); }
+  .b4w__h { font-size: 28px; }
+  .b4w__p { max-width: 30em; font-size: 17px; }
+  .way__p { font-size: 16px; }
+
+  /* блок 5: одна колонка, плашки до 560 px */
+  .b5__g { max-width: 560px; }
+  .b5__g p { font-size: 17px; }
+  .b5__big { white-space: nowrap; }   /* «вернём 100% денег» одной строкой — без наложения на «Гарантия 7 дней.» */
+  .b5__panel { width: 100%; max-width: 560px; margin-inline: auto; }
+  .b5__row p { font-size: 16px; }
+
+  /* блок 6: макеты — 2 в кадре, зона макета одной высоты (макет целиком, contain) */
+  .b6__track { align-items: stretch; gap: 20px; }
+  .b6__track .carousel__card { flex-basis: calc((100% - 20px) / 2); }
+  .feat__media { display: grid; place-items: center; height: 240px; padding: 8px; }
+  .feat__media img { width: 100%; height: 100%; object-fit: contain; }
+  .feat__p { font-size: 16px; }
+  .mini__p { font-size: 15px; }
+  #b6 .arrows { --arrows-top: 108px; }   /* середина зоны макета: 4 + 6 + 120 − 22 */
+  .b6__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+  .b6__grid > li:last-child { grid-column: 1 / -1; }   /* «Бонусные уроки» с раскрывашкой — на всю ширину */
+  .b6__ip { grid-template-columns: 220px minmax(0, 1fr); gap: 32px; max-width: 880px; margin: 20px auto 0; padding: 20px 36px; justify-items: start; text-align: left; }
+  .b6__ip-phones { width: 220px; height: 184px; }
+  .b6__ip-t { font-size: 28px; }
+  .b6__ip-p { max-width: 30em; font-size: 17px; }
+}
+
+/* ---------- Раунд 9 · БЛОКИ 1–6 на десктопе (≥ 1024) ---------- */
+@media (min-width: 1024px) {
+  /* блок 1: две колонки 50/50 — слева панель неба с Эрикой (600 px, голова над панелью, лицо по оси панели),
+     справа плашка, оффер, подоффер, кнопка и три пункта (по центру колонки); ниже — 4 плитки в ряд и видео 16:9 до 720 px.
+     .hero__sheet раскрыт (display: contents), его части — ячейки сетки секции. Строки 1 и 6 — пружины 1fr:
+     правая колонка встаёт по вертикали в середину панели. */
+  #b1 {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto auto auto 1fr auto auto; column-gap: 56px;
+    padding: 96px var(--pad-x) 80px;
+  }
+  .hero__sheet { display: contents; }
+  .hero__stage { --ph: 600px; --ih: 1260px; --pop: 52px; grid-column: 1; grid-row: 1 / 7; width: 100%; max-width: none; margin: 0; }
+  .hero__eyebrow { grid-column: 2; grid-row: 2; max-width: 100%; margin: 0 auto; font-size: 15px; }
+  .hero__title { grid-column: 2; grid-row: 3; max-width: none; margin: 16px 0 0; font-size: clamp(52px, 3.9vw, 58px); }
+  .hero__title-sub { max-width: 30em; margin-top: 18px; font-size: 22px; }
+  .hero__sub { grid-column: 2; grid-row: 4; margin: 18px auto 0; font-size: 18px; }
+  #b1 .cta { grid-column: 2; grid-row: 5; width: 100%; margin: 24px auto 0; }
+  .hero__chips { grid-column: 1 / -1; grid-row: 7; gap: 16px; margin-top: 64px; }
+  .hero__tile { min-height: 80px; padding: 12px 16px 12px 14px; gap: 12px; font-size: 16px; }
+  .hero__tile img { width: 48px; height: 48px; }
+  .video-card { grid-column: 1 / -1; grid-row: 8; width: 100%; max-width: 720px; justify-self: center; margin: 24px 0 0; }
+  .hero__glow { animation: none; }   /* на широком экране в кадре и видео с кольцом: движений не больше 6 */
+
+  /* блок 2: 3 карточки в кадре */
+  .b2__track { gap: 24px; }
+  .b2__track .carousel__card { flex-basis: calc((100% - 48px) / 3); }
+
+  /* блок 3: арки крупнее слева, регалии-плашка справа */
+  #b3 { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: 56px; align-items: center; }
+  #b3 > .blk__title, #b3 > .cta { grid-column: 1 / -1; }
+  .b3__pair { grid-column: 1; grid-row: 2; max-width: none; margin: 16px 0 0; gap: 24px; }
+  .b3__arch { height: 420px; }
+  .b3__list { grid-column: 2; grid-row: 2; max-width: 480px; margin: 16px 0 0; padding: 26px 30px 26px 28px; }
+  .b3__list > li { font-size: 17px; }
+  #b3 .cta { margin-top: 40px; }
+
+  /* блок 4w: 3 карточки в кадре */
+  .b4w__rail .carousel { gap: 24px; }
+  .b4w__rail .carousel__card { flex-basis: calc((100% - 48px) / 3); }
+
+  /* блок 5: щит слева, текст и способы оплаты справа; кнопка под обеими колонками */
+  #b5 {
+    min-height: 0; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr);
+    column-gap: 64px; align-items: center; padding-bottom: 64px;
+  }
+  #b5 > .blk__title { grid-column: 1 / -1; grid-row: 1; }
+  .b5__stage { grid-column: 1; grid-row: 2 / 5; width: 400px; height: 320px; margin: 0 auto; }
+  .b5__shield { left: 10px; width: 256px; height: 310px; }
+  .b5__seal { width: 120px; height: 120px; }
+  .b5__seal-n { font-size: 52px; }
+  .b5__seal-d { font-size: 17px; }
+  .b5__g { grid-column: 2; grid-row: 2; width: 100%; max-width: 540px; margin: 8px 0 16px; }
+  .b5__g p { font-size: 17px; }
+  .b5__big { font-size: 22px; }
+  .b5__panel { grid-column: 2; grid-row: 3; max-width: 540px; margin: 0; }
+  .b5__pay { grid-column: 2; grid-row: 4; align-items: flex-start; margin-top: 22px; text-align: left; }
+  .b5__chips { justify-content: flex-start; }
+  #b5 > .cta { grid-column: 1 / -1; grid-row: 5; margin-top: 40px; }
+
+  /* блок 6: все три макета в кадре — листать нечего: подсказка, стрелки, точки и счётчик не нужны */
+  .b6__track { gap: 24px; }
+  .b6__track .carousel__card { flex-basis: calc((100% - 48px) / 3); }
+  .b6__track::after { display: none; }
+  .feat__media { height: 260px; }
+  #b6 .hint-row, #b6 .b6__nav, #b6 .arrows__btn { display: none; }
+}
+@media (min-width: 1280px) {
+  .b6__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .b6__grid > li:last-child { grid-column: span 2; }
+}

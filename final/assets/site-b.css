@@ -589,3 +589,150 @@
 /* карточка модуля нажимается целиком (site-b.js) */
 #b7 .b7-card { cursor: pointer; }
 #b7 .b7-lessons { cursor: default; }
+
+/* =====================================================================
+   РАУНД 9 — планшет (768–1023) и десктоп (≥ 1024), ТЗ TZ9-adaptaciya.md, блоки 6А–12.
+   Телефон (≤ 767) не меняется: ВСЁ ниже — только внутри @media (min-width: 768px) и (min-width: 1024px).
+   Контейнер (до 1120 px), фон неба и отступы секции — каркас A (.page / .blk в site.css); здесь только
+   внутренние сетки блоков. Тексты не меняются, разметка та же.
+   ===================================================================== */
+@media (min-width: 768px) {
+  /* ---- 6А: пять шагов — 3 + 2 в ряд; линия идёт горизонтально от круга к кругу своего ряда ---- */
+  #b6a .b6a-steps { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: 16px; row-gap: 20px; }
+  #b6a .b6a-step {
+    grid-column: span 2; grid-template-columns: minmax(0, 1fr); justify-items: center; row-gap: 12px;
+    padding: 16px 14px 18px; text-align: center;
+  }
+  #b6a .b6a-step:nth-child(4) { grid-column: 2 / span 2; }
+  #b6a .b6a-step__txt { padding-top: 0; }
+  /* центр круга: 16 (отступ) + 28 (радиус) от верха; линия — от края круга до края следующего (ширина шага + зазор − 56) */
+  #b6a .b6a-step:not(:last-child)::after { left: calc(50% + 28px); top: 43px; width: calc(100% + 16px - 56px); height: 2px; }
+  #b6a .b6a-step:nth-child(3)::after { content: none; }
+  #b6a .b6a-every { grid-template-columns: repeat(4, minmax(0, 150px)); justify-content: center; max-width: none; gap: 10px 12px; }
+
+  /* ---- 7: две колонки «ёлочкой» — модули 0, 2, 4, 6 слева, 1, 3, 5, 7 справа со сдвигом на полкарточки;
+     кружки с номерами — на общем рельсе по центру между колонками (рельс рисует .b7-map::before, длину ставит site-b.js) ---- */
+  #b7 .b7-meta { margin-bottom: 28px; }
+  #b7 .b7-map { position: relative; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 64px; row-gap: 20px; }
+  #b7 .b7-mod { display: block; grid-column: 1; }
+  #b7 .b7-mod:nth-child(even) { grid-column: 2; }
+  #b7 .b7-mod:nth-child(1) { grid-row: 1 / span 2; }
+  #b7 .b7-mod:nth-child(2) { grid-row: 2 / span 2; }
+  #b7 .b7-mod:nth-child(3) { grid-row: 3 / span 2; }
+  #b7 .b7-mod:nth-child(4) { grid-row: 4 / span 2; }
+  #b7 .b7-mod:nth-child(5) { grid-row: 5 / span 2; }
+  #b7 .b7-mod:nth-child(6) { grid-row: 6 / span 2; }
+  #b7 .b7-mod:nth-child(7) { grid-row: 7 / span 2; }
+  #b7 .b7-mod:nth-child(8) { grid-row: 8 / span 2; }
+  #b7 .b7-mod:not(:last-child)::before { content: none; }
+  #b7 .b7-dot { position: absolute; top: 16px; margin: 0; }
+  #b7 .b7-mod:nth-child(odd) .b7-dot { left: calc(100% + 18px); }    /* центр зазора 64 px: 32 − 14 */
+  #b7 .b7-mod:nth-child(even) .b7-dot { left: -46px; }
+  /* animMax ≤ 6: на широком экране в кадре сразу 6–8 модулей — «покачивание» остаётся у дверки модуля 0 и модулей 1 и 3;
+     в 6А на одной строке все пять шагов — качаются два предмета из трёх */
+  #b7 .b7-mod:nth-child(n+5) .b7-card__obj { animation: none; }
+  #b6a .b6a-step:nth-child(3) .b6a-obj { animation: none; }
+  #b7 .b7-map::before {
+    content: ""; position: absolute; left: calc(50% - 1px); top: var(--rail-top, 30px); width: 2px; height: var(--rail-h, 0px);
+    border-radius: 2px; opacity: .7; pointer-events: none;
+    background: linear-gradient(180deg, #4FA3CF 0%, #F7894B 14.3%, #E9B949 28.6%, #4DB58A 42.9%, #4FA3CF 57.1%, #F7894B 71.4%, #E9B949 85.7%, #4DB58A 100%);
+  }
+
+  /* ---- 8: тарифы — на планшете одна колонка до 560 px; бонусы — на весь контейнер, подарки рядом ---- */
+  #tariffs .t8-deal { max-width: 560px; margin: 0 auto 20px; }
+  #tariffs .t8 { max-width: 560px; margin-inline: auto; gap: 20px; }
+  #tariffs .t8-bonus { margin-top: 32px; padding: 24px; }
+  #tariffs .t8-bonus__list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+  /* ---- 8А: слева цена дня и расчёт, справа весы; цитата, вопросы и кнопка — на всю ширину ---- */
+  #b8a { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; align-content: start; }
+  #b8a > .blk__title, #b8a > .b8a-quote, #b8a > .b8a-qs, #b8a > .cta { grid-column: 1 / -1; }
+  #b8a > .blk__title { font-size: 36px; }   /* как .blk__title каркаса A: 36 / 44 */
+  #b8a > .b8a-g--day { grid-column: 1; grid-row: 2; align-self: end; }
+  #b8a > .b8a-text { grid-column: 1; grid-row: 3; align-self: start; }
+  #b8a > .b8a-g--scales { grid-column: 2; grid-row: 2 / span 2; align-self: center; margin-top: 0; padding-top: 0; border-top: 0; }
+  #b8a .b8a-qs { width: 100%; max-width: 560px; margin-inline: auto; }
+
+  /* ---- 9: на планшете вкладки и карточки — колонкой до 640 px по центру ---- */
+  #b9 .b9, #b9 .b9-info { max-width: 640px; margin-inline: auto; }
+  #b9 .b9-seg { max-width: 520px; }
+  #b9 .b9-help__btn { max-width: 360px; }
+
+  /* ---- 10: развилка и плашка срока — не шире 600 / 560 px по центру ---- */
+  #b10 .b10-split { max-width: 600px; margin-inline: auto; gap: 16px; }
+  #b10 .b10-side { gap: 12px; }
+  #b10 .b10-deal { max-width: 560px; margin-inline: auto; }
+  #b10 .b10-lead { font-size: 17px; }       /* как .blk__lead каркаса A: 17 / 18 */
+  #b10 .b10-wa { max-width: 360px; }        /* одной ширины с .cta каркаса A */
+
+  /* ---- 11: вопросы — контейнер до 820 px по центру; ответ не длиннее ~70 знаков в строке ---- */
+  #b11 .b11-list, #b11 .b11-ask { max-width: 820px; margin-inline: auto; }
+  #b11 .b11-q > summary { min-height: 60px; padding: 12px 20px 12px 24px; }
+  #b11 .b11-a { padding: 0 24px 20px; }
+  #b11 .b11-a p { max-width: 36em; }
+  /* «Не нашла свой вопрос?» слева, две кнопки столбиком справа */
+  #b11 .b11-ask { display: grid; grid-template-columns: minmax(0, 1fr) 340px; column-gap: 24px; row-gap: 12px; align-items: center; padding: 24px; }
+  #b11 .b11-ask__row { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; }
+  #b11 .b11-wa { grid-column: 2; grid-row: 1; }
+  #b11 .b11-ask .cta { grid-column: 2; grid-row: 2; width: 100%; margin-top: 0; }
+
+  /* ---- 12: подвал в 2 колонки («Quem vende o curso» | «Importante»), ссылки — строкой из трёх ---- */
+  #b12 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; align-content: start; }
+  #b12 > .b12-mark, #b12 > .b12-links, #b12 > .b12-copy { grid-column: 1 / -1; }
+  #b12 .b12-links { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px; }
+}
+
+@media (min-width: 1024px) {
+  /* ---- 6А: пять шагов в один ряд ---- */
+  #b6a .b6a-steps { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  #b6a .b6a-step, #b6a .b6a-step:nth-child(4) { grid-column: auto; }
+  #b6a .b6a-step:nth-child(3)::after { content: ""; }
+  #b6a .b6a-quote { font-size: 30px; }
+
+  /* ---- 7 ---- */
+  #b7 .b7-card { padding: 16px 20px 0; }
+  #b7 .b7-card__res { font-size: 16px; }
+
+  /* ---- 8: три карточки в ряд одной высоты (Специалист, Старт, VIP); ярлык «выбирают чаще всего» — на верхнем крае
+     карточки, чтобы названия стояли на одной линии; название, подзаголовок и цена выравниваются site-b.js ---- */
+  #tariffs .t8-deal { max-width: 640px; }
+  #tariffs .t8 { max-width: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding-top: 14px; }
+  #tariffs .t8-card { padding: 28px 22px 22px; }
+  #tariffs .t8-badge { position: absolute; z-index: 1; top: 0; left: 50%; margin: 0; transform: translate(-50%, -50%); }
+  #tariffs .t8-bonus { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); column-gap: 24px; align-items: center; padding: 24px 28px; }
+  #tariffs .t8-bonus__list { margin-top: 0; }
+
+  /* ---- 8А ---- */
+  #b8a { column-gap: 64px; }
+  #b8a > .blk__title { font-size: 44px; }
+  #b8a .b8a-text p, #b8a .b8a-p { font-size: 17px; }
+  #b8a .b8a-quote { font-size: 30px; }
+  #b8a .b8a-qs { max-width: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  #b8a .b8a-q { grid-template-columns: minmax(0, 1fr); row-gap: 12px; padding: 20px; }
+
+  /* ---- 9: слева вкладки и шаги, справа карточки помощи ---- */
+  #b9 { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); column-gap: 40px; align-items: start; }
+  #b9 > .blk__title, #b9 > .cta { grid-column: 1 / -1; }
+  #b9 > .b9-hint { grid-column: 1; grid-row: 2; }
+  #b9 > .b9 { grid-column: 1; grid-row: 3; width: 100%; max-width: none; margin: 0; }
+  #b9 > .b9-info { grid-column: 2; grid-row: 2 / span 2; max-width: none; margin: 0; }
+  #b9 .b9-panel { padding: 24px; }
+  #b9 .b9-steps p { font-size: 17px; }
+  #b9 .b9-row p { font-size: 16px; }
+
+  /* ---- 10: слева развилка (две карточки рядом), справа Эрика с цитатой и плашка срока; кнопки — по центру ниже ---- */
+  #b10 { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: 40px; align-items: start; }
+  #b10 > .blk__title, #b10 > .b10-lead, #b10 > .cta, #b10 > .b10-help, #b10 > .b10-wa { grid-column: 1 / -1; }
+  #b10 > .b10-split { grid-column: 1; grid-row: 4 / span 2; max-width: none; margin: 0; }
+  #b10 > .b10-erika { grid-column: 2; grid-row: 4; margin-top: 8px; }
+  #b10 > .b10-deal { grid-column: 2; grid-row: 5; max-width: none; margin: 24px 0 0; }
+  #b10 .b10-lead { font-size: 18px; }
+
+  /* ---- 11 ---- */
+  #b11 .b11-q > summary { font-size: 17px; }
+  #b11 .b11-a { font-size: 16px; }
+
+  /* ---- 12: три колонки — «Quem vende o curso», «Importante», ссылки столбиком ---- */
+  #b12 { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.15fr) minmax(0, .8fr); }
+  #b12 > .b12-links { grid-column: 3; grid-row: 2; align-self: start; grid-template-columns: minmax(0, 1fr); margin-top: 0; padding-top: 8px; }
+}

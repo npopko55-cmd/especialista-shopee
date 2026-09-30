@@ -49,11 +49,22 @@
     const nextB = (arrowsBox || scope).querySelector('[data-carousel-next]');
     const hints = $$('.hint', scope);
     let cur = -1;
+    const step = () => (n > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth) || 1;
+    /* Раунд 9: на планшете/десктопе в кадре 2–3 карточки. perView — сколько карточек видно целиком
+       (на телефоне всегда 1 → поведение прежнее); last — последняя «стартовая» карточка (на телефоне n − 1). */
+    const perView = () => {
+      if (n < 2) return 1;
+      const cs = getComputedStyle(track);
+      const inner = track.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+      const gap = parseFloat(cs.columnGap) || 0;
+      return Math.max(1, Math.min(n, Math.floor((inner + gap) / step() + 0.05)));
+    };
+    const last = () => n - perView();
     const set = i => {
       if (i === cur) return;
       cur = i;
       if (prevB) prevB.classList.toggle('is-off', i <= 0);
-      if (nextB) nextB.classList.toggle('is-off', i >= n - 1);
+      if (nextB) nextB.classList.toggle('is-off', i >= last());
       if (i > 0) hints.forEach(h => h.classList.add('is-seen'));   /* уже листали — подсказка замирает */
       cards.forEach((c, k) => c.classList.toggle('is-cur', k === i));   /* 4w: покачивается только телефон активной карточки */
       if (counter) counter.textContent = (i + 1) + ' / ' + n;
@@ -68,7 +79,7 @@
       });
     };
     const go = i => {
-      i = Math.max(0, Math.min(n - 1, i));
+      i = Math.max(0, Math.min(last(), i));
       track.scrollTo({ left: cards[i].offsetLeft - cards[0].offsetLeft, behavior: reduce() ? 'auto' : 'smooth' });
       set(i);
     };
@@ -86,18 +97,29 @@
     gotos.forEach(b => b.addEventListener('click', () => go(Number(b.getAttribute('data-carousel-goto')))));
     if (prevB) prevB.addEventListener('click', () => go(cur - 1));
     if (nextB) nextB.addEventListener('click', () => go(cur + 1));
-    const step = () => (n > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth) || 1;
     let raf = 0;
     track.addEventListener('scroll', () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
         const max = track.scrollWidth - track.clientWidth;
-        const i = track.scrollLeft >= max - 4 ? n - 1 : Math.round(track.scrollLeft / step());
-        set(Math.max(0, Math.min(n - 1, i)));
+        const L = last();
+        const i = track.scrollLeft >= max - 4 ? L : Math.round(track.scrollLeft / step());
+        set(Math.max(0, Math.min(L, i)));
       });
     }, { passive: true });
-    set(0);
+    /* Раунд 9: лишние точки (карточка не может стать первой в кадре) прячем; при смене ширины — пересчёт */
+    let pv = 0;
+    const layout = () => {
+      const k = perView();
+      if (k === pv) return;
+      pv = k;
+      dots.forEach((b, j) => { b.hidden = j > last(); });
+      const c = cur; cur = -1;
+      set(Math.max(0, Math.min(last(), c < 0 ? 0 : c)));
+    };
+    layout();
+    window.addEventListener('resize', layout, { passive: true });
   });
 
   /* ---------- Вкладки: [data-tabs] → [data-tab-btn="k"] + [data-tab-panel="k"], активной — .is-active ---------- */
@@ -420,6 +442,7 @@
       pio.unobserve(track);
       setTimeout(() => {
         if (track.__touched || track.scrollLeft > 4 || reduce()) return;
+        if (track.scrollWidth - track.clientWidth < 48) return;   /* раунд 9: все карточки уже в кадре (десктоп) — листать нечего */
         $$('.carousel__card', track).forEach(c => c.animate(
           [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(-48px, 0, 0)', offset: 0.45 }, { transform: 'translate3d(0, 0, 0)' }],
           { duration: 1300, easing: 'ease-in-out' }));
