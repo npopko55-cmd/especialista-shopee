@@ -198,6 +198,7 @@
     if (!el) return;
     let on = false;
     try { const q = new URLSearchParams(location.search); on = q.get('lead') === '1' || q.get('planb') === '1'; } catch (e) { /* старый браузер */ }
+    if (/^oferta\./i.test(location.hostname)) on = true;   /* поддомен оферты плана Б */
     try { if (on) sessionStorage.setItem('em_planb', '1'); else on = sessionStorage.getItem('em_planb') === '1'; } catch (e) { /* приватный режим */ }
     if (on) el.hidden = false;
   })();

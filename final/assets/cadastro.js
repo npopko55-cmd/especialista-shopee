@@ -178,7 +178,8 @@
   window.addEventListener('pageshow', function (e) { if (e.persisted) lock(false); });
 
   function onProdHost() {
-    return PROD_HOSTS.indexOf(String(location.hostname).toLowerCase()) !== -1;
+    var h = String(location.hostname).toLowerCase();
+    return PROD_HOSTS.indexOf(h) !== -1 || /(^|\.)ericamarques\.com$/.test(h);   /* основной домен и любые поддомены */
   }
 
   function savePending(payload, reason) {
