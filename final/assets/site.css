@@ -883,7 +883,7 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
   transform: rotate(45deg); border-bottom-right-radius: 3px;
 }
 .wa-pop__link {
-  display: flex; align-items: center; min-height: 44px; padding: 4px 0;
+  display: block; min-height: 44px; padding: 10px 0 9px;   /* block, а не flex: иначе слово «WhatsApp» уезжает от фразы */
   font-size: 14.5px; font-weight: 600; line-height: 1.3; color: var(--ink); text-decoration: none; text-wrap: balance;
 }
 .wa-pop__link b { color: #128C4B; }
