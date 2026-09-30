@@ -18,7 +18,7 @@ body.cad { padding-bottom: 0; background: var(--sky-1); }
    экран выше → до 280 px, ниже → не меньше 200 px. Холст вырезки --ih: лицо ≈ 90 px, видны голова и плечи.
    Ось лица — 50 % панели (расчёт в site.css). */
 .cad-stage {
-  --ph: clamp(200px, calc(100svh - 614px), 280px);
+  --ph: clamp(200px, calc(var(--vh100) - 614px), 280px);
   --ih: clamp(560px, calc(var(--ph) * 2.3), 660px);
   --pop: 26px;
   margin-top: calc(var(--pop) + 2px);
@@ -151,7 +151,7 @@ body.cad { padding-bottom: 0; background: var(--sky-1); }
   .cad-tel__cc { padding: 0 10px 0 12px; }
 }
 @media (min-width: 520px) {
-  .cad-stage { --ph: clamp(200px, calc(100svh - 640px), 280px); }   /* колонка шире, форма выше: 1440×900 → 260 px */
+  .cad-stage { --ph: clamp(200px, calc(var(--vh100) - 640px), 280px); }   /* колонка шире, форма выше: 1440×900 → 260 px */
   .cad-body { padding: 16px 24px 0; }
   .cad-card { padding: 20px 20px 16px; }
 }
@@ -180,7 +180,7 @@ body.cad { padding-bottom: 0; background: var(--sky-1); }
   /* слева: небо с Эрикой — панель выше, холст вырезки крупнее (лицо ≈ 190 px), макушка над панелью на --pop */
   .cad-top { grid-area: top; align-self: center; min-width: 0; }
   .cad-stage {
-    --ph: clamp(520px, calc(100svh - 380px), 560px);
+    --ph: clamp(520px, calc(var(--vh100) - 380px), 560px);
     --ih: calc(var(--ph) * 1.9);
     --pop: 40px;
     margin: calc(var(--pop) + 2px) 0 0;
@@ -231,7 +231,7 @@ body.cad { padding-bottom: 0; background: var(--sky-1); }
     padding-inline: max(32px, calc((100% - 1120px) / 2));
   }
   /* панель 520 px на экране 900 px высотой, до 640 px на высоких экранах; лицо ≈ 200–245 px */
-  .cad-stage { --ph: clamp(520px, calc(100svh - 380px), 640px); --pop: 48px; }
+  .cad-stage { --ph: clamp(520px, calc(var(--vh100) - 380px), 640px); --pop: 48px; }
   .cad-stage .hero__spark--1 { left: calc(50% - 158px); top: 44px; }
   .cad-stage .hero__spark--2 { left: calc(50% + 124px); top: 10px; }
   .cad-stage .hero__spark--3 { left: calc(50% + 146px); top: 118px; }
