@@ -119,7 +119,6 @@
 #b7 .b7-acc[open] .b7-acc__less { display: inline; }
 #b7 .b7-acc[open] .b7-acc__go .i { transform: rotate(180deg); }
 @media (max-width: 359px) { #b7 .b7-acc__w { display: none; } }
-#b7 .b7-hint { margin: 0 auto 16px; }
 /* дверь модуля 0 — мягкое «приоткрывание» вокруг левого края */
 #b7 .b7-door { transform-origin: 8% 50%; animation: bB-door 3.6s ease-in-out infinite; }
 @keyframes bB-door { 0%, 100% { transform: perspective(60px) rotateY(4deg); } 50% { transform: perspective(60px) rotateY(-4deg); } }
@@ -469,3 +468,88 @@
 @media (max-width: 429px) {
   :is(#b7, #b9) .hint { height: auto; min-height: 32px; padding-block: 7px; white-space: normal; line-height: 1.25; text-align: center; text-wrap: balance; }
 }
+
+/* =====================================================================
+   РАУНД 6 — вторые правки Лизы (30.09): рука указывает ВНИЗ на то, что нажимать; «Рассрочка» с помощью;
+   верх блока 10 ниже; «живость» B: пульс активной вкладки и кнопки «Уроки», блик у «Специалиста», стрелка у «Начать».
+   Все анимации — transform/opacity/фон, выключаются общим правилом A при prefers-reduced-motion: reduce.
+   ===================================================================== */
+
+/* рука-палец пальцем вниз (иконка A повёрнута на 180°) и мягко «тычет» вниз на 3 px */
+:is(#b7, #b9) .hint--tap::before {
+  width: 20px; height: 20px; background: var(--azure-sm);
+  -webkit-mask-size: 20px 20px; mask-size: 20px 20px;
+  transform-origin: 50% 50%; transform: rotate(180deg); animation: bB-tapdown 1.6s ease-in-out infinite;
+}
+@keyframes bB-tapdown { 0%, 100% { transform: rotate(180deg) translateY(0); } 50% { transform: rotate(180deg) translateY(-3px); } }
+
+/* B1. Подсказка — внутри карточки модуля 0, прямо над строкой «Уроки»: пилюля-выноска справа,
+   рука справа над шевроном кнопки, хвостик выноски смотрит вниз на кнопку */
+#b7 .b7-card .b7-hint {
+  position: relative; align-self: flex-end; width: fit-content; max-width: 100%;
+  margin: 0 0 10px auto; padding: 0 10px 0 14px; gap: 6px;
+}
+#b7 .b7-card .b7-hint::before { order: 2; }
+#b7 .b7-card .b7-hint::after {
+  content: ""; position: absolute; right: 22px; bottom: -6px; width: 10px; height: 10px;
+  background: #fff; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  -webkit-mask: none; mask: none; transform: rotate(45deg); animation: none;
+}
+/* выноска держится у кнопки: свободная высота выровненной карточки уходит НАД выноску, а не между ней и кнопкой */
+#b7 .b7-card .b7-hint { margin-top: auto; }
+#b7 .b7-card .b7-hint + .b7-acc { margin-top: 0; }
+/* на узких экранах текст в две строки: выноска узкая (по тексту), а не во всю карточку */
+@media (max-width: 429px) { #b7 .b7-card .b7-hint { max-width: 212px; padding: 7px 10px 7px 14px; text-align: right; } }
+/* «Смотреть уроки ⌄» выглядит нажимаемой: обводка 1 px голубым; у модуля 0 (куда показывает рука) — мягкий пульс */
+#b7 .b7-acc__go { position: relative; border-color: rgba(11, 125, 176, .32); }
+#b7 .b7-acc--first .b7-acc__go::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
+  border: 1px solid var(--azure-sm); opacity: .5;
+  animation: bB-ring 2.2s ease-out infinite;
+}
+#b7 .b7-acc--first[open] .b7-acc__go::after { content: none; }
+@keyframes bB-ring { 0% { transform: scale(1); opacity: .6; } 75%, 100% { transform: scale(1.08, 1.32); opacity: 0; } }
+
+/* B6. Кнопка блока 7 — второстепенная (контур): следом, в том же кадре, идут «Оплатить» тарифов — главная там */
+#b7 .b7-cta__btn {
+  background: #fff; color: var(--orange-sm); border: 1.5px solid var(--cta);
+  box-shadow: var(--b-shadow-sm);
+}
+
+/* B2. «Как оплатить»: рука над вкладками пальцем вниз; активная вкладка мягко пульсирует рамкой 1 px */
+#b9 .b9-seg__b { position: relative; }
+#b9 .b9-seg__b.is-active::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  border: 1px solid var(--azure-sm); opacity: .25;
+  animation: bB-tabpulse 2.4s ease-in-out infinite;
+}
+@keyframes bB-tabpulse { 0%, 100% { opacity: .12; } 50% { opacity: .7; } }
+
+/* B3. «Карта отказала?» + «Получить помощь» внутри вкладки «Рассрочка» — тот же компонент, без второй тени (лежит в карточке);
+   пока открыта «Рассрочка», такой же блок в списке ниже скрыт — текст на экране один раз */
+#b9 .b9-row--tab { margin-top: 12px; box-shadow: none; }
+#b9 .b9:has(#b9-inst.is-active) + .b9-info .b9-row--fail { display: none; }
+
+/* B5. «Специалист по Shopee» (лучший тариф) — тот же блик, что у кнопки (полоса 105°, 6 с, пробег — первые 24 % цикла),
+   но свой, независимый: общий .shine A отдаёт блик одному элементу в кадре, и кнопки «Оплатить» (видны целиком)
+   почти всегда побеждают высокую карточку (замер: карточка блестела в 3–4 из ~30 положений на 320–390 и ни разу на 430–1440).
+   Полоса идёт по заливке карточки ПОД текстом (слой z-index −1 внутри isolation), текст не бледнеет. */
+#tariffs .t8-card--best { position: relative; isolation: isolate; }
+#tariffs .t8-card--best::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255, 255, 255, 0) 44%, rgba(255, 255, 255, .95) 50%, rgba(255, 255, 255, 0) 56%) 90% 0 / 300% 100% no-repeat;
+  animation: bB-shine 6s ease-in-out 1s infinite;
+}
+@keyframes bB-shine { 0% { background-position: 90% 0; } 24%, 100% { background-position: 10% 0; } }
+
+/* B5. Блок 10: стрелка у «Начать» покачивается вправо */
+#b10 .b10-go-arrow { animation: bB-nudge 2.4s ease-in-out infinite; }
+@keyframes bB-nudge { 0%, 100% { transform: translateX(-2px); } 50% { transform: translateX(4px); } }
+
+/* B4. Блок 10: верх ниже — заголовок в две строки, два подзаголовка по одной строке (15 px; где не влезает — 14 px) */
+#b10 .blk__title { margin-bottom: 8px; }
+#b10 .b10-lead { max-width: none; margin: 0 auto; font-size: 15px; line-height: 1.4; text-wrap: balance; }
+#b10 .b10-lead--go { margin: 2px auto 18px; }
+/* замер WebKit: «Можно закрыть…» при 15 px — 418 px, при 14 px и −0.01em — 383 px; «А можно…» (700) — 363 / 333 px.
+   Колонка текста 350 px на 390: вторая строка встаёт в одну строку при 14 px, первая — только от ширины 423 px */
+@media (min-width: 380px) and (max-width: 458px) { #b10 .b10-lead { font-size: 14px; letter-spacing: -.01em; } }

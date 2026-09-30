@@ -1,16 +1,24 @@
-/* Especialista em Shopee — поведение блоков 6А–12 (исполнитель B), раунд 4. Без библиотек.
+/* Especialista em Shopee — поведение блоков 6А–12 (исполнитель B), раунды 4–6. Без библиотек.
    Тарифы больше не карусель (три карточки друг под другом) — скрипт для них не нужен.
    Блок 7: восемь карточек модулей одной высоты в закрытом виде. Высоту берём по самой высокой
-   закрытой карточке и ставим всем как min-height; открытая карточка просто растёт вниз. */
+   закрытой карточке и ставим всем как min-height; открытая карточка просто растёт вниз.
+   Раунд 6: в карточке модуля 0 над строкой «Уроки» стоит подсказка-выноска — её высоту в общую
+   высоту не считаем (иначе все 8 карточек выросли бы на её строку), а добавляем только своей карточке. */
 (() => {
   'use strict';
   const cards = Array.from(document.querySelectorAll('#b7 .b7-card'));
   if (cards.length < 2) return;
+  const extra = c => {
+    const h = c.querySelector('.b7-hint');
+    if (!h || !h.getClientRects().length) return 0;
+    /* верхний отступ выноски — auto (забирает свободную высоту), его не считаем */
+    return h.getBoundingClientRect().height + parseFloat(getComputedStyle(h).marginBottom);
+  };
   const fit = () => {
     cards.forEach(c => { c.style.minHeight = ''; });
     const closed = cards.filter(c => !c.querySelector('details[open]'));
-    const h = Math.max(0, ...closed.map(c => c.getBoundingClientRect().height));
-    if (h > 0) cards.forEach(c => { c.style.minHeight = Math.ceil(h) + 'px'; });
+    const h = Math.max(0, ...closed.map(c => c.getBoundingClientRect().height - extra(c)));
+    if (h > 0) cards.forEach(c => { c.style.minHeight = Math.ceil(h + extra(c)) + 'px'; });
   };
   fit();
   window.addEventListener('load', fit, { once: true });

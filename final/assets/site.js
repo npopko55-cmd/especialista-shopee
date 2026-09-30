@@ -153,11 +153,13 @@
      открыт баннер cookies, открыто окно видео или на экране тарифы (#tariffs ≥ половины экрана). */
   const bar = d.getElementById('sticky-cta');
   const st = { cta: new Set(), cookie: false, modal: false, tariffs: false };
+  let onBar = () => { /* раунд 6: блик кнопки подписывается ниже */ };
   const applyBar = () => {
     if (!bar) return;
     const compact = st.cta.size > 0 || st.cookie || st.modal || st.tariffs;
     bar.classList.toggle('is-compact', compact);
     bar.setAttribute('data-state', compact ? 'compact' : 'full');
+    onBar();
   };
   if (bar && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver(es => {
@@ -334,5 +336,86 @@
     if (x) x.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); ss.off = true; save(); hidePop(); });
     const link = pop.querySelector('a');
     if (link) link.addEventListener('click', () => hidePop());
+  }
+
+  /* ---------- Раунд 6: блик на главной кнопке — .is-shine ОДНОЙ кнопке за раз ----------
+     Кандидаты: оранжевые .btn (не .btn--wa) и любые .shine вне панели. Блестит та, что в кадре (≥ 60 % видно
+     или ≥ 40 % высоты окна); текущая держится, пока видна. Нет ни одной в кадре — кнопка панели, если панель полная. */
+  const shineEls = $$('.btn:not(.btn--wa), .shine').filter(el => !(bar && bar.contains(el)));
+  const barBtn = bar ? bar.querySelector('.btn') : null;
+  const seen = new Map();
+  let shineCur = null;
+  const okShine = el => { const v = seen.get(el); return !!v && (v.r >= 0.6 || v.h >= window.innerHeight * 0.4); };
+  const pickShine = () => {
+    let best = null;
+    if (!reduce()) {
+      if (shineCur && shineCur !== barBtn && okShine(shineCur)) best = shineCur;
+      else shineEls.forEach(el => { if (okShine(el) && (!best || seen.get(el).r > seen.get(best).r + 0.01)) best = el; });
+      if (!best && barBtn && bar.getAttribute('data-state') === 'full') best = barBtn;
+    }
+    if (best === shineCur) return;
+    if (shineCur) shineCur.classList.remove('is-shine');
+    shineCur = best;
+    if (best) best.classList.add('is-shine');
+  };
+  if ('IntersectionObserver' in window && shineEls.length) {
+    const sio = new IntersectionObserver(es => {
+      es.forEach(e => seen.set(e.target, { r: e.isIntersecting ? e.intersectionRatio : 0, h: e.isIntersecting ? e.intersectionRect.height : 0 }));
+      pickShine();
+    }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+    shineEls.forEach(el => sio.observe(el));
+    onBar = pickShine;
+    pickShine();
+  }
+
+  /* ---------- Раунд 6: счётчик [data-count] (блок 4) — число «набегает» с нуля за 1,2 с, один раз ----------
+     В HTML — итоговый текст дословно (7&nbsp;000+ и т. п.); по окончании возвращается ровно он. Без JS / reduce — сразу итог. */
+  const cnt = $$('[data-count]');
+  if (cnt.length && 'IntersectionObserver' in window && !reduce()) {
+    const fmt = (v, sep) => (sep ? String(v).replace(/\B(?=(\d{3})+(?!\d))/g, sep) : String(v));
+    const cio = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting || e.intersectionRatio < 0.5) return;
+      const el = e.target, p = el.__cnt;
+      cio.unobserve(el);
+      if (!p) return;
+      const t0 = performance.now(), D = 1200;
+      const step = now => {
+        const k = Math.min(1, (now - t0) / D);
+        el.textContent = k < 1 ? p.pre + fmt(Math.round(p.n * (1 - Math.pow(1 - k, 3))), p.sep) + p.post : p.full;
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }), { threshold: [0, 0.5, 1] });
+    cnt.forEach(el => {
+      const full = el.textContent;
+      const m = full.match(/\d[\d\u00a0\u202f ]*\d|\d/);
+      if (!m) return;
+      const sp = m[0].match(/[\u00a0\u202f ]/);
+      el.__cnt = { full, pre: full.slice(0, m.index), post: full.slice(m.index + m[0].length), n: parseInt(m[0].replace(/\D/g, ''), 10), sep: sp ? sp[0] : '' };
+      el.textContent = el.__cnt.pre + '0' + el.__cnt.post;
+      cio.observe(el);
+    });
+  }
+
+  /* ---------- Раунд 6: «выглядывание» каруселей блоков 2, 4w, 6 ----------
+     Один раз, когда лента впервые попала в кадр: карточки мягко сдвигаются на 48 px влево и возвращаются (WAAPI, 1,3 с),
+     показывая, что лента листается. Не срабатывает, если ленту уже трогали/листали или включён reduce-motion. */
+  if ('IntersectionObserver' in window && !reduce() && Element.prototype.animate) {
+    const pio = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const track = e.target;
+      pio.unobserve(track);
+      setTimeout(() => {
+        if (track.__touched || track.scrollLeft > 4 || reduce()) return;
+        $$('.carousel__card', track).forEach(c => c.animate(
+          [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(-48px, 0, 0)', offset: 0.45 }, { transform: 'translate3d(0, 0, 0)' }],
+          { duration: 1300, easing: 'ease-in-out' }));
+      }, 1100);
+    }), { threshold: 0.6 });
+    $$('#b2 [data-carousel] .carousel, #b4w [data-carousel] .carousel, #b6 [data-carousel] .carousel').forEach(track => {
+      const mark = () => { track.__touched = true; };
+      ['pointerdown', 'touchstart', 'wheel', 'scroll'].forEach(ev => track.addEventListener(ev, mark, { passive: true }));
+      pio.observe(track);
+    });
   }
 })();
