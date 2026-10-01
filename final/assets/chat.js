@@ -73,16 +73,16 @@
       chat: { pop: 'Есть вопрос? Напиши <b>Эрике</b>', plaque: 'Есть вопросы? Задай их Эрике в&nbsp;чате', btn: 'Открыть чат',
         words: [[/Задать вопрос в WhatsApp/g, 'Задать вопрос в чате'], [/напиши нам в WhatsApp/g, 'напиши нам в чат'], [/Напиши в WhatsApp/g, 'Напиши в чат'], [/ответит в WhatsApp/g, 'ответит в чате']] },
       mail: { aria: 'Написать на почту', pop: 'Есть вопрос? Напиши нам на&nbsp;<b>почту</b>', plaque: 'Есть вопросы? Напиши нам на&nbsp;почту', btn: 'Написать на почту',
-        words: [[/ИИ-помощник ответит в WhatsApp/g, 'Поддержка ответит на почте'], [/Задать вопрос в WhatsApp/g, 'Написать на почту'], [/напиши нам в WhatsApp/g, 'напиши нам на почту'], [/Напиши в WhatsApp/g, 'Напиши на почту']] }
+        words: [[/Эрика ответит в WhatsApp/g, 'Ответим на почте'], [/Задать вопрос в WhatsApp/g, 'Написать на почту'], [/напиши нам в WhatsApp/g, 'напиши нам на почту'], [/Напиши в WhatsApp/g, 'Напиши на почту']] }
     },
     pt: {
-      pre: /chat|IA da Erika/,
+      pre: /chat/,
       chat: { pop: null, plaque: null, btn: null, words: [], aria: 'Abrir o chat' },
       mail: { aria: 'Escrever por e-mail', pop: 'Dúvidas? Escreva pra gente por e-mail', plaque: 'Dúvidas? Escreva pra gente por e-mail', btn: 'Escrever por e-mail',
-        words: [[/Não sabe qual plano escolher\? Pergunte aqui no chat — a IA da Erika te ajuda\./g, 'Não sabe qual plano escolher? Escreva por e-mail — a gente te ajuda.'],
-          [/Pergunte no chat — a IA da Erika responde por aqui\./g, 'Escreva por e-mail — a gente responde.'],
-          [/A IA da Erika responde por aqui e te ajuda a escolher o plano\./g, 'A gente responde por e-mail e te ajuda a escolher o plano.'],
-          [/A IA da Erika responde por aqui/g, 'Respondemos por e-mail'],
+        words: [[/Não sabe qual plano escolher\? Escreva aqui no chat — eu te ajudo\./g, 'Não sabe qual plano escolher? Escreva por e-mail — a gente te ajuda.'],
+          [/Pergunte no chat — eu respondo por aqui\./g, 'Escreva por e-mail — a gente responde.'],
+          [/Respondo suas dúvidas e te ajudo a escolher o plano\./g, 'Respondemos por e-mail e te ajudamos a escolher o plano.'],
+          [/Eu respondo por aqui/g, 'Respondemos por e-mail'],
           [/Falar com a Erika no chat/g, 'Escrever por e-mail'], [/Pedir ajuda no chat/g, 'Escrever por e-mail']] }
     }
   };
