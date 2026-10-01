@@ -15,8 +15,8 @@
   try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
   try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
 })(document.documentElement);</script>
-<link rel="stylesheet" href="assets/site.css?v=1001c">
-<link rel="stylesheet" href="assets/site-b.css?v=1001c">
+<link rel="stylesheet" href="assets/site.css?v=1001d">
+<link rel="stylesheet" href="assets/site-b.css?v=1001d">
 </head>
 <body>
 <!-- Иконки (линейные, как lucide): <svg class="i"><use href="#i-…"/></svg> -->
@@ -625,12 +625,13 @@
 <section id="tariffs" class="blk bg-golden" aria-labelledby="tariffs-title">
   <h2 class="blk__title" id="tariffs-title">Выбери свой тариф</h2>
   <div class="t8-deal">
-    <p class="t8-deal__line">Выбери тариф до повышения цен:</p>
+    <p class="t8-deal__line">До повышения цен осталось:</p>
     <div class="cd t8-pcd" data-price-timer role="timer">
       <div class="cd__tile"><b data-cd="h">24</b><span>часов</span></div>
       <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>
       <div class="cd__tile"><b data-cd="s">00</b><span>секунд</span></div>
     </div>
+    <p class="t8-deal__note">Успей занять место по самой низкой цене</p>
   </div>
   <div class="t8">
       <article class="t8-card" id="plan-start" aria-labelledby="plan-start-name">
@@ -708,12 +709,13 @@
       </article>
   </div>
   <div class="t8-deal t8-deal--end">
-    <p class="t8-deal__line">Выбери тариф до повышения цен:</p>
+    <p class="t8-deal__line">До повышения цен осталось:</p>
     <div class="cd t8-pcd" data-price-timer role="timer">
       <div class="cd__tile"><b data-cd="h">24</b><span>часов</span></div>
       <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>
       <div class="cd__tile"><b data-cd="s">00</b><span>секунд</span></div>
     </div>
+    <p class="t8-deal__note">Успей занять место по самой низкой цене</p>
   </div>
   <div class="t8-bonus">
     <div class="t8-bonus__head">
@@ -873,12 +875,13 @@
     <blockquote class="b10-quote"><p>У женщины должны быть свои деньги. Давай начнём с твоих.</p></blockquote>
   </figure>
   <div class="b10-deal">
-    <p class="b10-deadline">Выбери тариф до повышения цен:</p>
+    <p class="b10-deadline">До повышения цен осталось:</p>
     <div class="cd b10-cd" data-price-timer role="timer">
       <div class="cd__tile"><b data-cd="h">24</b><span>часов</span></div>
       <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>
       <div class="cd__tile"><b data-cd="s">00</b><span>секунд</span></div>
     </div>
+    <p class="b10-note">Успей занять место по самой низкой цене</p>
     <p class="b10-bonus">Оплатишь в течение 3 часов — получишь бонусы: удвоение доступа, вдвое больше учебных заказов, чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
   </div>
   <div class="cta">
@@ -971,10 +974,8 @@
     <a href="#b7">Программа обучения</a>
     <a href="#tariffs">Тарифы</a>
     <a href="#b9">Как оплатить</a>
+    <button class="topnav__video" type="button" data-video-open>Смотреть видео</button>
     <a href="#b11">Вопросы и ответы</a>
-    <span class="topnav__sep" aria-hidden="true"></span>
-    <a class="topnav__sm" href="termos/">Условия</a>
-    <a class="topnav__sm" href="privacidade/">Политика конфиденциальности</a>
   </nav>
 </div>
 
@@ -1012,8 +1013,8 @@
   </div>
 </div>
 
-<script src="assets/site.js?v=1001c" defer></script>
-<script src="assets/site-b.js?v=1001c" defer></script>
+<script src="assets/site.js?v=1001d" defer></script>
+<script src="assets/site-b.js?v=1001d" defer></script>
 <!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
 <script>(function(){var m=/[?&]chat=(1|mock)(&|$)/.exec(location.search);if(!m&&!/^oferta\./i.test(location.hostname))return;var v=5,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(m&&m[1]==='mock')s('chat-mock.js');s('chat.js');})();</script>
 </body>

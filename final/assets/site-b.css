@@ -750,3 +750,16 @@
 
 /* Лёша 01.10 (вечер): подарков снова четыре, по слайду 53 презентации — 2 × 2 на планшете и десктопе */
 #tariffs .t8-bonus__ico { object-fit: contain; }
+
+/* ---------- Лёша 01.10 22:15–22:22 ---------- */
+/* строка под таймером «Успей занять место по самой низкой цене» */
+#tariffs .t8-deal__note, #b10 .b10-note { margin: 12px 0 0; font-size: 15px; font-weight: 600; line-height: 1.4; color: var(--tx2); text-align: center; text-wrap: balance; }
+/* цена в рассрочку целиком синяя («12 ×», «R$» и сумма одним цветом); красный вариант для теста: ?price=red */
+#tariffs .t8-inst, #tariffs .t8-inst__x, #tariffs .t8-inst__cur, #tariffs .t8-inst__sum { color: #1597D1; }
+#tariffs .t8-inst__x, #tariffs .t8-inst__cur { font-size: 26px; }
+html[data-price="red"] #tariffs .t8-inst, html[data-price="red"] #tariffs .t8-inst__x,
+html[data-price="red"] #tariffs .t8-inst__cur, html[data-price="red"] #tariffs .t8-inst__sum { color: #D92D20; }
+/* окно продаж закрыто (5–6 октября): на тарифах вместо «Оплатить» плашка «Места закончились», таймеры и бонусы убраны */
+#tariffs .t8-pay.is-sold { background: #E6EAEE; color: #55636E; box-shadow: none; border: 0; cursor: default; pointer-events: none; animation: none; }
+html.is-soldout #tariffs .t8-deal, html.is-soldout #b10 .b10-deal, html.is-soldout #tariffs .t8-bonus { display: none; }
+

@@ -163,7 +163,38 @@
      часы считаются от нуля и доходят до 24 (плитки «дней» нет). Стартовый HTML без JS уже показывает 24:00:00. */
   const PRICE_KEY = 'es_price_until';
   const PRICE_DAY = 24 * 3600 * 1000;
-  const SALE_END = Date.parse('2026-10-05T02:59:59Z');
+  /* Окна продаж (Лёша 01.10): 2–4 октября и 7–9 октября по Бразилиа (UTC−3); 5–6 октября продажи закрыты («места закончились»).
+     Конец окна для таймера: первое окно — 05.10 02:59:59 UTC, второе — 10.10 02:59:59 UTC. Время берём у сервера (заголовок Date),
+     чтобы сбитые часы на телефоне ничего не открывали и не закрывали; нет ответа — часы устройства. */
+  const CLOSE_FROM = Date.parse('2026-10-05T03:00:00Z'), CLOSE_TO = Date.parse('2026-10-07T03:00:00Z');
+  let skew = 0;
+  const nowMs = () => Date.now() + skew;
+  const saleEnd = now => Date.parse(now < CLOSE_FROM ? '2026-10-05T02:59:59Z' : '2026-10-10T02:59:59Z');
+  const soldTime = now => now >= CLOSE_FROM && now < CLOSE_TO;
+  let soldQ = null;
+  try { const q = new URLSearchParams(location.search).get('soldout'); soldQ = q === '1' ? true : q === '0' ? false : null; } catch (e) { /* старый браузер */ }
+  const applySold = () => {
+    const on = soldQ !== null ? soldQ : soldTime(nowMs());
+    html.classList.toggle('is-soldout', on);
+    $$('.t8-pay').forEach(a => {
+      if (on && !a.classList.contains('is-sold')) {
+        a.setAttribute('data-href', a.getAttribute('href') || ''); a.setAttribute('data-txt', a.innerHTML);
+        a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.classList.add('is-sold'); a.textContent = 'Места закончились';
+      } else if (!on && a.classList.contains('is-sold')) {
+        a.setAttribute('href', a.getAttribute('data-href')); a.innerHTML = a.getAttribute('data-txt'); a.removeAttribute('aria-disabled'); a.classList.remove('is-sold');
+      }
+    });
+  };
+  applySold();
+  try {
+    const t0 = Date.now();
+    fetch(location.pathname + location.search, { method: 'HEAD', cache: 'no-store' }).then(r => {
+      const dt = Date.parse(r.headers.get('date') || '');
+      if (isFinite(dt)) { skew = dt + (Date.now() - t0) / 2 - Date.now(); applySold(); }
+    }).catch(() => {});
+  } catch (e) { /* fetch недоступен */ }
+  d.addEventListener('visibilitychange', () => { if (!d.hidden) applySold(); });
+  window.addEventListener('pageshow', applySold);
   let priceMem = 0;
   /* Читаем из первого хранилища, где ключ есть (localStorage → sessionStorage); нигде нет или оба закрыты — из памяти страницы */
   const priceRead = () => {
@@ -193,8 +224,8 @@
   let priceT = 0;
   const priceTick = () => {
     clearTimeout(priceT);
-    const now = Date.now();
-    const ms = now < SALE_END ? Math.min(priceUntil(now), SALE_END) - now : 0;
+    const now = nowMs(), end = saleEnd(now);
+    const ms = now < end && !soldTime(now) ? Math.min(priceUntil(now), end) - now : 0;
     const left = Math.max(0, Math.ceil(ms / 1000));
     const v = { h: Math.floor(left / 3600), m: Math.floor(left % 3600 / 60), s: left % 60 };
     priceTimers.forEach(t => {
@@ -505,10 +536,13 @@
       panel.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false'); box.classList.toggle('is-open', open);
     };
     btn.addEventListener('click', () => set(panel.hidden));
-    panel.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('a')) set(false); });
+    panel.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('a, button')) set(false); });
     d.addEventListener('click', (e) => { if (!panel.hidden && !box.contains(e.target)) set(false); });
     d.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) { set(false); btn.focus(); } });
     /* лента листается пальцем — меню закрываем, чтобы не висело поверх блока */
     window.addEventListener('scroll', () => { if (!panel.hidden && Math.abs((window.scrollY || 0) - y0) > 160) set(false); }, { passive: true });
   })();
+
+  /* ---------- Вариант цвета цены для теста (?price=red): красный; по умолчанию синий ---------- */
+  try { if (new URLSearchParams(location.search).get('price') === 'red') html.setAttribute('data-price', 'red'); } catch (e) { /* старый браузер */ }
 })();

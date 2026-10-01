@@ -1235,3 +1235,10 @@ html.emc-on .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-sh
 /* Лёша/Никита 01.10: плашка вопросов — внутри блока тарифов, на его золотом фоне, без своей белой полосы со швами */
 #tariffs .pb-wa { padding: 0; background: none; margin-top: 28px; }
 
+/* Лёша 01.10 22:22: в меню нет «Условия» и «Политика»; после «Как оплатить» пункт «Смотреть видео» (открывает ролик) */
+.topnav__panel .topnav__video {
+  display: block; width: 100%; margin: 0; padding: 13px 14px; border: 0; border-radius: 12px; background: none; text-align: left; cursor: pointer;
+  color: var(--ink); font: 600 16px/1.25 var(--sans, 'Raleway', sans-serif); -webkit-tap-highlight-color: transparent;
+}
+.topnav__panel .topnav__video:hover, .topnav__panel .topnav__video:focus-visible { background: var(--sky-0); }
+
