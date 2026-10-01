@@ -67,7 +67,8 @@
       if (nextB) nextB.classList.toggle('is-off', i >= last());
       if (i > 0) hints.forEach(h => h.classList.add('is-seen'));   /* уже листали — подсказка замирает */
       cards.forEach((c, k) => c.classList.toggle('is-cur', k === i));   /* 4w: покачивается только телефон активной карточки */
-      if (counter) counter.textContent = (i + 1) + ' / ' + n;
+      /* раунд 10: в кадре 2–3 карточки — счётчик диапазоном «1–3 / 8», последний шаг — «6–8 / 8» */
+      if (counter) counter.textContent = (pv > 1 ? (i + 1) + '–' + Math.min(n, i + pv) : (i + 1)) + ' / ' + n;
       gotos.forEach(b => {
         const on = Number(b.getAttribute('data-carousel-goto')) === i;
         b.classList.toggle('is-active', on);

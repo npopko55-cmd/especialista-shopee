@@ -716,57 +716,48 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
 .b6__nav { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: -14px; }
 .b6__nav .carousel__dots { margin-top: 0; }
 .b6__count { font: 700 14px/1 var(--sans); color: var(--ink); }
-/* раунд 6 (Лиза): шесть плиток ОДНОГО вида. Слева квадрат-картинка 84×84 (скругление 20, рамка 1 px var(--line),
-   мягкая тень, светлая заливка), справа заголовок и текст. Все плитки одной высоты (grid-auto-rows: 1fr);
-   пока открыта раскрывашка «Какие уроки» — высоты свои, чтобы не раздувать соседей. */
-.b6__grid { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; gap: 10px; margin-top: 8px; }
-.b6__grid:has(.more[open]) { grid-auto-rows: auto; }
-.mini {
-  display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: center; column-gap: 14px;
-  min-width: 0; padding: 14px 16px 14px 14px;
+/* раунд 10 (Лёша 01.10): пять бывших плиток — слайды той же ленты. Подложка фиксированной высоты (220 / 240 / 260),
+   поле 6 + 2 = 8 px, картинка крупно на всю подложку; квадратиков 84×84 больше нет */
+.feat__media--art { height: 220px; padding: 2px; }
+.feat__art {
+  position: relative; display: block; width: 100%; height: 100%; overflow: hidden; align-self: stretch; justify-self: stretch;
+  border-radius: calc(var(--r-lg) - 8px); background: var(--sky-0);
 }
-.mini__txt { min-width: 0; }
-.mini__t { font-weight: 700; font-size: 15px; line-height: 1.3; color: var(--ink); text-wrap: balance; }
-.mini__p { font-size: 14.5px; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
-.mini__txt > .mini__p { margin-top: 4px; }
-.mini__pic {
-  position: relative; display: block; flex: none; width: 84px; height: 84px; overflow: hidden; align-self: center;
-  border-radius: 20px; background: var(--sky-0); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
-}
-.mini__pic img { position: absolute; display: block; max-width: none; }
+.feat__art img { position: absolute; min-height: 0; object-fit: fill; display: block; max-width: none; }
+/* селекторы с .feat__media — сильнее общего правила планшета «.feat__media img { 100 % × 100 %, contain }» */
 /* ИИ: нарисованное окно чата — запрос, ответ, искры, строка ввода с кнопкой отправки */
-.mini__chat { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-/* образцы: настоящий экран из презентации, обрезан по верху телефона */
-.mini__pic--ex { background: var(--peach-2); }
-.mini__pic--ex img { left: calc(50% - 37px); top: 8px; width: 74px; height: auto; filter: drop-shadow(0 6px 8px rgba(160, 90, 40, .2)); }
-/* эфиры: фото Эрики + метка LIVE */
-.mini__pic--live img { left: -25%; top: -6px; width: 150%; height: auto; }
-.mini__live {
-  position: absolute; left: 6px; bottom: 6px; display: flex; align-items: center; gap: 3px;
-  padding: 3px 6px 3px 5px; border-radius: 6px; background: var(--live); color: #fff;
-  font: 700 10px/1 var(--sans); letter-spacing: .06em;
+.feat__chat { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+/* образцы: экран из презентации крупно, обрезан снизу краем подложки */
+.feat__art--ex { background: var(--peach-2); }
+.feat__media .feat__art--ex img { left: 50%; top: 12px; width: 62%; height: auto; transform: translateX(-50%); filter: drop-shadow(0 10px 14px rgba(160, 90, 40, .2)); }
+/* поддержка: круглое фото Эрики + значок чата; --D — диаметр круга */
+.feat__art--ava { --D: 184px; background: var(--sky-1); }
+.feat__face {
+  position: absolute; left: calc(50% - var(--D) / 2); top: calc(50% - var(--D) / 2); width: var(--D); height: var(--D);
+  overflow: hidden; border-radius: 50%;
+  background: radial-gradient(circle at 40% 30%, #F1F9FC, #BFE0EE); box-shadow: 0 0 0 3px #fff, var(--shadow-sm);
 }
-.mini__live::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #fff; }
-/* поддержка: круглое фото Эрики + значок чата */
-.mini__pic--ava { background: var(--sky-1); }
-.mini__pic--ava .mini__face { inset: auto; left: 11px; top: 10px; width: 60px; height: 60px; }
-.mini__pic--ava .mini__face img { height: 268px; width: auto; left: calc(30px - 268px * .75 * .579); top: -26px; }
-.mini__pic--ava .mini__bubble { right: 7px; bottom: 7px; }
+.feat__media .feat__face img { height: calc(var(--D) * 4.467); width: auto; left: calc(var(--D) * -1.4397); top: calc(var(--D) * -.433); }
+.feat__bubble {
+  position: absolute; left: calc(50% + var(--D) * .24); top: calc(50% + var(--D) * .2); display: grid; place-items: center;
+  width: 52px; height: 52px; border-radius: 50%; background: #fff; box-shadow: var(--shadow-sm); color: var(--azure-sm);
+}
+.feat__bubble svg { width: 28px; height: 28px; }
 /* сертификат: лист под углом 3°, покачивается (rotate — отдельным свойством, .bob двигает transform) */
-.mini__pic--cert { background: var(--peach-2); }
-.mini__cert { position: absolute; left: calc(50% - 24px); top: 10px; display: block; width: 48px; height: 64px; rotate: -3deg; filter: drop-shadow(0 6px 8px rgba(31, 42, 51, .16)); }
-/* бонусные уроки: кадр урока (Эрика на видео, кроп из pres/lessons.webp) + кнопка play */
-.mini__pic--les { background: #3B3050; }
-.mini__pic--les img { left: -203px; top: -20px; width: 400px; height: auto; }
-.mini__play {
-  position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 32px; height: 32px; margin: -16px 0 0 -16px;
-  border-radius: 50%; background: #fff; color: var(--ink); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .45);
+.feat__art--cert { display: grid; place-items: center; background: var(--peach-2); }
+.feat__cert { display: block; height: 86%; width: auto; aspect-ratio: 68 / 90; rotate: -3deg; filter: drop-shadow(0 10px 12px rgba(31, 42, 51, .16)); }
+/* бонусные уроки: кадр урока (Эрика на видео, из pres/lessons.webp) на всю подложку + кнопка play */
+.feat__art--les { background: #3B3050; }
+.feat__media .feat__art--les img { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; }
+.feat__play {
+  position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 56px; height: 56px; margin: -28px 0 0 -28px;
+  border-radius: 50%; background: #fff; color: var(--ink); box-shadow: 0 8px 18px -6px rgba(0, 0, 0, .45);
 }
-.mini__play svg { width: 15px; height: 15px; }
-@media (max-width: 359px) {
-  .mini { column-gap: 12px; padding: 12px 12px 12px 12px; }
-}
-/* раунд 5: плитки в одну колонку на любой ширине (в 2 колонках на 480 заголовки рвались на 3–4 строки по слову) */
+.feat__play svg { width: 24px; height: 24px; }
+.feat__txt > .more { margin-top: 4px; }
+.feat__txt > .more > .feat__p { margin-top: 2px; }
+/* 8 точек + «N / 8» помещаются в 280 px (ширина 320): тап-зона точки 28×40 */
+#b6 .carousel__dots button { width: 28px; }
 .more > summary {
   display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px;
   list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
@@ -790,15 +781,6 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
 /* стрелки — по середине самого низкого макета (lessons 1100×549), считается от ширины ленты:
    лента = min(100vw, 480) − 40, картинка = лента × .9 − 18 (рамка 2 + поля 16), центр зоны = 13 + h/2, кнопка 44 → −22 */
 #b6 .arrows { --arrows-top: calc(((min(100vw, 480px) - 40px) * .9 - 18px) * .2495 - 9px); }
-.mini__face {
-  position: absolute; inset: 0; overflow: hidden; border-radius: 50%;
-  background: radial-gradient(circle at 40% 30%, #F1F9FC, #BFE0EE); box-shadow: 0 0 0 2px #fff, var(--shadow-sm);
-}
-.mini__bubble {
-  position: absolute; display: grid; place-items: center; width: 24px; height: 24px;
-  border-radius: 50%; background: #fff; box-shadow: var(--shadow-sm); color: var(--azure-sm);
-}
-.mini__bubble svg { width: 14px; height: 14px; }
 .b6__ip { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 8px; padding: 14px 20px 20px; text-align: center; }
 .b6__ip-phones { display: block; width: 200px; max-width: 100%; height: 168px; object-fit: contain; filter: drop-shadow(0 12px 14px rgba(160, 80, 30, .22)); }   /* любые пропорции: целиком, без растяжения */
 @media (min-width: 470px) { .b6__ip { grid-template-columns: 172px minmax(0, 1fr); justify-items: start; text-align: left; gap: 16px; } }
@@ -1054,12 +1036,12 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
   .b6__track { align-items: stretch; gap: 20px; }
   .b6__track .carousel__card { flex-basis: calc((100% - 20px) / 2); }
   .feat__media { display: grid; place-items: center; height: 240px; padding: 8px; }
-  .feat__media img { width: 100%; height: 100%; object-fit: contain; }
+  .feat__media img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }   /* min-height: 0 — иначе WebKit растит img-элемент сетки до натуральной высоты и макет платформы налезал на текст */
   .feat__p { font-size: 16px; }
-  .mini__p { font-size: 15px; }
   #b6 .arrows { --arrows-top: 108px; }   /* середина зоны макета: 4 + 6 + 120 − 22 */
-  .b6__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
-  .b6__grid > li:last-child { grid-column: 1 / -1; }   /* «Бонусные уроки» с раскрывашкой — на всю ширину */
+  .feat__media--art { padding: 2px; }
+  .b6__track::after { display: none; }   /* 2–3 в кадре: последний шаг «назад/вперёд» доходит до края ленты */
+  .feat__art--ava { --D: 200px; }
   .b6__ip { grid-template-columns: 220px minmax(0, 1fr); gap: 32px; max-width: 880px; margin: 20px auto 0; padding: 20px 36px; justify-items: start; text-align: left; }
   .b6__ip-phones { width: 220px; height: 184px; }
   .b6__ip-t { font-size: 28px; }
@@ -1126,16 +1108,12 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
   .b5__chips { justify-content: flex-start; }
   #b5 > .cta { grid-column: 1 / -1; grid-row: 5; margin-top: 40px; }
 
-  /* блок 6: все три макета в кадре — листать нечего: подсказка, стрелки, точки и счётчик не нужны */
+  /* блок 6: 3 слайда из 8 в кадре — стрелки, точки, счётчик и «листай» нужны (раунд 10) */
   .b6__track { gap: 24px; }
   .b6__track .carousel__card { flex-basis: calc((100% - 48px) / 3); }
-  .b6__track::after { display: none; }
   .feat__media { height: 260px; }
-  #b6 .hint-row, #b6 .b6__nav, #b6 .arrows__btn { display: none; }
-}
-@media (min-width: 1280px) {
-  .b6__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .b6__grid > li:last-child { grid-column: span 2; }
+  #b6 .arrows { --arrows-top: 118px; }   /* середина зоны макета: 4 + 6 + 130 − 22 */
+  .feat__art--ava { --D: 214px; }
 }
 
 /* Высота экрана для расчётов в переменных: svh есть не везде (iOS до 15.4, старые Android), там берём vh */
