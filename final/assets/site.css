@@ -1232,3 +1232,6 @@ html.emc-on .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-sh
 }
 .feat--vi .feat__media--mock img { object-fit: cover; object-position: 100% 50%; }
 
+/* Лёша/Никита 01.10: плашка вопросов — внутри блока тарифов, на его золотом фоне, без своей белой полосы со швами */
+#tariffs .pb-wa { padding: 0; background: none; margin-top: 28px; }
+

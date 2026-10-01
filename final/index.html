@@ -734,11 +734,8 @@
     <a class="btn" id="tariffs-cta" href="#tariffs" data-cta>Получить доступ</a>
     <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
   </div>
-</section>
-
-<!-- ================= План Б: плашка «Есть вопросы — напиши Эрике» СРАЗУ ПОСЛЕ ТАРИФОВ (Лёша 01.10: раньше это отвлекает от покупки).
-     Скрыта по умолчанию; site.js показывает её, когда человек пришёл через форму (?lead=1, потом помним в sessionStorage), открыл ?planb=1 или хост oferta. ================= -->
-<section class="pb-wa" id="pb-wa" hidden aria-labelledby="pb-wa-t">
+  <!-- План Б: плашка «Есть вопросы — напиши Эрике» в конце блока тарифов (Лёша 01.10: после тарифов, не раньше). Скрыта по умолчанию; site.js показывает на плане Б (?lead=1, ?planb=1, хост oferta.) -->
+  <div class="pb-wa" id="pb-wa" hidden aria-labelledby="pb-wa-t">
   <div class="pb-wa__card">
     <span class="pb-wa__ic" aria-hidden="true"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg></span>
     <div class="pb-wa__txt">
@@ -747,7 +744,9 @@
     </div>
     <a class="btn btn--wa pb-wa__btn" id="pb-wa-btn" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Vim%20do%20site%20do%20curso%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Написать в WhatsApp</a>
   </div>
+</div>
 </section>
+
 
 <!-- Блок 8А — давай посчитаем: цена дня, весы -->
 <section id="b8a" class="blk bg-section" aria-labelledby="b8a-title">
@@ -1016,6 +1015,6 @@
 <script src="assets/site.js" defer></script>
 <script src="assets/site-b.js" defer></script>
 <!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
-<script>(function(){var m=/[?&]chat=(1|mock)(&|$)/.exec(location.search);if(!m&&!/^oferta\./i.test(location.hostname))return;var v=2,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(m&&m[1]==='mock')s('chat-mock.js');s('chat.js');})();</script>
+<script>(function(){var m=/[?&]chat=(1|mock)(&|$)/.exec(location.search);if(!m&&!/^oferta\./i.test(location.hostname))return;var v=3,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(m&&m[1]==='mock')s('chat-mock.js');s('chat.js');})();</script>
 </body>
 </html>
