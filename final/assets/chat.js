@@ -52,6 +52,17 @@
     return null;
   }
   function fmt(s, n) { return s.replace('{n}', n); }
+  // последнее прочитанное событие (чат был открыт): по нему при заходе понимаем, что есть непрочитанный ответ Эрики
+  function seenGet() {
+    var v = store('localStorage', 'em_chat_seen');
+    if (!v || !S.sid) return 0;
+    var i = v.lastIndexOf(':');
+    return v.slice(0, i) === S.sid ? (+v.slice(i + 1) || 0) : 0;
+  }
+  function markSeen(id) {
+    if (!S.sid || !(id > 0) || id <= seenGet()) return;
+    store('localStorage', 'em_chat_seen', S.sid + ':' + id);
+  }
   function uuid() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -159,7 +170,7 @@
   // Пузырь-подсказка с приветствием у закрытой кнопки
   var peek = el('div', 'emc-peek');
   peek.hidden = true;
-  peek.innerHTML = '<button class="emc-peek__msg" type="button"><b></b><span></span></button>' +
+  peek.innerHTML = '<button class="emc-peek__msg" type="button"><b></b><span></span><i class="emc-dots" aria-hidden="true"><i></i><i></i><i></i></i></button>' +
     '<button class="emc-peek__x" type="button">' + SVG + '<path d="M18 6 6 18M6 6l12 12"/></svg></button>';
   peek.querySelector('b').textContent = L.erika;
   peek.querySelector('.emc-peek__x').setAttribute('aria-label', L.peekClose);
@@ -258,7 +269,8 @@
     render(ev);
     if (ev.from !== 'user' && ev.type !== 'user' && ev.type !== 'typing') {
       if (S.busy && (S.busyId == null || ev.id > S.busyId)) setBusy(false);
-      if (!S.open && !hist && ev.type !== 'system') { S.unread++; badgeUp(); if (ev.text) peekShow(ev.text, ev.from); }
+      if (!S.open && !hist && ev.type !== 'system') { S.unread++; badgeUp(); if (ev.text) peekShow(ev.text, ev.from, ev.id); }
+      if (S.open && ev.id != null) markSeen(ev.id);
     }
     if (ev.type === 'handoff') setBusy(false);
   }
@@ -363,9 +375,20 @@
     var lim = j.limits || {};
     ta.maxLength = lim.max_chars > 0 ? lim.max_chars : 500;
     S.handoff = !!j.handoff;
-    var evs = j.events || [], last = null;
-    evs.forEach(function (ev) { if (accept(ev)) { show(ev, true); if (ev.type !== 'typing') last = ev; } });
+    var evs = j.events || [], last = null, seenId = seenGet(), unreadEvs = [];
+    evs.forEach(function (ev) {
+      if (!accept(ev)) return;
+      show(ev, true);
+      if (ev.type !== 'typing') last = ev;
+      if (ev.id > seenId && ev.from !== 'user' && ev.type !== 'user' && ev.type !== 'typing' && ev.type !== 'system' && ev.text) unreadEvs.push(ev);
+    });
     if (evs.length) S.hasHistory = true;
+    if (S.open) markSeen(j.last_event_id || S.lastId);
+    else if (unreadEvs.length) {
+      var ue = unreadEvs[unreadEvs.length - 1];
+      S.unread = unreadEvs.length; badgeUp();
+      setTimeout(function () { peekShow(ue.text, ue.from, ue.id); }, 2500);
+    }
     if (j.last_event_id > S.lastId) S.lastId = j.last_event_id;
     // последний — непрочитанный ответом вопрос человека: ждём ответ
     if (last && last.type === 'user' && !S.handoff) { setBusy(true, last.id); typing(true); }
@@ -609,25 +632,35 @@
     peek.style.right = Math.max(12, innerWidth - r.right) + 'px';
     peek.style.bottom = (innerHeight - r.top + 12) + 'px';
   }
-  var peekText = '';
-  function peekShow(text, from) {
-    if (store('sessionStorage', 'em_chat_peek_off') || S.open) return;
-    peekText = text;
+  var peekText = '', peekFrom = '', peekId = 0, peekT = 0;
+  // крестик гасит только это сообщение: новое сообщение Эрики снова всплывает
+  function peekDismissed(id) { var v = store('sessionStorage', 'em_chat_peek_dis'); return v != null && id <= +v; }
+  function peekShow(text, from, id) {
+    id = id != null ? +id : 0;
+    if (S.open || peekDismissed(id)) return;
+    var fresh = peekText !== text || peekId !== id;
+    peekText = text; peekFrom = from || peekFrom; peekId = id;
     peek.querySelector('span').textContent = text;
-    if (from) peek.querySelector('b').textContent = from === 'manager' ? L.team : L.erika;
+    peek.querySelector('b').textContent = peekFrom === 'manager' ? L.team : L.erika;
     if (!btnVisible()) return;   // кнопка ещё спрятана (самый верх страницы) — покажем после прокрутки
+    var was = !peek.hidden;
     peek.hidden = false;
     html.classList.add('emc-peek-on');
     peekPlace();
+    if (fresh && !was && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      // как живое сообщение: сначала «печатает…», потом текст
+      peek.classList.add('is-typing'); clearTimeout(peekT);
+      peekT = setTimeout(function () { peek.classList.remove('is-typing'); peekPlace(); }, 1100);
+    }
   }
-  function peekHide() { peek.hidden = true; peekText = ''; html.classList.remove('emc-peek-on'); }
+  function peekHide() { clearTimeout(peekT); peek.classList.remove('is-typing'); peek.hidden = true; peekText = ''; html.classList.remove('emc-peek-on'); }
   window.addEventListener('scroll', function () {
-    if (peekText && peek.hidden && !S.open && btnVisible()) peekShow(peekText);
+    if (peekText && peek.hidden && !S.open && btnVisible()) peekShow(peekText, peekFrom, peekId);
   }, { passive: true });
   window.addEventListener('resize', peekPlace);
   peek.querySelector('.emc-peek__msg').addEventListener('click', function () { openChat(btn); });
   peek.querySelector('.emc-peek__x').addEventListener('click', function () {
-    store('sessionStorage', 'em_chat_peek_off', '1'); peekHide();
+    store('sessionStorage', 'em_chat_peek_dis', String(peekId)); peekHide();
   });
 
   /* ---------- Открыть / закрыть ---------- */
@@ -651,7 +684,7 @@
     html.classList.add('emc-open');
     html.classList.toggle('emc-lock', m);
     btn.setAttribute('aria-expanded', 'true');
-    S.unread = 0; badgeUp(); peekHide();
+    S.unread = 0; badgeUp(); peekHide(); markSeen(S.lastId);
     if (!S.ok) startSession();
     sync(); vv(); scrollEnd();
     setTimeout(function () { try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } }, 30);
