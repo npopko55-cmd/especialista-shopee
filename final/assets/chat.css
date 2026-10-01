@@ -1,0 +1,180 @@
+/* Веб-чат с ИИ-менеджером Эрики (план Б). Грузится только вместе с assets/chat.js (oferta.* или ?chat=1/mock).
+   Токены — из site.css (Prata/Raleway, --ink, --sky-1 …). Всё под префиксом .emc / html.emc-on — на план А не влияет.
+   Контраст: текст на белом/небе ≥ 4,5:1; оранжевая кнопка — #C24A12 (5,0:1 к белому). Цели касания ≥ 44 px. */
+
+/* ---------- Круглая кнопка: вместо зелёной WhatsApp — фото Эрики (обрезка по лицу) ---------- */
+.emc-ava,
+html.emc-on .sticky-cta__wa,
+html.emc-on .pb-wa__ic {
+  background: #FFE9DA url(img/hero-erika-cut-hd.webp) 58% 15% / 417% auto no-repeat;
+}
+html.emc-on .sticky-cta__wa > svg, html.emc-on .pb-wa__ic > svg { display: none; }
+html.emc-on .sticky-cta__wa { box-shadow: 0 0 0 4px rgba(255, 255, 255, .85), 0 14px 26px -10px rgba(31, 42, 51, .45); }
+@media (max-width: 767px) { html.emc-on .sticky-cta__wa { position: relative; } }
+.emc-solo { position: fixed; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 40; }
+.emc-dot, .emc-badge { display: none; }
+html.emc-on .emc-dot {
+  display: block; position: absolute; right: 0; bottom: 1px; width: 15px; height: 15px; border-radius: 50%;
+  background: #25D366; box-shadow: 0 0 0 2.5px #fff;
+}
+html.emc-on .emc-badge:not([hidden]) {
+  display: grid; place-items: center; position: absolute; top: -5px; right: -5px;
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px;
+  background: #C24A12; color: #fff; font: 700 12px/1 var(--sans); box-shadow: 0 0 0 2px #fff;
+}
+html.emc-peek-on .wa-pop, html.emc-open .wa-pop { display: none; }
+
+/* ---------- Пузырь с приветствием у закрытой кнопки ---------- */
+.emc-peek {
+  position: fixed; z-index: 45; display: flex; align-items: flex-start;
+  width: max-content; max-width: min(300px, calc(100vw - 24px));
+  padding: 4px 2px 4px 4px; border-radius: 18px; border-bottom-right-radius: 6px;
+  background: #fff; border: 1px solid var(--line, rgba(31, 42, 51, .08)); box-shadow: var(--shadow, 0 12px 32px -12px rgba(31, 42, 51, .18));
+  animation: emc-in .25s ease both;
+}
+.emc-peek[hidden] { display: none; }
+.emc-peek__msg {
+  display: block; min-height: 44px; padding: 8px 6px 8px 10px; border: 0; background: none; cursor: pointer;
+  text-align: left; font: 500 14.5px/1.35 var(--sans); color: var(--ink, #1F2A33);
+}
+.emc-peek__msg b { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 700; color: var(--muted, #4E5A63); }
+.emc-peek__x, .emc__x {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; color: var(--muted, #4E5A63); cursor: pointer;
+}
+.emc-peek__x svg, .emc__x svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+/* ---------- Окно: телефон — на весь экран ---------- */
+html.emc-lock, html.emc-lock body { overflow: hidden; }
+.emc {
+  position: fixed; left: 0; right: 0; top: 0; z-index: 55;
+  height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column;
+  background: var(--sky-1, #EAF5FA); color: var(--ink, #1F2A33);
+  font-family: var(--sans); font-size: 16px;
+  animation: emc-in .2s ease both;
+}
+.emc[hidden] { display: none; }
+@keyframes emc-in { from { opacity: 0; transform: translate3d(0, 12px, 0); } to { opacity: 1; transform: none; } }
+
+.emc__head {
+  flex: none; display: flex; align-items: center; gap: 12px;
+  padding: calc(8px + env(safe-area-inset-top)) 8px 8px 16px;
+  background: #fff; border-bottom: 1px solid var(--line, rgba(31, 42, 51, .08));
+}
+.emc-ava { flex: none; width: 44px; height: 44px; border-radius: 50%; }
+.emc__who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.emc__name { font: 400 18px/1.2 var(--serif); }
+.emc__st { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #0F7A40; }
+.emc__st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #25D366; }
+.emc__bar { flex: none; padding: 8px 16px; background: #FFF3EA; font-size: 14px; font-weight: 600; text-align: center; }
+
+.emc__feed {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+  display: flex; flex-direction: column; gap: 6px; padding: 16px 12px 12px;
+}
+.emc__feed:focus { outline: none; }
+.emc-who { margin: 8px 0 0 6px; font-size: 13px; font-weight: 700; color: var(--muted, #4E5A63); }
+.emc-b {
+  align-self: flex-start; max-width: 84%; padding: 10px 14px;
+  border-radius: 18px; border-bottom-left-radius: 6px;
+  background: #fff; box-shadow: var(--shadow-sm, 0 6px 16px -8px rgba(31, 42, 51, .16));
+  font-size: 15.5px; line-height: 1.42; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.emc-b--user {
+  align-self: flex-end; margin-top: 6px; border-radius: 18px; border-bottom-right-radius: 6px;
+  background: #0B7DB0; color: #fff;
+}
+.emc-b--mgr { background: #FBF8EF; }
+.emc-b--paid { background: #FFF3EA; }
+.emc-b--paid b { display: block; margin-bottom: 4px; font: 400 18px/1.25 var(--serif); }
+.emc-sys { align-self: center; max-width: 92%; margin: 6px 0; font-size: 13.5px; line-height: 1.4; color: var(--muted, #4E5A63); text-align: center; }
+.emc-ho {
+  align-self: stretch; margin: 8px 0; padding: 10px 14px; border-radius: 14px;
+  background: #FBF8EF; border: 1px solid var(--line, rgba(31, 42, 51, .08));
+  font-size: 14.5px; font-weight: 600; text-align: center;
+}
+.emc-btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 2px; }
+.emc-btns button {
+  min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer;
+  border: 1.5px solid #0B7DB0; background: #fff; color: #0B7DB0; font: 700 15px/1.2 var(--sans);
+}
+.emc-btns button:disabled { cursor: default; border-color: #B8C3CA; color: #4E5A63; background: transparent; }
+.emc-cta {
+  display: flex; align-items: center; justify-content: center; align-self: stretch;
+  min-height: 56px; margin: 6px 0; padding: 8px 20px; border: 0; border-radius: 999px; cursor: pointer;
+  background: #C24A12; color: #fff; font: 700 17px/1.2 var(--sans); text-align: center; text-decoration: none;
+  box-shadow: 0 12px 24px -12px rgba(194, 74, 18, .7);
+}
+.emc-cta:disabled { opacity: .7; cursor: default; }
+.emc-cta--wa { background: #fff; color: #0F7A40; border: 1.5px solid #25D366; box-shadow: none; }
+
+.emc-typing { align-self: flex-start; display: flex; gap: 5px; padding: 14px 16px; border-radius: 18px; border-bottom-left-radius: 6px; background: #fff; }
+.emc-typing span { width: 7px; height: 7px; border-radius: 50%; background: #7A868F; animation: emc-dot 1.2s infinite ease-in-out; }
+.emc-typing span:nth-child(2) { animation-delay: .2s; }
+.emc-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes emc-dot { 0%, 80%, 100% { opacity: .35; } 40% { opacity: 1; } }
+
+/* ---------- Форма контакта ---------- */
+.emc-form { align-self: stretch; display: grid; gap: 10px; margin: 4px 0; padding: 14px; border-radius: 18px; background: #fff; box-shadow: var(--shadow-sm, 0 6px 16px -8px rgba(31, 42, 51, .16)); }
+.emc-form__t { font: 400 18px/1.25 var(--serif); }
+.emc-form__ok { font: 400 20px/1.3 var(--serif); text-align: center; padding: 6px 0; }
+.emc-f { display: grid; gap: 4px; }
+.emc-f > label:not(.emc-ck) { font-size: 14px; font-weight: 700; }
+.emc-f input[type="text"], .emc-f input[type="tel"], .emc-f input[type="email"] {
+  width: 100%; min-height: 48px; padding: 0 14px; border: 1px solid #7A868F; border-radius: 12px;
+  background: #fff; color: var(--ink, #1F2A33); font: 500 16px/1.2 var(--sans);
+}
+.emc-f input[aria-invalid="true"] { border-color: #B3261E; }
+.emc-tel { display: flex; align-items: center; gap: 8px; }
+.emc-tel__cc { flex: none; font-weight: 700; color: var(--muted, #4E5A63); }
+.emc-ck { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.4; cursor: pointer; }
+.emc-ck input { flex: none; width: 22px; height: 22px; margin: 1px 0 0; accent-color: #0B7DB0; }
+.emc-ck a { color: #0B7DB0; font-weight: 700; }
+.emc-err { min-height: 0; font-size: 13px; font-weight: 600; color: #B3261E; }
+.emc-err:empty { display: none; }
+
+/* ---------- Поле ввода ---------- */
+.emc__hint { flex: none; margin: 0; padding: 0 16px; font-size: 13.5px; font-weight: 600; line-height: 1.35; color: #A83A0C; }
+.emc__hint:not(:empty) { padding: 8px 16px 2px; }
+.emc__in {
+  flex: none; position: relative; display: flex; align-items: flex-end; gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: #fff; border-top: 1px solid var(--line, rgba(31, 42, 51, .08));
+}
+.emc__in textarea {
+  flex: 1; min-width: 0; min-height: 44px; max-height: 132px; padding: 10px 16px; resize: none;
+  border: 1px solid #7A868F; border-radius: 22px; background: #fff; color: var(--ink, #1F2A33);
+  font: 500 16px/1.4 var(--sans);
+}
+.emc__in textarea::placeholder { color: #5F6B74; }
+.emc__in textarea:read-only { background: #F3F6F8; }
+.emc__cnt { position: absolute; right: 70px; top: -20px; padding: 0 6px; border-radius: 8px; background: rgba(255, 255, 255, .92); font-size: 12px; font-weight: 600; color: var(--muted, #4E5A63); }
+.emc__cnt:empty { display: none; }
+.emc__cnt.is-max { color: #A83A0C; }
+.emc__send {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: 50%; background: #0B7DB0; color: #fff; cursor: pointer;
+}
+.emc__send:disabled { background: #D5DDE2; color: #4E5A63; cursor: default; }
+.emc__send svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+
+.emc :focus-visible, .emc-peek :focus-visible, html.emc-on .sticky-cta__wa:focus-visible { outline: 3px solid #0B7DB0; outline-offset: 2px; }
+.emc__in textarea:focus-visible, .emc-f input:focus-visible { outline-offset: 0; }
+
+/* ---------- Планшет и компьютер: окно 380 × 600 справа внизу над панелью ---------- */
+@media (min-width: 768px) {
+  .emc {
+    left: auto; top: auto; right: 24px; bottom: calc(96px + env(safe-area-inset-bottom));
+    width: 380px; height: 600px; max-height: calc(100vh - 120px);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 24px 60px -20px rgba(31, 42, 51, .35), 0 0 0 1px var(--line, rgba(31, 42, 51, .08));
+  }
+  .emc__head { padding-top: 10px; }
+  .emc__in { padding-bottom: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emc, .emc-peek, .emc-typing span { animation: none; }
+  .emc-typing span { opacity: .6; }
+}

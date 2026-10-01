@@ -616,8 +616,8 @@
     <div class="cd t8-pcd" data-countdown="2026-10-05T02:59:00Z">
       <div class="cd__tile"><b data-cd="d">03</b><span>дней</span></div>
       <div class="cd__tile"><b data-cd="h">14</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">19</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">45</b><span>секунд</span></div>
+      <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">34</b><span>секунд</span></div>
     </div>
   </div>
   <div class="t8">
@@ -843,8 +843,8 @@
     <div class="cd b10-cd" data-countdown="2026-10-05T02:59:00Z">
       <div class="cd__tile"><b data-cd="d">03</b><span>дней</span></div>
       <div class="cd__tile"><b data-cd="h">14</b><span>часов</span></div>
-      <div class="cd__tile"><b data-cd="m">19</b><span>минут</span></div>
-      <div class="cd__tile"><b data-cd="s">45</b><span>секунд</span></div>
+      <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">34</b><span>секунд</span></div>
     </div>
     <p class="b10-bonus">Оплатишь в течение 3 часов — получишь бонусы: чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
   </div>
@@ -961,5 +961,7 @@
 
 <script src="assets/site.js" defer></script>
 <script src="assets/site-b.js" defer></script>
+<!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
+<script>(function(){var m=/[?&]chat=(1|mock)(&|$)/.exec(location.search);if(!m&&!/^oferta\./i.test(location.hostname))return;var v=1,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(m&&m[1]==='mock')s('chat-mock.js');s('chat.js');})();</script>
 </body>
 </html>
