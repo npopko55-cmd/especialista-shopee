@@ -1119,3 +1119,67 @@ html[data-b2="a"] .b2v--b, html:not([data-b2="a"]) .b2v--a { display: none; }
 /* Высота экрана для расчётов в переменных: svh есть не везде (iOS до 15.4, старые Android), там берём vh */
 :root { --vh100: 100vh; }
 @supports (height: 100svh) { :root { --vh100: 100svh; } }
+
+/* =====================================================================
+   ПРАВКИ ЛЁШИ 01.10 (вечер): видео крупнее и красный акцент; плашка плана Б ровнее
+   ===================================================================== */
+/* Видео: срезаем поля постера (≈3 %), на телефоне карточка на всю ширину экрана; меньше пустоты до «Для кого подойдёт» */
+.video-card img { transform: scale(1.07); }
+@media (max-width: 767px) {
+  .video-card { width: calc(100% + 40px); max-width: none; margin-inline: -20px; border-radius: 0; box-shadow: none; }
+  #b1 { padding-bottom: 0; }
+}
+#b2 { padding-top: 40px; }
+/* «Не проглядели»: красный круг play и красная плашка «Нажми, чтобы посмотреть» (просьба Лёши обвести красным) */
+.video-card__play { box-shadow: 0 0 0 4px #E5362B, 0 10px 22px -8px rgba(31, 42, 51, .45); }
+.video-card__ring { background: rgba(229, 54, 43, .55); }
+.hint.hint--dark.video-card__hint { background: #D92D20; border-color: rgba(255, 255, 255, .85); color: #fff; box-shadow: 0 10px 22px -8px rgba(217, 45, 32, .65); }
+/* Плашка «Напиши Эрике» (план Б): без отдельной голубой полосы со швами, на десктопе одной строкой */
+.pb-wa { background: #fff; padding-top: 6px; padding-bottom: 22px; }
+.pb-wa__card { grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; align-items: center; }
+.pb-wa__ic { width: 56px; height: 56px; }
+html.emc-on .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-shadow: 0 10px 22px -10px rgba(31, 42, 51, .5); }
+@media (min-width: 768px) {
+  .pb-wa__card { grid-template-columns: 64px minmax(0, 1fr) auto; max-width: 880px; padding: 20px 24px; column-gap: 18px; }
+  .pb-wa__ic { width: 64px; height: 64px; }
+  .pb-wa__btn { grid-column: auto; margin-top: 0; width: auto; min-width: 220px; }
+  .pb-wa__t { font-size: 26px; }
+  .pb-wa__p { font-size: 16px; }
+}
+
+/* =====================================================================
+   ПРАВКИ ЛЁШИ 01.10 (раунд 11): блок 6 — робот у «Готовых команд для ИИ», утверждённый сертификат, набор подарков с
+   видимым списком бонусов, три разных iPhone. Всё внутри уже существующих слайдов .feat; старые правила выше не тронуты.
+   ===================================================================== */
+/* ИИ: 3D-робот с «нейромозгом» (assets/l5/robot-ai.webp, прозрачный фон) на всю высоту подложки, лёгкая тень */
+.feat__art--ai { background: radial-gradient(ellipse at 50% 46%, #fff 0, var(--sky-0) 58%, var(--sky-1) 100%); }
+.feat__media .feat__art--ai img { left: 0; top: 6px; width: 100%; height: calc(100% - 16px); object-fit: contain; filter: drop-shadow(0 7px 9px rgba(31, 42, 51, .17)); }
+
+/* Сертификат: дословный кадр из презентации (1100 × 972), подложка без полей и по пропорции картинки; фон = край картинки */
+.feat__media.feat__media--cert { display: block; height: auto; aspect-ratio: 1100 / 972; padding: 0; overflow: hidden; background: #F5F7F6; }
+.feat__media.feat__media--cert img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Бонусные уроки: набор подарков по центру подложки (большой подарок, звёзды, стопка коробок, искры) */
+.feat__art--gift { background: radial-gradient(circle at 50% 56%, #fff 0, var(--peach-2) 52%, var(--peach) 100%); }
+.feat__media .feat__g { position: absolute; width: auto; height: auto; min-height: 0; max-width: none; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(160, 90, 40, .22)); }
+.feat__media .feat__g--main { left: 50%; top: 6%; height: 88%; transform: translateX(-50%); }
+.feat__media .feat__g--stars { left: 7%; top: 8%; height: 40%; }
+.feat__media .feat__g--box { right: 8%; bottom: 8%; height: 42%; }
+.feat__sp { position: absolute; display: block; fill: var(--gold); }
+.feat__sp--a { right: 24%; top: 12%; width: 20px; height: 20px; }
+.feat__sp--b { left: 17%; bottom: 14%; width: 14px; height: 14px; fill-opacity: .8; }
+.feat__sp--c { right: 6%; top: 42%; width: 11px; height: 11px; fill-opacity: .7; }
+/* список бонусов виден сразу: две подгруппы с подписями; подложка слайда ниже обычной (композиция «набор подарков» шире, чем выше),
+   шрифт списка 14 px на всех ширинах — чтобы слайд не вырос втрое против соседей */
+.feat--les .feat__media--art { height: 140px; }
+.feat--les .feat__txt { padding-top: 10px; }
+.feat--les .feat__txt > .more { margin-top: 0; }
+.feat--les .more > summary { min-height: 38px; }
+.feat__bon { margin-right: -8px; padding: 0 0 2px; }   /* на 8 px шире текстовой колонки: «…поднимать чек» не рвётся на 358 px */
+.feat__bt { margin-top: 4px; font-size: 14px; font-weight: 700; line-height: 1.3; color: var(--ink); text-wrap: balance; }
+.feat__bon > .feat__bt ~ .feat__bt { margin-top: 10px; }
+.feat__bl { margin: 3px 0 0; padding: 0; list-style: none; }
+.feat__bl li { position: relative; padding-left: 15px; margin-top: 2px; font-size: 14px; line-height: 1.3; color: var(--muted); }
+.feat__bl li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 6px; height: 6px; border-radius: 50%; background: var(--cta); }
+@media (min-width: 768px) { .feat--les .feat__media--art { height: 150px; } }
+@media (min-width: 1024px) { .feat--les .feat__media--art { height: 160px; } }

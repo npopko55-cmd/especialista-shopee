@@ -152,24 +152,63 @@
     show(def.getAttribute('data-tab-btn'));
   });
 
-  /* ---------- Таймер: [data-countdown="ISO-дата"] → [data-cd="d|h|m|s"]; одинаковый для всех ---------- */
-  const timers = $$('[data-countdown]').map(el => ({
-    el,
-    end: Date.parse(el.getAttribute('data-countdown')),
-    u: { d: el.querySelector('[data-cd="d"]'), h: el.querySelector('[data-cd="h"]'),
-         m: el.querySelector('[data-cd="m"]'), s: el.querySelector('[data-cd="s"]') },
-  })).filter(t => !isNaN(t.end));
+  /* ---------- Таймер цены: личные сутки посетителя (раунд 10, Лёша 01.10) ----------
+     Человек зашёл — на этом устройстве идут ровно 24 часа до конца самой низкой цены; сутки вышли — стартуют новые.
+     Общее окно продаж заканчивается 04.10.2026 23:59:59 по Бразилиа (UTC−3 = 05.10 02:59:59 UTC):
+     показываем min(личный дедлайн, конец окна), после конца окна — нули.
+     Дедлайн (мс) лежит в localStorage под ключом es_price_until; запасные места — sessionStorage, затем память страницы
+     (доступ к хранилищу может бросить исключение: приватный режим, запрет cookies, iframe). Читаем на каждом тике:
+     другая вкладка продлила срок или ключ поменяли — подхватим.
+     Дедлайн один на все [data-price-timer] страницы (плашка над тарифами и блок 10); плитки [data-cd="h|m|s"],
+     часы считаются от нуля и доходят до 24 (плитки «дней» нет). Стартовый HTML без JS уже показывает 24:00:00. */
+  const PRICE_KEY = 'es_price_until';
+  const PRICE_DAY = 24 * 3600 * 1000;
+  const SALE_END = Date.parse('2026-10-05T02:59:59Z');
+  let priceMem = 0;
+  /* Читаем из первого хранилища, где ключ есть (localStorage → sessionStorage); нигде нет или оба закрыты — из памяти страницы */
+  const priceRead = () => {
+    for (const n of ['localStorage', 'sessionStorage']) {
+      try {
+        const raw = window[n].getItem(PRICE_KEY);
+        if (raw !== null) { const x = Number(raw); return isFinite(x) ? x : 0; }
+      } catch (e) { /* хранилища нет — пробуем следующее */ }
+    }
+    return priceMem;
+  };
+  /* Пишем в первое хранилище, которое приняло запись; память страницы — всегда */
+  const priceWrite = v => {
+    priceMem = v;
+    ['localStorage', 'sessionStorage'].some(n => { try { window[n].setItem(PRICE_KEY, String(v)); return true; } catch (e) { return false; } });
+  };
+  /* Нет дедлайна, он вышел или «из будущего» (двигали часы) → новые 24 часа с этого момента */
+  const priceUntil = now => {
+    let v = priceRead();
+    if (!(v > now) || v > now + PRICE_DAY) { v = now + PRICE_DAY; priceWrite(v); }
+    return v;
+  };
+  const priceTimers = $$('[data-price-timer]').map(el => ({
+    el, h: el.querySelector('[data-cd="h"]'), m: el.querySelector('[data-cd="m"]'), s: el.querySelector('[data-cd="s"]'),
+  }));
   const pad = v => String(v).padStart(2, '0');
-  const tick = () => {
+  let priceT = 0;
+  const priceTick = () => {
+    clearTimeout(priceT);
     const now = Date.now();
-    timers.forEach(t => {
-      const left = Math.max(0, Math.floor((t.end - now) / 1000));
-      const v = { d: Math.floor(left / 86400), h: Math.floor(left % 86400 / 3600), m: Math.floor(left % 3600 / 60), s: left % 60 };
-      Object.keys(v).forEach(k => { if (t.u[k]) t.u[k].textContent = pad(v[k]); });
+    const ms = now < SALE_END ? Math.min(priceUntil(now), SALE_END) - now : 0;
+    const left = Math.max(0, Math.ceil(ms / 1000));
+    const v = { h: Math.floor(left / 3600), m: Math.floor(left % 3600 / 60), s: left % 60 };
+    priceTimers.forEach(t => {
+      ['h', 'm', 's'].forEach(k => { if (t[k]) t[k].textContent = pad(v[k]); });
       t.el.classList.toggle('is-over', left === 0);
     });
+    /* следующий тик — когда сменится секунда (без setInterval: цифры не пропускают значения) */
+    if (left > 0) priceT = setTimeout(priceTick, (ms - 1) % 1000 + 1 + 15);
   };
-  if (timers.length) { tick(); setInterval(tick, 1000); }
+  if (priceTimers.length) {
+    priceTick();
+    d.addEventListener('visibilitychange', () => { if (!d.hidden) priceTick(); });
+    window.addEventListener('pageshow', priceTick);
+  }
 
   /* ---------- Закреплённая панель #sticky-cta: full ↔ compact ----------
      compact (только круглая WhatsApp) — если в кадре хоть краем любая кнопка блока (.cta .btn, [data-cta]),
