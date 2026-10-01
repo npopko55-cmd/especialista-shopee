@@ -186,3 +186,8 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
   .emc, .emc-peek, .emc-typing span, .emc-dots i { animation: none; }
   .emc-typing span { opacity: .6; }
 }
+
+/* План Б: кнопки, которые были «WhatsApp» (зелёные), на хостах чата — цвета сайта с иконкой чата */
+html.emc-on .btn--wa { color: var(--ink, #1F2A33); border-color: var(--azure-sm, #2B6F9E); }
+html.emc-on .btn--wa svg { color: var(--azure-sm, #2B6F9E); }
+

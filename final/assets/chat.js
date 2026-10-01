@@ -115,6 +115,37 @@
     var e = d.getElementById(id);
     if (e) { swaps.push([e, e.innerHTML]); e.innerHTML = htmlText; }
   }
+  // На плане Б вместо WhatsApp — чат: тексты про WhatsApp на странице (кроме футера Лёши #b12 и поля «WhatsApp» кассы) говорят про чат,
+  // зелёные WhatsApp-кнопки получают иконку чата. При отказе чата всё возвращается как было.
+  var wordSwaps = [], iconSwaps = [];
+  var WORDS = [[/Задать вопрос в WhatsApp/g, 'Задать вопрос в чате'], [/напиши нам в WhatsApp/g, 'напиши нам в чат'], [/Напиши в WhatsApp/g, 'Напиши в чат'], [/ответит в WhatsApp/g, 'ответит в чате']];
+  function chatWords(on) {
+    if (!on) {
+      wordSwaps.forEach(function (w) { w[0].nodeValue = w[1]; });
+      iconSwaps.forEach(function (i) { i[0].setAttribute('href', i[1]); });
+      wordSwaps = []; iconSwaps = [];
+      return;
+    }
+    if (!d.getElementById('emc-ic')) {
+      var sp = d.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      sp.setAttribute('width', '0'); sp.setAttribute('height', '0'); sp.setAttribute('aria-hidden', 'true'); sp.style.position = 'absolute';
+      sp.innerHTML = '<symbol id="emc-ic" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.5-.7L3 21l1.8-5.3A8.4 8.4 0 1 1 21 11.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>';
+      d.body.appendChild(sp);
+    }
+    var w = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) {
+      var pe = n.parentElement;
+      if (!pe || pe.closest('#emc, #b12, script, style') || !/WhatsApp/.test(n.nodeValue)) continue;
+      var v = n.nodeValue, o = v;
+      WORDS.forEach(function (x) { v = v.replace(x[0], x[1]); });
+      if (v !== o) { wordSwaps.push([n, o]); n.nodeValue = v; }
+    }
+    Array.prototype.forEach.call(d.querySelectorAll('.btn--wa use'), function (u) {
+      if (u.closest('#emc, #b12')) return;
+      var h = u.getAttribute('href') || u.getAttribute('xlink:href');
+      if (h && /#(bi|i)-wa$/.test(h)) { iconSwaps.push([u, h]); u.setAttribute('href', '#emc-ic'); }
+    });
+  }
   function onMode(on) {
     html.classList.toggle('emc-on', on);
     btn.setAttribute('aria-label', on ? L.open : btnLabel);
@@ -124,11 +155,13 @@
         swap('wa-pop-link', 'Есть вопрос? Напиши <b>Эрике</b>');
         swap('pb-wa-t', 'Напиши Эрике в&nbsp;чате');
         swap('pb-wa-btn', 'Открыть чат');
+        chatWords(true);
       }
     } else {
       ['aria-haspopup', 'aria-controls', 'aria-expanded'].forEach(function (a) { btn.removeAttribute(a); });
       swaps.forEach(function (s) { s[0].innerHTML = s[1]; });
       swaps = [];
+      chatWords(false);
     }
   }
   onMode(true);
