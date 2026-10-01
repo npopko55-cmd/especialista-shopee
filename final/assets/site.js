@@ -163,6 +163,30 @@
      часы считаются от нуля и доходят до 24 (плитки «дней» нет). Стартовый HTML без JS уже показывает 24:00:00. */
   const PRICE_KEY = 'es_price_until';
   const PRICE_DAY = 24 * 3600 * 1000;
+  /* ---------- Метка источника на ссылках оплаты (Hotmart: src → hsrc) ----------
+     Для теста двух вариантов плана Б (Лёша 01.10): в отчёте Hotmart у каждой оплаты видно, откуда пришёл человек.
+     Значение: utm_content из ссылки (b-direct, b-form, a-direct …); нет — по пути: lead=1 → b-form, хост oferta. → b-direct, иначе a-direct.
+     Запоминаем на сессию (форма → сайт сохраняет метки в адресе, но на всякий случай). */
+  let emSrc = '';
+  try { emSrc = sessionStorage.getItem('em_src') || ''; } catch (e) { /* приватный режим */ }
+  if (!emSrc) {
+    try {
+      const q = new URLSearchParams(location.search);
+      emSrc = (q.get('utm_content') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40)
+        || (q.get('lead') === '1' ? 'b-form' : /^oferta\./i.test(location.hostname) ? 'b-direct' : 'a-direct');
+      try { sessionStorage.setItem('em_src', emSrc); } catch (e) { /* без хранилища: метка только на этой странице */ }
+    } catch (e) { emSrc = ''; }
+  }
+  const markPay = () => {
+    if (!emSrc) return;
+    $$('a[href*="go.hotmart.com"], a[href*="pay.hotmart.com"]').forEach(a => {
+      try { const u = new URL(a.href); if (u.searchParams.get('src') !== emSrc) { u.searchParams.set('src', emSrc); a.href = u.toString(); } } catch (e) { /* битая ссылка — не трогаем */ }
+    });
+  };
+  window.emMarkPay = markPay;
+  markPay();
+  window.addEventListener('pageshow', markPay);
+
   /* Окна продаж (Лёша 01.10): 2–4 октября и 7–9 октября по Бразилиа (UTC−3); 5–6 октября продажи закрыты («места закончились»).
      Конец окна для таймера: первое окно — 05.10 02:59:59 UTC, второе — 10.10 02:59:59 UTC. Время берём у сервера (заголовок Date),
      чтобы сбитые часы на телефоне ничего не открывали и не закрывали; нет ответа — часы устройства. */
@@ -181,7 +205,7 @@
         a.setAttribute('data-href', a.getAttribute('href') || ''); a.setAttribute('data-txt', a.innerHTML);
         a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.classList.add('is-sold'); a.textContent = 'Места закончились';
       } else if (!on && a.classList.contains('is-sold')) {
-        a.setAttribute('href', a.getAttribute('data-href')); a.innerHTML = a.getAttribute('data-txt'); a.removeAttribute('aria-disabled'); a.classList.remove('is-sold');
+        a.setAttribute('href', a.getAttribute('data-href')); a.innerHTML = a.getAttribute('data-txt'); a.removeAttribute('aria-disabled'); a.classList.remove('is-sold'); markPay();
       }
     });
   };
