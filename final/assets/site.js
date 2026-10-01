@@ -393,7 +393,7 @@
     try { ss = JSON.parse(sessionStorage.getItem(SK) || '{}') || {}; } catch (e) { ss = {}; }
     ss.n = ss.n || 0;
     const save = () => { try { sessionStorage.setItem(SK, JSON.stringify(ss)); } catch (e) { /* приватный режим */ } };
-    const free = () => !st.modal && !st.cookie && st.cta.size === 0 && !st.tariffs && !d.hidden;
+    const free = () => !st.modal && !st.cookie && st.cta.size === 0 && !st.tariffs && !d.hidden && !html.classList.contains('emc-late');
     let nextAt = Date.now() + 15000, hideAt = 0, on = false, timer = 0;
     const hidePop = () => { on = false; pop.classList.remove('is-on'); };
     const showPop = () => {

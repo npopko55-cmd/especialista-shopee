@@ -3,11 +3,29 @@
    Грузится только инлайн-загрузчиком parts/tail.html: хост oferta.* или ?chat=1 / ?chat=mock.
    Адрес API: <meta name="em-chat-api"> (по умолчанию /api/chat); для тестов ?chatapi=http://localhost:PORT/api/chat
    (только localhost/127.0.0.1 — чтобы ссылкой нельзя было увести переписку и контакты на чужой сервер).
-   Чат недоступен (503 chat_disabled, 403, 404, сеть) — круглая кнопка и ссылки снова ведут на wa.me, как раньше. */
+   Чат недоступен (503 chat_disabled, 403, 404, сеть) — круглая кнопка и ссылки снова ведут на wa.me, как раньше.
+   Кнопка чата, пузырь-приглашение и .wa-pop скрыты до блока тарифов (html.emc-late, sessionStorage em_chat_late). Класс ставится при старте этого скрипта;
+   чтобы не было ни одного кадра с кнопкой ДО его загрузки, можно продублировать в <head> (только на хостах чата), с запасным снятием, если chat.js не загрузится:
+   if (sessionStorage.em_chat_late !== '1') { html.classList.add('emc-late'); style 'html.emc-late .sticky-cta__wa,html.emc-late .wa-pop{opacity:0!important;visibility:hidden!important;transition:none!important}';
+   setTimeout(function () { if (!window.__emChat) html.classList.remove('emc-late'); }, 4000); } */
 (function () {
   'use strict';
   if (window.__emChat) return;
   window.__emChat = 1;
+
+  /* ---------- Настройки ---------- */
+  // Форма контакта «Seu contato» (событие contact_form → форма → /api/lead и /api/chat/contact). С 01.10 выключена по просьбе Лёши:
+  // событие молча пропускается (ни текста, ни формы). Вернуть форму — поставить true (код формы ниже сохранён).
+  var CONTACT_FORM = false;
+  // «Человеческая» пауза перед репликами бота (from: bot, type: text|buttons|cta). Для автотестов — ?chatfast=1 (все паузы = 0).
+  // Первый пузырь ответа: «печатает…» не меньше min(HUMAN_MIN_MS + HUMAN_PER_CHAR_MS × длина_текста, HUMAN_MAX_MS) ± HUMAN_JITTER_MS,
+  // отсчёт — от момента отправки сообщения человеком (если ответ пришёл позже — показываем сразу), и не меньше delay_ms события.
+  // Следующие пузыри того же ответа: HUMAN_NEXT_MIN_MS … HUMAN_NEXT_MIN_MS + HUMAN_NEXT_RND_MS, а на длинных — по HUMAN_PER_CHAR_MS на символ, потолок HUMAN_NEXT_MAX_MS.
+  var HUMAN_MIN_MS = 1800, HUMAN_PER_CHAR_MS = 55, HUMAN_MAX_MS = 7000, HUMAN_JITTER_MS = 400;
+  var HUMAN_NEXT_MIN_MS = 1200, HUMAN_NEXT_RND_MS = 1000, HUMAN_NEXT_MAX_MS = 4500;
+  // Круглая кнопка чата и пузырь-приглашение появляются только когда человек долистал до тарифов (#tariffs): html.emc-late прячет их.
+  // Пузырь-приглашение (приветствие / непрочитанное) — через PEEK_AFTER_MS после появления кнопки.
+  var LATE_TARGET = 'tariffs', PEEK_AFTER_MS = 2500;
 
   /* ---------- Тексты интерфейса (pt-BR). Для русского — добавить T.ru и выбрать по lang ---------- */
   var T = { pt: {
@@ -52,6 +70,48 @@
     return null;
   }
   function fmt(s, n) { return s.replace('{n}', n); }
+  var FAST = q.get('chatfast') === '1';   // автотесты: человеческих пауз нет
+
+  /* ---------- Кнопка чата прячется до тарифов: html.emc-late ставим сразу при старте скрипта, до первого кадра ---------- */
+  var lateOn = store('sessionStorage', 'em_chat_late') !== '1';
+  if (lateOn) {
+    html.classList.add('emc-late');
+    try {   // страховка от мигания: то же правило есть в chat.css, но стили могут догрузиться позже скрипта
+      var cs0 = d.createElement('style');
+      cs0.textContent = 'html.emc-late .sticky-cta__wa,html.emc-late .wa-pop,html.emc-late .emc-peek{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:none!important}';
+      d.head.appendChild(cs0);
+    } catch (e) { /* нет head */ }
+  }
+  var shownAt = 0, shownCbs = [], ringT = 0;
+  function isLate() { return html.classList.contains('emc-late'); }
+  function afterShown(fn) { if (isLate()) shownCbs.push(fn); else fn(); }
+  function ringOnce() {   // кольцо-пульс вокруг кнопки: 2 цикла по 2 с, потом статично (CSS: html.emc-ring)
+    html.classList.add('emc-ring');
+    clearTimeout(ringT);
+    ringT = setTimeout(function () { html.classList.remove('emc-ring'); }, 4200);
+  }
+  function lateShow() {
+    if (!isLate()) return;
+    html.classList.remove('emc-late');
+    shownAt = Date.now();
+    store('sessionStorage', 'em_chat_late', '1');
+    ringOnce();
+    var cbs = shownCbs; shownCbs = [];
+    cbs.forEach(function (f) { f(); });
+    greetPlan();
+  }
+  // Кнопка появляется, когда верхняя граница #tariffs вошла в окно (с запасом 12 % снизу) или секция уже выше экрана (пролистали / якорь)
+  function watchTarget() {
+    if (!lateOn) { ringOnce(); return; }
+    var tg = d.getElementById(LATE_TARGET);
+    if (!tg || !('IntersectionObserver' in window)) { lateShow(); return; }   // нет блока тарифов / старый браузер — как раньше
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting || e.boundingClientRect.top < 0) { io.disconnect(); lateShow(); }
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    io.observe(tg);
+  }
   // последнее прочитанное событие (чат был открыт): по нему при заходе понимаем, что есть непрочитанный ответ Эрики
   function seenGet() {
     var v = store('localStorage', 'em_chat_seen');
@@ -94,7 +154,8 @@
     sid: null, ok: false, off: false, net: 0, bo: 0, gen: 0, polling: false,
     lastId: 0, seen: {}, handoff: false, busy: false, busyT: 0, sending: false, rateUntil: 0,
     open: false, unread: 0, greeting: null, greetDelay: 4000, gt: 0, greeted: false, greetEl: null, greetId: null, echoes: [],
-    wrote: false, hasHistory: false, pend: null, lastFrom: '', opener: null, starting: null
+    wrote: false, hasHistory: false, pend: null, lastFrom: '', opener: null, starting: null,
+    rep: 0, sentAt: 0, lastReply: 0   // rep — сколько пузырей бота уже показано в текущем ответе; sentAt — когда человек отправил сообщение
   };
 
   /* ---------- Круглая кнопка (бывшая WhatsApp панели) ---------- */
@@ -107,7 +168,14 @@
   var btnLabel = btn.getAttribute('aria-label') || '';
   var dot = el('span', 'emc-dot'), badge = el('span', 'emc-badge');
   dot.setAttribute('aria-hidden', 'true'); badge.setAttribute('aria-hidden', 'true'); badge.hidden = true;
-  btn.appendChild(dot); btn.appendChild(badge);
+  // Признак «это чат»: пузырь с тремя точками в левом нижнем углу круга (SVG, синий #2B6F9E, белые точки)
+  var chatIc = el('span', 'emc-chat');
+  chatIc.setAttribute('aria-hidden', 'true');
+  chatIc.innerHTML = '<svg viewBox="0 0 28 28" focusable="false" aria-hidden="true">' +
+    '<path d="M9 3h10a6 6 0 0 1 6 6v5a6 6 0 0 1-6 6h-6L8 25.5V20h1a6 6 0 0 1-6-6V9a6 6 0 0 1 6-6z" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>' +
+    '<path d="M9 3h10a6 6 0 0 1 6 6v5a6 6 0 0 1-6 6h-6L8 25.5V20h1a6 6 0 0 1-6-6V9a6 6 0 0 1 6-6z" fill="#2B6F9E"/>' +
+    '<circle cx="9.5" cy="11.5" r="1.8" fill="#fff"/><circle cx="14" cy="11.5" r="1.8" fill="#fff"/><circle cx="18.5" cy="11.5" r="1.8" fill="#fff"/></svg>';
+  btn.appendChild(chatIc); btn.appendChild(dot); btn.appendChild(badge);
 
   /* ---------- Подмена текстов на странице (в HTML ничего не меняем; при отказе чата — возвращаем) ---------- */
   var swaps = [];
@@ -153,7 +221,7 @@
       btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-controls', 'emc'); btn.setAttribute('aria-expanded', S.open ? 'true' : 'false');
       if (!swaps.length) {
         swap('wa-pop-link', 'Есть вопрос? Напиши <b>Эрике</b>');
-        swap('pb-wa-t', 'Напиши Эрике в&nbsp;чате');
+        swap('pb-wa-t', 'Есть вопросы? Задай их Эрике в&nbsp;чате');
         swap('pb-wa-btn', 'Открыть чат');
         chatWords(true);
       }
@@ -245,6 +313,7 @@
   function render(ev) {
     var from = ev.from || 'bot', t = ev.type;
     if (t === 'typing') return;
+    if (t === 'contact_form' && !CONTACT_FORM) return;   // форма выключена: ни текста, ни формы
     if (t === 'user' || from === 'user') { bubble('user', ev.text || ev.title || ''); closeButtons(); return; }
     if (t === 'system') { note('emc-sys', ev.text || ''); return; }
     if (t === 'handoff') { S.handoff = true; note('emc-ho', ev.text || L.handoff); return; }
@@ -285,6 +354,12 @@
 
   // Показ одного события (история — сразу; живые — через очередь с паузами delay_ms)
   function show(ev, hist) {
+    // форма контакта выключена: событие молча пропускаем (его id уже учтён в accept — long-poll не зациклится),
+    // но если это был единственный ответ на сообщение — поле ввода разблокируем
+    if (ev.type === 'contact_form' && !CONTACT_FORM) {
+      if (S.busy && (S.busyId == null || ev.id > S.busyId)) setBusy(false);
+      return;
+    }
     // эхо своей отправки уже нарисовано — привязываем, не дублируем
     // (ответ долгого опроса может прийти РАНЬШЕ ответа на отправку, поэтому записи об эхо не стираем сразу)
     if (ev.type === 'user') {
@@ -300,7 +375,10 @@
       if (!S.greetBound && ev.text === S.greeting) { S.greetBound = 1; S.greetId = ev.id; return; }
     }
     render(ev);
+    if (ev.from === 'user' || ev.type === 'user') S.rep = 0;
+    else if (isReply(ev)) S.rep++;
     if (ev.from !== 'user' && ev.type !== 'user' && ev.type !== 'typing') {
+      if (ev.id != null && ev.id > S.lastReply) S.lastReply = ev.id;
       if (S.busy && (S.busyId == null || ev.id > S.busyId)) setBusy(false);
       if (!S.open && !hist && ev.type !== 'system') { S.unread++; badgeUp(); if (ev.text) peekShow(ev.text, ev.from, ev.id); }
       if (S.open && ev.id != null) markSeen(ev.id);
@@ -308,17 +386,39 @@
     if (ev.type === 'handoff') setBusy(false);
   }
 
-  var Q = [], qRun = false;
+  var Q = [], qRun = false, drainT = 0;
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function isReply(ev) { return ev.from === 'bot' && (ev.type === 'text' || ev.type === 'buttons' || ev.type === 'cta'); }
+  // Сколько ждать перед показом живого события (мс): delay_ms бэкенда и «человеческая» пауза печати (константы HUMAN_* вверху файла)
+  function pause(ev) {
+    if (ev.from === 'user' || ev.type === 'user') return 0;
+    if (ev.type === 'contact_form' && !CONTACT_FORM) return 0;
+    if (ev.from === 'bot' && ev.type === 'text' && S.greetEl &&
+        ((S.greetId != null && ev.id === S.greetId) || (!S.greetBound && ev.text === S.greeting))) return 0;   // дубль приветствия: show() его отбросит
+    var wait = Math.min(Math.max(+ev.delay_ms || 0, 0), 5000);
+    if (FAST || !isReply(ev)) return wait;
+    var len = String(ev.text || '').length, now = Date.now(), human;
+    if (S.rep === 0) {   // первый пузырь ответа: отсчёт от отправки сообщения; если ответ пришёл позже — показываем сразу
+      var t1 = (S.busy || S.sending) && S.sentAt ? S.sentAt : now;
+      human = t1 + Math.min(HUMAN_MIN_MS + HUMAN_PER_CHAR_MS * len, HUMAN_MAX_MS) + rnd(-HUMAN_JITTER_MS, HUMAN_JITTER_MS) - now;
+    } else {             // следующие пузыри того же ответа
+      human = Math.min(Math.max(HUMAN_NEXT_MIN_MS + Math.random() * HUMAN_NEXT_RND_MS, HUMAN_PER_CHAR_MS * len + 400), HUMAN_NEXT_MAX_MS);
+    }
+    return Math.max(wait, human);
+  }
   function drain() {
     if (qRun) return;
     qRun = true;
+    var g = S.gen;
     (function step() {
+      if (g !== S.gen) { qRun = false; return; }   // сессию сбросили / чат отключили, пока ждали
       var ev = Q.shift();
       if (!ev) { qRun = false; if (!S.busy) typing(false); return; }
       if (ev.type === 'typing') { if (!S.handoff) typing(true); step(); return; }
-      var wait = ev.from === 'user' ? 0 : Math.min(Math.max(+ev.delay_ms || 0, 0), 5000);
+      var wait = pause(ev);
       if (wait && typingEl.parentNode == null && ev.from === 'bot') typing(true);
-      setTimeout(function () {
+      drainT = setTimeout(function () {
+        if (g !== S.gen) { qRun = false; return; }
         show(ev);
         if (!(Q.length && Q[0].from === 'bot') && !S.busy) typing(false);   // между пузырями одного ответа «печатает» не мигает
         step();
@@ -392,6 +492,7 @@
   function reset() {
     S.gen++; S.lastId = 0; S.seen = {}; S.lastFrom = ''; S.pend = null; S.handoff = false;
     S.greeted = false; S.greetEl = null; S.greetBound = 0; S.greetId = null; S.echoes = []; S.hasHistory = false;
+    clearTimeout(drainT); qRun = false; S.rep = 0; S.sentAt = 0; S.lastReply = 0;
     Q = []; feed.textContent = ''; setBusy(false);
   }
   function restart() {
@@ -413,18 +514,19 @@
       if (!accept(ev)) return;
       show(ev, true);
       if (ev.type !== 'typing') last = ev;
-      if (ev.id > seenId && ev.from !== 'user' && ev.type !== 'user' && ev.type !== 'typing' && ev.type !== 'system' && ev.text) unreadEvs.push(ev);
+      if (ev.id > seenId && ev.from !== 'user' && ev.type !== 'user' && ev.type !== 'typing' && ev.type !== 'system' && ev.text &&
+          !(ev.type === 'contact_form' && !CONTACT_FORM)) unreadEvs.push(ev);
     });
     if (evs.length) S.hasHistory = true;
     if (S.open) markSeen(j.last_event_id || S.lastId);
     else if (unreadEvs.length) {
       var ue = unreadEvs[unreadEvs.length - 1];
       S.unread = unreadEvs.length; badgeUp();
-      setTimeout(function () { peekShow(ue.text, ue.from, ue.id); }, 2500);
+      afterShown(function () { setTimeout(function () { peekShow(ue.text, ue.from, ue.id); }, PEEK_AFTER_MS); });   // через 2,5 с после появления кнопки
     }
     if (j.last_event_id > S.lastId) S.lastId = j.last_event_id;
     // последний — непрочитанный ответом вопрос человека: ждём ответ
-    if (last && last.type === 'user' && !S.handoff) { setBusy(true, last.id); typing(true); }
+    if (last && last.type === 'user' && !S.handoff) { S.sentAt = Date.now(); setBusy(true, last.id); typing(true); }
     S.greeting = j.greeting || null;
     S.greetDelay = j.greeting_delay_ms != null ? +j.greeting_delay_ms : 4000;
     greetPlan();
@@ -437,7 +539,10 @@
   function greetPlan() {
     clearTimeout(S.gt);
     if (!S.greeting || S.hasHistory || S.wrote || S.greeted) return;
-    S.gt = setTimeout(greetShow, Math.max(0, S.greetDelay - (Date.now() - t0)));
+    if (isLate()) return;   // кнопки ещё нет — запланируем, когда она появится (lateShow)
+    // кнопка появилась после тарифов — приветствие через PEEK_AFTER_MS после неё; иначе, как раньше, от загрузки страницы
+    var wait = shownAt ? Math.min(S.greetDelay, PEEK_AFTER_MS) - (Date.now() - shownAt) : S.greetDelay - (Date.now() - t0);
+    S.gt = setTimeout(greetShow, Math.max(0, wait));
   }
   function greetShow() {
     clearTimeout(S.gt);
@@ -482,6 +587,7 @@
     if (!S.ok || S.off || S.busy || S.sending) return false;
     if (Date.now() < S.rateUntil) return false;
     S.wrote = true; clearTimeout(S.gt);
+    S.sentAt = Date.now(); S.rep = 0;
     say('');
     var body = { session_id: S.sid, client_msg_id: uuid(), page_url: location.href };
     if (payload.button_id) body.button_id = payload.button_id; else body.text = payload.text;
@@ -515,7 +621,7 @@
           var id = r.j.event_id;
           if (id != null) { S.seen[id] = 1; if (pe0.id == null) pe0.id = id; }
           S.pend = null;
-          if (!S.handoff) setBusy(true, id); else sync();
+          if (!S.handoff && !(id != null && S.lastReply > id)) { setBusy(true, id); typing(true); } else sync();
           return;
         }
         if (r.s === 409) { undo(L.busy); setBusy(true, S.lastId); return; }
@@ -656,6 +762,7 @@
 
   /* ---------- Пузырь с приветствием у закрытой кнопки ---------- */
   function btnVisible() {
+    if (isLate()) return false;
     var cs = getComputedStyle(btn), r = btn.getBoundingClientRect();
     return cs.visibility === 'visible' && +cs.opacity > 0.5 && r.width > 0 && r.bottom <= innerHeight + 1;
   }
@@ -709,6 +816,7 @@
   function openChat(from) {
     if (S.off) return;
     S.opener = from && from.focus ? from : btn;
+    lateShow();   // человек сам открыл чат (ссылкой на странице) — кнопка нужна, чтобы вернуться к переписке и увидеть ответ
     S.open = true;
     store('sessionStorage', 'em_chat_open', '1');
     panel.hidden = false;
@@ -783,6 +891,7 @@
 
   /* ---------- Старт: после первого взаимодействия или через 1 с ---------- */
   sync();
+  watchTarget();
   var started = false;
   function kick() {
     if (started) return;

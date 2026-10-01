@@ -24,6 +24,24 @@ html.emc-on .emc-badge:not([hidden]) {
 }
 html.emc-peek-on .wa-pop, html.emc-open .wa-pop { display: none; }
 
+/* Кнопка чата — «это чат»: бейдж-пузырь с тремя точками слева внизу + пульс-кольцо (после показа кнопки: 2 цикла по 2 с, потом статично) */
+.emc-chat { display: none; }
+html.emc-on .emc-chat {
+  display: block; position: absolute; left: -7px; bottom: -4px; width: 27px; height: 27px; pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(31, 42, 51, .28));
+}
+html.emc-on .emc-chat svg { display: block; width: 100%; height: 100%; }   /* перебивает .sticky-cta__wa svg { 30px } из site.css */
+html.emc-on .sticky-cta__wa::before {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; border: 3px solid #2B6F9E; opacity: 0; pointer-events: none;
+}
+html.emc-on.emc-ring:not(.emc-peek-on):not(.emc-open) .sticky-cta__wa::before { animation: emc-ring 2s ease-out 2 both; }   /* ≤ 1 анимация; при пузыре/окне — выключено */
+@keyframes emc-ring { 0% { transform: scale(1); opacity: .6; } 75%, 100% { transform: scale(1.6); opacity: 0; } }
+
+/* Кнопка, пузырь-приглашение и .wa-pop скрыты, пока человек не долистал до тарифов (html.emc-late ставит chat.js до первого кадра).
+   Без transition в скрытом состоянии; обратно — плавно (fade/scale 250 мс из site.css: .sticky-cta__wa { transition }). */
+html.emc-late .sticky-cta__wa { opacity: 0 !important; visibility: hidden !important; transform: scale(.8); pointer-events: none !important; transition: none !important; }
+html.emc-late .wa-pop, html.emc-late .emc-peek { display: none !important; }
+
 /* ---------- Пузырь с приветствием у закрытой кнопки ---------- */
 .emc-peek {
   position: fixed; z-index: 45; display: flex; align-items: flex-start;
@@ -174,7 +192,8 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
 @media (min-width: 768px) {
   .emc {
     left: auto; top: auto; right: 24px; bottom: calc(96px + env(safe-area-inset-bottom));
-    width: 380px; height: 600px; max-height: calc(100vh - 120px);
+    width: 380px; height: 600px;
+    max-height: calc(100vh - 96px - 76px - env(safe-area-inset-bottom));   /* сверху 76 px — свободно для закреплённого меню #topnav (top 16 + 44) */
     border-radius: 20px; overflow: hidden;
     box-shadow: 0 24px 60px -20px rgba(31, 42, 51, .35), 0 0 0 1px var(--line, rgba(31, 42, 51, .08));
   }
@@ -183,11 +202,12 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .emc, .emc-peek, .emc-typing span, .emc-dots i { animation: none; }
+  .emc, .emc-peek, .emc-typing span, .emc-dots i, html.emc-on .sticky-cta__wa::before { animation: none !important; }
+  html.emc-late .sticky-cta__wa { transform: none; }
   .emc-typing span { opacity: .6; }
 }
 
 /* План Б: кнопки, которые были «WhatsApp» (зелёные), на хостах чата — цвета сайта с иконкой чата */
-html.emc-on .btn--wa { color: var(--ink, #1F2A33); border-color: var(--azure-sm, #2B6F9E); }
-html.emc-on .btn--wa svg { color: var(--azure-sm, #2B6F9E); }
+html.emc-on .btn--wa:not(.pb-wa__btn) { color: var(--ink, #1F2A33); border-color: var(--azure-sm, #2B6F9E); }
+html.emc-on .btn--wa:not(.pb-wa__btn) svg { color: var(--azure-sm, #2B6F9E); }
 

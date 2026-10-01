@@ -1,9 +1,13 @@
 /* Демо-режим веб-чата (?chat=mock): без бэкенда, для превью на GitHub Pages.
    Подменяет fetch для /api/chat/* и /api/lead и сам играет тот же сценарий, что chat-mock/server.py
-   (контракт API v1): «preço» → кнопки тарифов → cta; 3-е сообщение → contact_form; «humano» → handoff.
+   (контракт API v1): ответ по ключевым словам (PT и RU): «comprar|quero|хочу купить|купить|оплат» → кнопки тарифов → после выбора cta со ссылкой
+   оплаты (только после явного выбора тарифа); «preço|valor|цена|сколько» → цены 299/399/599; «garantia|гарантия» → 7 дней; «iphone» → правила подарка;
+   «oi|olá|привет|здравствуйте» → приветствие; «humano» → handoff; всё остальное → одна нейтральная фраза (не ссылка и не форма).
+   Просьб оставить контакт демо не шлёт.
    Состояние — в localStorage (em_chat_mock_v1), поэтому перезагрузка восстанавливает историю.
    Отладка из консоли: emChatMock.paid() — событие paid; emChatMock.disable(true|false) — 503 chat_disabled;
-   emChatMock.reset() — стереть демо-переписку. Приветствие — ТОЛЬКО тестовое. */
+   emChatMock.reset() — стереть демо-переписку; emChatMock.force('form'|'form_only') — следующий ответ «text + contact_form» (проверка флага CONTACT_FORM).
+   Приветствие — ТОЛЬКО тестовое. */
 (function () {
   'use strict';
   var KEY = 'em_chat_mock_v1';
@@ -40,33 +44,71 @@
     return ev;
   }
 
+  function words(t) { return fold(t).match(/[a-zа-я0-9]+/g) || []; }
+  function K(a) { return a.map(fold); }
+  function pre(ws, ps) { return ws.some(function (w) { return ps.some(function (p) { return w.indexOf(p) === 0; }); }); }
+  function phrase(ws, list) { var j = ' ' + ws.join(' ') + ' '; return list.some(function (p) { return j.indexOf(' ' + fold(p) + ' ') >= 0; }); }
+  var KW_HANDOFF = K(['human', 'atendente', 'менеджер', 'оператор']);
+  var KW_BUY = K(['compr', 'pagar', 'pagament', 'assinar', 'matricul', 'inscrev', 'оплат', 'куп', 'покуп', 'приобр']);
+  var KW_PRICE = K(['preco', 'valor', 'quanto', 'custa', 'цен', 'стоим', 'сколько', 'почем', 'прайс']);
+  var KW_GUARANTEE = K(['garantia', 'гарант', 'reembolso', 'возврат']);
+  var KW_IPHONE = K(['iphone', 'айфон', 'sorteio', 'розыгрыш']);
+  var KW_HELLO = K(['oi', 'oii', 'ola', 'hey', 'hello', 'hi', 'привет', 'здравствуйте', 'здравствуй']);
+  var PLAN_WORDS = { plan_start: K(['start', 'старт']), plan_especialista: K(['especialista', 'специалист']), plan_vip: K(['vip', 'вип']) };
+  var QUERO_NOT_BUY = K(['saber', 'entender', 'conhecer', 'ver', 'perguntar', 'tirar', 'falar', 'mais', 'uma', 'um', 'duvida']);
+  var NEUTRAL = 'Não entendi bem 🙈 Pode me contar com outras palavras? Posso te ajudar com preço, conteúdo do curso e pagamento.';
+  var PLAN_BUTTONS = [{ id: 'plan_start', title: 'Start' }, { id: 'plan_especialista', title: 'Especialista' }, { id: 'plan_vip', title: 'VIP' }];
+
+  function isBuy(ws) {
+    if (pre(ws, KW_BUY)) return true;
+    return ws.some(function (w, i) { return w === 'quero' && (i + 1 >= ws.length || QUERO_NOT_BUY.indexOf(ws[i + 1]) < 0); });
+  }
+  function planEvents(bid, u) {
+    var p = PLANS[bid];
+    return [['text', 0, { text: 'Ótima escolha! O plano ' + p[1] + ' é perfeito para começar com o pé direito.' }],
+      ['cta', rnd(600, 1200), { text: 'É só tocar no botão para garantir sua vaga:', title: 'Quero o ' + p[1],
+        url: p[2] + '&sck=web-' + u.replace(/-/g, '').slice(0, 16), plan: p[0] }]];
+  }
+  // Ответ «Эрики» по ключевым словам → [[type, delay_ms, поля]]. Ссылка оплаты — только после явного выбора тарифа (как в chat-mock/server.py)
+  function script(text, bid, u) {
+    if (bid && PLANS[bid]) return planEvents(bid, u);
+    var ws = words(text);
+    if (pre(ws, KW_HANDOFF)) return [['handoff', 0, { text: 'Passei para a equipe, já já respondem aqui' }]];
+    var buy = isBuy(ws), named = Object.keys(PLAN_WORDS).filter(function (k) { return pre(ws, PLAN_WORDS[k]); });
+    if (buy && named.length === 1) return planEvents(named[0], u);
+    if (pre(ws, KW_PRICE)) {
+      return [['text', 0, { text: 'Os planos são:\nStart — R$ 299\nEspecialista — R$ 399\nVIP — R$ 599\nÉ à vista ou em até 12x no cartão 🤍' }],
+        ['buttons', rnd(600, 1200), { text: 'Qual deles combina mais com você?', buttons: PLAN_BUTTONS }]];
+    }
+    if (buy) return [['buttons', 0, { text: 'Que bom! 🤍 Qual plano você quer?', buttons: PLAN_BUTTONS }]];
+    if (pre(ws, KW_GUARANTEE)) return [['text', 0, { text: 'Tem sim! 🤍 São 7 dias de garantia: se o curso não for para você, devolvo 100% do valor, sem precisar explicar o motivo.' }]];
+    if (pre(ws, KW_IPHONE)) {
+      return [['text', 0, { text: 'Tem sim! 🎁 Você ganha pontos pelas aulas e tarefas, e as três alunas com mais pontos no fim do curso ganham um iPhone.' }],
+        ['text', rnd(600, 1200), { text: 'Isso vale para os planos Especialista e VIP.' }]];
+    }
+    if (pre(ws, KW_HELLO) || phrase(ws, ['bom dia', 'boa tarde', 'boa noite', 'добрый день', 'добрый вечер', 'доброе утро'])) {
+      return [['text', 0, { text: 'Oi! 🤍 Que bom te ver por aqui. O que você quer saber sobre o curso?' }]];
+    }
+    return [['text', 0, { text: NEUTRAL }]];
+  }
+
   function reply(u, ev) {
     setTimeout(function () {
       var s = DB.s[u];
       if (!s) return;
       if (s.handoff) {
         push(s, 'manager', 'text', 0, { text: 'Oi, aqui é a equipe da Erika. Já vi sua mensagem, me conta mais?' });
-      } else if (PLANS[ev.button_id]) {
-        var p = PLANS[ev.button_id];
-        push(s, 'bot', 'text', 0, { text: 'Ótima escolha! O plano ' + p[1] + ' é perfeito para começar com o pé direito.' });
-        push(s, 'bot', 'cta', rnd(600, 1200), { text: 'É só tocar no botão para garantir sua vaga:', title: 'Quero o ' + p[1],
-          url: p[2] + '&sck=web-' + u.replace(/-/g, '').slice(0, 16), plan: p[0] });
-      } else if (/humano/.test(fold(ev.text))) {
-        s.handoff = true;
-        push(s, 'bot', 'handoff', 0, { text: 'Passei para a equipe, já já respondem aqui' });
-      } else if (/preco|valor/.test(fold(ev.text))) {
-        push(s, 'bot', 'buttons', 0, { text: 'Temos três planos. Qual você quer conhecer?', buttons: [
-          { id: 'plan_start', title: 'Start' }, { id: 'plan_especialista', title: 'Especialista' }, { id: 'plan_vip', title: 'VIP' }] });
-      } else if (s.count >= 3 && !s.name && !s.form) {
-        s.form = true;
-        push(s, 'bot', 'text', 0, { text: 'Adorei conversar com você!' });
-        push(s, 'bot', 'contact_form', rnd(600, 1200), { text: 'Me deixa seu contato? Assim eu te mando os detalhes e não perco você de vista.', title: 'Seu contato' });
       } else {
-        var hi = s.name ? s.name + ', ' : '';
-        var o = [[hi + 'Boa pergunta!', 'No curso eu mostro tudo passo a passo, do zero até as primeiras vendas na Shopee.'],
-          [hi + 'Entendi.', 'Quer que eu te mostre os planos? É só escrever "preço".'],
-          [hi + 'Claro!', 'Tem aula prática, suporte e comunidade. Pode perguntar o que quiser.']][rnd(0, 3)];
-        o.forEach(function (t, i) { push(s, 'bot', 'text', i ? rnd(600, 1200) : 0, { text: t }); });
+        var force = DB.force; DB.force = null;
+        var evs;
+        if (force) {   // только для автотестов флага CONTACT_FORM
+          var form = ['contact_form', rnd(600, 1200), { text: 'Me deixa seu contato? Assim eu te mando os detalhes e não perco você de vista.', title: 'Seu contato' }];
+          evs = force === 'form_only' ? [form] : [['text', 0, { text: 'Adorei conversar com você!' }], form];
+        } else evs = script(ev.text || '', ev.button_id, u);
+        evs.forEach(function (e) {
+          if (e[0] === 'handoff') s.handoff = true;
+          push(s, 'bot', e[0], e[1], e[2]);
+        });
       }
       s.busy = false; save(); wake();
     }, rnd(1500, 3000));
@@ -163,6 +205,7 @@
       if (s) push(s, 'system', 'paid', 0, { text: 'Pagamento confirmado! Bem-vinda ao curso 🤍', title: 'Parabéns!', instruction_url: 'https://example.com/instrucao-de-acesso' });
     },
     disable: function (on) { DB.off = on !== false; save(); wake(); },
-    reset: function () { DB = { s: {}, off: false }; save(); }
+    reset: function () { DB = { s: {}, off: false }; save(); },
+    force: function (mode) { DB.force = mode === 'form' || mode === 'form_only' ? mode : null; save(); }
   };
 })();
