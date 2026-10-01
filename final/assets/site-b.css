@@ -763,3 +763,6 @@ html[data-price="red"] #tariffs .t8-inst__cur, html[data-price="red"] #tariffs .
 #tariffs .t8-pay.is-sold { background: #E6EAEE; color: #55636E; box-shadow: none; border: 0; cursor: default; pointer-events: none; animation: none; }
 html.is-soldout #tariffs .t8-deal, html.is-soldout #b10 .b10-deal, html.is-soldout #tariffs .t8-bonus { display: none; }
 
+/* PT-страница: пометка под подарками (какие подарки в каком тарифе) */
+#tariffs .t8-bonus__note { margin: 14px 4px 0; font-size: 14px; line-height: 1.45; color: var(--tx2); text-wrap: pretty; }
+

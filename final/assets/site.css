@@ -1242,3 +1242,7 @@ html.emc-on .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-sh
 }
 .topnav__panel .topnav__video:hover, .topnav__panel .topnav__video:focus-visible { background: var(--sky-0); }
 
+/* Никита 02.10: видео — отдельный блок между «Думаешь, не потянешь» и «Как оплатить»; без лишнего воздуха сверху */
+#bvideo { padding-top: 6px; padding-bottom: 22px; }
+#bvideo .video-card { margin-top: 0; }
+

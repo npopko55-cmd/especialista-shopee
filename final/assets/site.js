@@ -6,6 +6,8 @@
   const html = d.documentElement;
   const $$ = (s, c = d) => Array.from(c.querySelectorAll(s));
   const reduce = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  /* Строки для PT-страницы: index-pt.html кладёт словарь в window.EM_I18N (build_pt.py); на русской странице словаря нет — берётся ключ */
+  const tr = s => (window.EM_I18N && window.EM_I18N[s]) || s;
 
   /* ---------- Вариант блока 2 (раунд 5, Лиза): по умолчанию фото — <html data-b2="faces">; ?b2=a → диорамы ---------- */
   try {
@@ -35,7 +37,7 @@
     /* Раунд 5: .arrows — кнопки ‹ › по краям ленты (создаём, если их нет в разметке) */
     const arrowsBox = track.closest('.arrows') || scope.querySelector('.arrows');
     if (arrowsBox && n > 1 && !arrowsBox.querySelector('[data-carousel-prev]')) {
-      [['prev', 'Предыдущая карточка', 'M15 5l-7 7 7 7'], ['next', 'Следующая карточка', 'M9 5l7 7-7 7']].forEach(([k, lab, p]) => {
+      [['prev', tr('Предыдущая карточка'), 'M15 5l-7 7 7 7'], ['next', tr('Следующая карточка'), 'M9 5l7 7-7 7']].forEach(([k, lab, p]) => {
         const b = d.createElement('button');
         b.type = 'button';
         b.className = 'arrows__btn arrows__btn--' + k;
@@ -89,7 +91,7 @@
       cards.forEach((c, i) => {
         const b = d.createElement('button');
         b.type = 'button';
-        b.setAttribute('aria-label', 'Карточка ' + (i + 1) + ' из ' + n);
+        b.setAttribute('aria-label', tr('Карточка {i} из {n}').replace('{i}', i + 1).replace('{n}', n));
         b.addEventListener('click', () => go(i));
         dotsBox.appendChild(b);
         dots.push(b);
@@ -165,7 +167,7 @@
   const PRICE_DAY = 24 * 3600 * 1000;
   /* ---------- Метка источника на ссылках оплаты (Hotmart: src → hsrc) ----------
      Для теста двух вариантов плана Б (Лёша 01.10): в отчёте Hotmart у каждой оплаты видно, откуда пришёл человек.
-     Значение: utm_content из ссылки (b-direct, b-form, a-direct …); нет — по пути: lead=1 → b-form, хост oferta. → b-direct, иначе a-direct.
+     Значение: utm_content из ссылки (b-direct, b-form, a-direct …); нет — по пути: lead=1 → b-form, хост oferta. → b-direct, иначе site (корень).
      Запоминаем на сессию (форма → сайт сохраняет метки в адресе, но на всякий случай). */
   let emSrc = '';
   try { emSrc = sessionStorage.getItem('em_src') || ''; } catch (e) { /* приватный режим */ }
@@ -173,7 +175,7 @@
     try {
       const q = new URLSearchParams(location.search);
       emSrc = (q.get('utm_content') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40)
-        || (q.get('lead') === '1' ? 'b-form' : /^oferta\./i.test(location.hostname) ? 'b-direct' : 'a-direct');
+        || (q.get('lead') === '1' ? 'b-form' : /^oferta\./i.test(location.hostname) ? 'b-direct' : 'site');
       try { sessionStorage.setItem('em_src', emSrc); } catch (e) { /* без хранилища: метка только на этой странице */ }
     } catch (e) { emSrc = ''; }
   }
@@ -203,7 +205,7 @@
     $$('.t8-pay').forEach(a => {
       if (on && !a.classList.contains('is-sold')) {
         a.setAttribute('data-href', a.getAttribute('href') || ''); a.setAttribute('data-txt', a.innerHTML);
-        a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.classList.add('is-sold'); a.textContent = 'Места закончились';
+        a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.classList.add('is-sold'); a.textContent = tr('Места закончились');
       } else if (!on && a.classList.contains('is-sold')) {
         a.setAttribute('href', a.getAttribute('data-href')); a.innerHTML = a.getAttribute('data-txt'); a.removeAttribute('aria-disabled'); a.classList.remove('is-sold'); markPay();
       }
@@ -315,7 +317,7 @@
     if (!el) return;
     let on = false;
     try { const q = new URLSearchParams(location.search); on = q.get('lead') === '1' || q.get('planb') === '1'; } catch (e) { /* старый браузер */ }
-    if (/^oferta\./i.test(location.hostname)) on = true;   /* поддомен оферты плана Б */
+    if (/^(www\.|oferta\.)?ericamarques\.com$/i.test(location.hostname) || /\.github\.io$/i.test(location.hostname)) on = true;   /* корень, www, оферта и превью — план Б (плана А больше нет) */
     try { if (on) sessionStorage.setItem('em_planb', '1'); else on = sessionStorage.getItem('em_planb') === '1'; } catch (e) { /* приватный режим */ }
     if (on) el.hidden = false;
   })();
@@ -378,7 +380,7 @@
     const cfg = ck.querySelector('[data-ck="config"]');
     const cfgLabel = cfg ? cfg.textContent : '';
     const show = () => { ck.hidden = false; st.cookie = true; applyBar(); };
-    const openCfg = () => { if (setBox) setBox.hidden = false; if (cfg) cfg.textContent = 'Сохранить'; };
+    const openCfg = () => { if (setBox) setBox.hidden = false; if (cfg) cfg.textContent = tr('Сохранить'); };
     const close = () => {
       ck.hidden = true; if (setBox) setBox.hidden = true; if (cfg) cfg.textContent = cfgLabel;
       st.cookie = false; applyBar();

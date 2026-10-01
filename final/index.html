@@ -15,8 +15,11 @@
   try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
   try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
 })(document.documentElement);</script>
-<link rel="stylesheet" href="assets/site.css?v=1001e">
-<link rel="stylesheet" href="assets/site-b.css?v=1001e">
+<link rel="stylesheet" href="assets/site.css?v=1002b">
+<link rel="stylesheet" href="assets/site-b.css?v=1002b">
+<!-- чат плана Б (корень, www, oferta., превью): до первого кадра прячем WhatsApp-кнопки, пока assets/chat.js не решит, чат это или запасная почта (emc-pre снимает chat.js; если он не загрузился — через 4 с) -->
+<script>(function(){var h=location.hostname;if(/^(www\.|oferta\.)?ericamarques\.com$/i.test(h)||/\.github\.io$/i.test(h)||/[?&]chat=(1|mock)(&|$)/.test(location.search)){var e=document.documentElement;e.className+=' emc-pre';setTimeout(function(){e.className=e.className.replace(/\bemc-pre\b/,'')},4000);}})();</script>
+<style>html.emc-pre #sticky-cta-wa,html.emc-pre #wa-pop,html.emc-pre #pb-wa{visibility:hidden}</style>
 </head>
 <body>
 <!-- Иконки (линейные, как lucide): <svg class="i"><use href="#i-…"/></svg> -->
@@ -68,12 +71,6 @@
       <li class="hero__tile reveal"><img src="assets/3d/A19.webp" width="360" height="357" alt="" loading="lazy" decoding="async"><span>Без лица в кадре</span></li>
       <li class="hero__tile reveal"><img src="assets/3d/A07.webp" width="360" height="347" alt="" loading="lazy" decoding="async"><span>От 1 до 4 часов в&nbsp;день</span></li>
     </ul>
-    <button class="video-card" type="button" data-video-open aria-label="Смотреть видео">
-      <img src="assets/img/video-poster.webp" width="1160" height="613" alt="" loading="lazy" decoding="async">
-      <span class="video-card__ring" aria-hidden="true"></span>
-      <span class="video-card__play" aria-hidden="true"><svg class="i"><use href="#i-play"/></svg></span>
-      <span class="hint hint--tap hint--dark video-card__hint" aria-hidden="true">Нажми, чтобы посмотреть</span>
-    </button>
   </div>
 </section>
 
@@ -788,6 +785,17 @@
   </div>
 </section>
 
+<!-- ================= Видео (Никита 02.10): после «Думаешь, не потянешь? Давай посчитаем», перед «Как оплатить» —
+     наверху и у тарифов оно сбивало бы с покупки. Карточка та же (data-video-open), окно плеера — #video-modal в parts/tail.html ================= -->
+<section id="bvideo" class="blk bg-paper" aria-label="Видео от Эрики">
+  <button class="video-card" type="button" data-video-open aria-label="Смотреть видео">
+    <img src="assets/img/video-poster.webp" width="1160" height="613" alt="" loading="lazy" decoding="async">
+    <span class="video-card__ring" aria-hidden="true"></span>
+    <span class="video-card__play" aria-hidden="true"><svg class="i"><use href="#i-play"/></svg></span>
+    <span class="hint hint--tap hint--dark video-card__hint" aria-hidden="true">Нажми, чтобы посмотреть</span>
+  </button>
+</section>
+
 <!-- Блок 9 — как оплатить: вкладки, шаги, светлый телефон с кодом Pix -->
 <section id="b9" class="blk bg-paper" aria-labelledby="b9-title">
   <h2 class="blk__title" id="b9-title">Как оплатить</h2>
@@ -935,7 +943,7 @@
     <div>
       <h2 class="b12-h">Quem vende o curso</h2>
       <p>TECHBUILDCOM NETWORK SERVICES - FZCO, Emirados Árabes Unidos · Licença nº 78028 (Dubai Integrated Economic Zones Authority) · Endereço: IFZA Properties, DSO-IFZA, Dubai Silicon Oasis, Dubai, Emirados Árabes Unidos</p>
-      <p>E-mail: <a id="b12-mail" href="mailto:contato@ericamarques.com">contato@ericamarques.com</a> · WhatsApp: <a id="b12-wa" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Vim%20do%20site%20do%20curso%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener">+55 71 8762-7227</a></p>
+      <p>E-mail: <a id="b12-mail" href="mailto:contato@ericamarques.com">contato@ericamarques.com</a></p>
       <p class="b12-hot">O pagamento é recebido e processado pela Hotmart.</p>
     </div>
   </div>
@@ -1013,9 +1021,9 @@
   </div>
 </div>
 
-<script src="assets/site.js?v=1001e" defer></script>
-<script src="assets/site-b.js?v=1001e" defer></script>
+<script src="assets/site.js?v=1002b" defer></script>
+<script src="assets/site-b.js?v=1002b" defer></script>
 <!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
-<script>(function(){var m=/[?&]chat=(1|mock)(&|$)/.exec(location.search);if(!m&&!/^oferta\./i.test(location.hostname))return;var v=5,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(m&&m[1]==='mock')s('chat-mock.js');s('chat.js');})();</script>
+<script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=6,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
 </body>
 </html>
