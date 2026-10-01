@@ -1245,4 +1245,6 @@ html.emc-on .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-sh
 /* Никита 02.10: видео — отдельный блок между «Думаешь, не потянешь» и «Как оплатить»; без лишнего воздуха сверху */
 #bvideo { padding-top: 6px; padding-bottom: 22px; }
 #bvideo .video-card { margin-top: 0; }
+/* на планшете и десктопе карточка видео — по центру блока (раньше стояла в сетке первого экрана и прижималась влево) */
+@media (min-width: 768px) { #bvideo .video-card { margin-inline: auto; width: 100%; max-width: 820px; } }
 
