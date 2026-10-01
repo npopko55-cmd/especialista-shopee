@@ -82,7 +82,7 @@
   var S = {
     sid: null, ok: false, off: false, net: 0, bo: 0, gen: 0, polling: false,
     lastId: 0, seen: {}, handoff: false, busy: false, busyT: 0, sending: false, rateUntil: 0,
-    open: false, unread: 0, greeting: null, greetDelay: 4000, gt: 0, greeted: false, greetEl: null,
+    open: false, unread: 0, greeting: null, greetDelay: 4000, gt: 0, greeted: false, greetEl: null, greetId: null, echoes: [],
     wrote: false, hasHistory: false, pend: null, lastFrom: '', opener: null, starting: null
   };
 
@@ -242,13 +242,18 @@
   // Показ одного события (история — сразу; живые — через очередь с паузами delay_ms)
   function show(ev, hist) {
     // эхо своей отправки уже нарисовано — привязываем, не дублируем
-    if (ev.type === 'user' && S.pend && !S.pend.id &&
-        ((S.pend.button_id && S.pend.button_id === ev.button_id) || (S.pend.text && S.pend.text === ev.text))) {
-      S.pend.id = ev.id; return;
+    // (ответ долгого опроса может прийти РАНЬШЕ ответа на отправку, поэтому записи об эхо не стираем сразу)
+    if (ev.type === 'user') {
+      for (var ei = S.echoes.length - 1; ei >= 0; ei--) {
+        var pe = S.echoes[ei];
+        if (pe.id === ev.id) return;
+        if (pe.id == null && ((pe.button_id && pe.button_id === ev.button_id) || (pe.text && pe.text === ev.text))) { pe.id = ev.id; return; }
+      }
     }
     // приветствие уже показано виджетом — событие от greeting_shown не дублируем
-    if (S.greetEl && !S.greetBound && ev.from === 'bot' && ev.type === 'text' && ev.text === S.greeting) {
-      S.greetBound = 1; return;
+    if (S.greetEl && ev.from === 'bot' && ev.type === 'text') {
+      if (S.greetId != null && ev.id === S.greetId) return;
+      if (!S.greetBound && ev.text === S.greeting) { S.greetBound = 1; S.greetId = ev.id; return; }
     }
     render(ev);
     if (ev.from !== 'user' && ev.type !== 'user' && ev.type !== 'typing') {
@@ -341,7 +346,7 @@
 
   function reset() {
     S.gen++; S.lastId = 0; S.seen = {}; S.lastFrom = ''; S.pend = null; S.handoff = false;
-    S.greeted = false; S.greetEl = null; S.greetBound = 0; S.hasHistory = false;
+    S.greeted = false; S.greetEl = null; S.greetBound = 0; S.greetId = null; S.echoes = []; S.hasHistory = false;
     Q = []; feed.textContent = ''; setBusy(false);
   }
   function restart() {
@@ -386,7 +391,7 @@
     S.greetEl = true;   // ставим ПОСЛЕ show: событие с тем же текстом из ленты дальше не дублируется
     var g = S.gen;
     api('/greeting_shown', { session_id: S.sid }).then(function (r) {
-      if (g === S.gen && r.j.event && r.j.event.id != null) { S.seen[r.j.event.id] = 1; S.greetBound = 1; }
+      if (g === S.gen && r.j.event && r.j.event.id != null) { S.seen[r.j.event.id] = 1; S.greetBound = 1; if (S.greetId == null) S.greetId = r.j.event.id; }
     });
   }
 
@@ -426,13 +431,14 @@
     if (payload.button_id) body.button_id = payload.button_id; else body.text = payload.text;
     var b = bubble('user', echo);
     if (payload.button_id) closeButtons();
-    S.pend = { el: b, text: payload.text, button_id: payload.button_id, id: null };
+    var pe0 = { el: b, text: payload.text, button_id: payload.button_id, id: null };
+    S.pend = pe0; S.echoes.push(pe0); if (S.echoes.length > 20) S.echoes.shift();
     S.hasHistory = true;
     S.sending = true; sync();
     var tries = 0, g = S.gen;
     function undo(msg) {
       if (b.parentNode) b.parentNode.removeChild(b);
-      S.lastFrom = ''; S.pend = null;
+      S.lastFrom = ''; S.pend = null; var ix = S.echoes.indexOf(pe0); if (ix >= 0) S.echoes.splice(ix, 1);
       if (payload.text && !ta.value) ta.value = payload.text;
       grow();
       if (msg) say(msg);
@@ -451,7 +457,7 @@
         var e = r.j.error;
         if (r.s === 200 || r.s === 202) {
           var id = r.j.event_id;
-          if (id != null) { S.seen[id] = 1; if (S.pend) S.pend.id = id; }
+          if (id != null) { S.seen[id] = 1; if (pe0.id == null) pe0.id = id; }
           S.pend = null;
           if (!S.handoff) setBusy(true, id); else sync();
           return;
