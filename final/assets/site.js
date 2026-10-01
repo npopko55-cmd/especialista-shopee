@@ -494,4 +494,21 @@
       pio.observe(track);
     });
   }
+
+  /* ---------- Меню в правом верхнем углу (#topnav): открыть/закрыть, переход по якорям ---------- */
+  (function () {
+    const box = d.getElementById('topnav'), btn = d.getElementById('topnav-btn'), panel = d.getElementById('topnav-panel');
+    if (!box || !btn || !panel) return;
+    let y0 = 0;
+    const set = (open) => {
+      if (open) y0 = window.scrollY || 0;
+      panel.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false'); box.classList.toggle('is-open', open);
+    };
+    btn.addEventListener('click', () => set(panel.hidden));
+    panel.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('a')) set(false); });
+    d.addEventListener('click', (e) => { if (!panel.hidden && !box.contains(e.target)) set(false); });
+    d.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) { set(false); btn.focus(); } });
+    /* лента листается пальцем — меню закрываем, чтобы не висело поверх блока */
+    window.addEventListener('scroll', () => { if (!panel.hidden && Math.abs((window.scrollY || 0) - y0) > 160) set(false); }, { passive: true });
+  })();
 })();
