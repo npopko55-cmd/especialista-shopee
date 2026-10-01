@@ -571,4 +571,29 @@
 
   /* ---------- Вариант цвета цены для теста (?price=red): красный; по умолчанию синий ---------- */
   try { if (new URLSearchParams(location.search).get('price') === 'red') html.setAttribute('data-price', 'red'); } catch (e) { /* старый браузер */ }
+
+  /* ---------- Круглая кнопка чата не закрывает кнопки оплаты и «Получить доступ» ----------
+     Пока кнопка #sticky-cta-wa лежала бы поверх любой кнопки страницы (кроме самой нижней панели), она гаснет (.is-over-cta) и снова появляется,
+     когда кнопка ушла из-под неё. Проверяется на прокрутке и смене размера; без наблюдателей — один rAF на кадр. */
+  (function () {
+    const wa = d.getElementById('sticky-cta-wa');
+    if (!wa) return;
+    let raf = 0;
+    const targets = () => $$('.t8-pay, [data-cta], .cta .btn, .b9-help__btn, .b10-wa, .b11-wa, .pb-wa__btn').filter(el => !el.closest('#sticky-cta, #emc'));
+    const check = () => {
+      raf = 0;
+      const r = wa.getBoundingClientRect();
+      if (!r.width) return;
+      const hit = targets().some(el => {
+        const b = el.getBoundingClientRect();
+        return b.width > 0 && b.bottom > 0 && b.top < innerHeight && !(b.right < r.left + 4 || b.left > r.right - 4 || b.bottom < r.top + 4 || b.top > r.bottom - 4);
+      });
+      wa.classList.toggle('is-over-cta', hit);
+    };
+    const sched = () => { if (!raf) raf = requestAnimationFrame(check); };
+    window.addEventListener('scroll', sched, { passive: true });
+    window.addEventListener('resize', sched);
+    window.addEventListener('pageshow', sched);
+    check();
+  })();
 })();
