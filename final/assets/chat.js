@@ -1,9 +1,12 @@
 /* Веб-чат с ИИ-менеджером Эрики (план Б, 01.10). Чистый JS без библиотек.
    Контракт API v1 — «Курс Эрики/Веб-чат — контракт API.md» (эндпоинты /api/chat/*).
-   Грузится только инлайн-загрузчиком parts/tail.html: хост oferta.* или ?chat=1 / ?chat=mock.
+   Грузится только инлайн-загрузчиком parts/tail.html; сам тоже проверяет хост: isChatHost() (ericamarques.com, www., oferta.; превью github.io/localhost —
+   только с ?chat=1|mock или window.__EMC_PREVIEW = true от загрузчика; для тестов ?chathost=1). Не хост чата — скрипт ничего не делает.
    Адрес API: <meta name="em-chat-api"> (по умолчанию /api/chat); для тестов ?chatapi=http://localhost:PORT/api/chat
    (только localhost/127.0.0.1 — чтобы ссылкой нельзя было увести переписку и контакты на чужой сервер).
-   Чат недоступен (503 chat_disabled, 403, 404, сеть) — круглая кнопка и ссылки снова ведут на wa.me, как раньше.
+   Чат недоступен (session 502/503, chat_disabled, 403, 404, нет сети) — «запасной режим»: все ссылки на WhatsApp (кроме подвала #b12) становятся
+   mailto:suporte@ericamarques.com, иконка — конверт, тексты «в WhatsApp/в чате» → «на почту», пузыри не показываются. WhatsApp на сайте больше не используется.
+   html.emc-pre (ставит head до первого кадра, прячет #sticky-cta-wa, #wa-pop, #pb-wa) снимается, как только решение принято и chat.css применён.
    Кнопка чата, пузырь-приглашение и .wa-pop скрыты до блока тарифов (html.emc-late, sessionStorage em_chat_late). Класс ставится при старте этого скрипта;
    чтобы не было ни одного кадра с кнопкой ДО его загрузки, можно продублировать в <head> (только на хостах чата), с запасным снятием, если chat.js не загрузится:
    if (sessionStorage.em_chat_late !== '1') { html.classList.add('emc-late'); style 'html.emc-late .sticky-cta__wa,html.emc-late .wa-pop{opacity:0!important;visibility:hidden!important;transition:none!important}';
@@ -12,6 +15,21 @@
   'use strict';
   if (window.__emChat) return;
   window.__emChat = 1;
+
+  /* ---------- Хост чата ---------- */
+  function isChatHost() {
+    var h = String(location.hostname || '').toLowerCase(), qs = location.search || '';
+    if (/[?&]chathost=1(&|$)/.test(qs)) return true;                                   // только для тестов: имитация боевого хоста
+    if (/^(www\.|oferta\.)?ericamarques\.com$/.test(h)) return true;                    // боевые хосты (b.ericamarques.com — форма, чата там нет)
+    if (/\.github\.io$/.test(h) || h === 'localhost' || h === '127.0.0.1') {            // превью: только по явному признаку
+      return window.__EMC_PREVIEW === true || /[?&]chat=(1|mock)(&|$)/.test(qs);
+    }
+    return false;
+  }
+  if (!isChatHost()) {   // страница не чата: ничего не трогаем (и не оставляем спрятанные head'ом кнопки)
+    try { document.documentElement.classList.remove('emc-pre'); } catch (e) { /* нет документа */ }
+    return;
+  }
 
   /* ---------- Настройки ---------- */
   // Форма контакта «Seu contato» (событие contact_form → форма → /api/lead и /api/chat/contact). С 01.10 выключена по просьбе Лёши:
@@ -35,7 +53,7 @@
     connecting: 'Conectando…', offline: 'Sem conexão. Tentando de novo…',
     busy: 'Espere a resposta da mensagem anterior.', tooLong: 'Mensagem longa demais: até {n} caracteres.',
     rate: 'Calma, muitas mensagens. Tente de novo em {n} s.', restarted: 'A conversa foi reiniciada.',
-    unavail: 'O chat está indisponível agora. Fale com a gente no WhatsApp.', waBtn: 'Escrever no WhatsApp',
+    unavail: 'O chat está indisponível agora. Escreva para a gente por e-mail.', mailBtn: 'Escrever por e-mail',
     err: 'Não foi possível enviar. Tente de novo.', handoff: 'Passei para a equipe, já já respondem aqui',
     typing: 'Erika está digitando…', unread: 'mensagens novas', peekClose: 'Fechar aviso',
     fName: 'Nome', fWa: 'WhatsApp', fEmail: 'E-mail', fConsent: 'Aceito receber mensagens no WhatsApp e concordo com a ',
@@ -44,7 +62,32 @@
     consentErr: 'Marque a caixa para continuar', sendErr: 'Não deu para enviar. Tente de novo.',
     instr: 'Ver instruções de acesso'
   } };
-  var L = T.pt;
+  var L = T.pt;   // L — тексты самого окна чата (всегда pt-BR)
+
+  /* ---------- Тексты страницы: подмена слов про WhatsApp на чат / почту. Язык страницы: window.EM_LANG === 'pt' (index-pt.html) или русский ----------
+     PL — язык страницы, X = TX[PL]. В PT-версии HTML уже про чат — подмены в режиме чата нет (text: null), меняется только запасной режим (почта). */
+  var PL = window.EM_LANG === 'pt' ? 'pt' : 'ru';
+  var TX = {
+    ru: {
+      pre: /WhatsApp/,   // быстрый отсев текстовых узлов, где есть что менять
+      chat: { pop: 'Есть вопрос? Напиши <b>Эрике</b>', plaque: 'Есть вопросы? Задай их Эрике в&nbsp;чате', btn: 'Открыть чат',
+        words: [[/Задать вопрос в WhatsApp/g, 'Задать вопрос в чате'], [/напиши нам в WhatsApp/g, 'напиши нам в чат'], [/Напиши в WhatsApp/g, 'Напиши в чат'], [/ответит в WhatsApp/g, 'ответит в чате']] },
+      mail: { aria: 'Написать на почту', pop: 'Есть вопрос? Напиши нам на&nbsp;<b>почту</b>', plaque: 'Есть вопросы? Напиши нам на&nbsp;почту', btn: 'Написать на почту',
+        words: [[/ИИ-помощник ответит в WhatsApp/g, 'Поддержка ответит на почте'], [/Задать вопрос в WhatsApp/g, 'Написать на почту'], [/напиши нам в WhatsApp/g, 'напиши нам на почту'], [/Напиши в WhatsApp/g, 'Напиши на почту']] }
+    },
+    pt: {
+      pre: /chat|IA da Erika/,
+      chat: { pop: null, plaque: null, btn: null, words: [], aria: 'Abrir o chat' },
+      mail: { aria: 'Escrever por e-mail', pop: 'Dúvidas? Escreva pra gente por e-mail', plaque: 'Dúvidas? Escreva pra gente por e-mail', btn: 'Escrever por e-mail',
+        words: [[/Não sabe qual plano escolher\? Pergunte aqui no chat — a IA da Erika te ajuda\./g, 'Não sabe qual plano escolher? Escreva por e-mail — a gente te ajuda.'],
+          [/Pergunte no chat — a IA da Erika responde por aqui\./g, 'Escreva por e-mail — a gente responde.'],
+          [/A IA da Erika responde por aqui e te ajuda a escolher o plano\./g, 'A gente responde por e-mail e te ajuda a escolher o plano.'],
+          [/A IA da Erika responde por aqui/g, 'Respondemos por e-mail'],
+          [/Falar com a Erika no chat/g, 'Escrever por e-mail'], [/Pedir ajuda no chat/g, 'Escrever por e-mail']] }
+    }
+  };
+  var X = TX[PL];
+  if (X.chat.aria) L.open = X.chat.aria;   // aria-label круглой кнопки в PT: «Abrir o chat»
 
   var d = document, html = d.documentElement, t0 = Date.now();
   var q = new URLSearchParams(location.search);
@@ -52,7 +95,8 @@
   var PAY = ['btn-pay-start', 'btn-pay-specialist', 'btn-pay-vip'];
   var MARKS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'];
   var CONSENT_VERSION = 'pt-2026-10-01';
-  var WA_DEFAULT = 'https://wa.me/557187627227?text=Ol%C3%A1%21%20Vim%20do%20site%20do%20curso%20e%20tenho%20uma%20d%C3%BAvida.';
+  var MAIL = 'suporte@ericamarques.com', MAIL_HREF = 'mailto:' + MAIL + '?subject=Duvida%20sobre%20o%20curso';
+  var START_TRIES = 3;   // сессия не стартует (502/503/нет сети) столько раз подряд (≈ 3 с) — запасной режим
 
   function meta(n) { var m = d.querySelector('meta[name="' + n + '"]'); return m ? (m.getAttribute('content') || '').trim() : ''; }
   var API = meta('em-chat-api') || '/api/chat';
@@ -155,16 +199,23 @@
     lastId: 0, seen: {}, handoff: false, busy: false, busyT: 0, sending: false, rateUntil: 0,
     open: false, unread: 0, greeting: null, greetDelay: 4000, gt: 0, greeted: false, greetEl: null, greetId: null, echoes: [],
     wrote: false, hasHistory: false, pend: null, lastFrom: '', opener: null, starting: null,
-    rep: 0, sentAt: 0, lastReply: 0   // rep — сколько пузырей бота уже показано в текущем ответе; sentAt — когда человек отправил сообщение
+    fails: 0, rep: 0, sentAt: 0, lastReply: 0   // rep — сколько пузырей бота уже показано в текущем ответе; sentAt — когда человек отправил сообщение
   };
 
   /* ---------- Круглая кнопка (бывшая WhatsApp панели) ---------- */
   var btn = d.getElementById('sticky-cta-wa');
   if (!btn) {
     btn = el('a', 'sticky-cta__wa emc-solo');
-    btn.href = WA_DEFAULT; btn.id = 'emc-fab';
+    btn.href = MAIL_HREF; btn.id = 'emc-fab';
     d.body.appendChild(btn);
   }
+  // Все ссылки на WhatsApp (кроме подвала #b12 и самого окна) сразу становятся mailto: даже Ctrl/Cmd-клик не уведёт в WhatsApp.
+  // Обычный клик (пока чат работает) открывает окно чата — их ловит делегат ниже по метке data-emc-link.
+  Array.prototype.forEach.call(d.querySelectorAll('a[href*="wa.me"]'), function (a) {
+    if (a.closest('#b12, #emc')) return;
+    a.setAttribute('href', MAIL_HREF); a.removeAttribute('target'); a.removeAttribute('rel'); a.setAttribute('data-emc-link', '1');
+  });
+  btn.setAttribute('data-emc-link', '1'); btn.removeAttribute('target'); btn.removeAttribute('rel');
   var btnLabel = btn.getAttribute('aria-label') || '';
   var dot = el('span', 'emc-dot'), badge = el('span', 'emc-badge');
   dot.setAttribute('aria-hidden', 'true'); badge.setAttribute('aria-hidden', 'true'); badge.hidden = true;
@@ -183,10 +234,35 @@
     var e = d.getElementById(id);
     if (e) { swaps.push([e, e.innerHTML]); e.innerHTML = htmlText; }
   }
-  // На плане Б вместо WhatsApp — чат: тексты про WhatsApp на странице (кроме футера Лёши #b12 и поля «WhatsApp» кассы) говорят про чат,
-  // зелёные WhatsApp-кнопки получают иконку чата. При отказе чата всё возвращается как было.
+  // Чат вместо WhatsApp: тексты про WhatsApp на странице (кроме футера Лёши #b12 и поля «WhatsApp» кассы) говорят про чат,
+  // зелёные WhatsApp-кнопки получают иконку чата. Запасной режим (чат недоступен) — «на почту» / «por e-mail» и иконка-конверт.
+  // Списки слов (TX) нужны, пока в HTML исходно стоит «WhatsApp» (RU). При отказе чата сначала всё возвращается как было, потом ставится почта.
   var wordSwaps = [], iconSwaps = [];
-  var WORDS = [[/Задать вопрос в WhatsApp/g, 'Задать вопрос в чате'], [/напиши нам в WhatsApp/g, 'напиши нам в чат'], [/Напиши в WhatsApp/g, 'Напиши в чат'], [/ответит в WhatsApp/g, 'ответит в чате']];
+  function symbols() {
+    if (d.getElementById('emc-ic')) return;
+    var sp = d.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    sp.setAttribute('width', '0'); sp.setAttribute('height', '0'); sp.setAttribute('aria-hidden', 'true'); sp.style.position = 'absolute';
+    sp.innerHTML = '<symbol id="emc-ic" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.5-.7L3 21l1.8-5.3A8.4 8.4 0 1 1 21 11.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>' +
+      '<symbol id="emc-mail-ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m4 8 8 5.5L20 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>';
+    d.body.appendChild(sp);
+  }
+  function wordsPass(list) {
+    var w = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) {
+      var pe = n.parentElement;
+      if (!pe || pe.closest('#emc, #b12, script, style') || !X.pre.test(n.nodeValue)) continue;
+      var v = n.nodeValue, o = v;
+      list.forEach(function (x) { v = v.replace(x[0], x[1]); });
+      if (v !== o) { wordSwaps.push([n, o]); n.nodeValue = v; }
+    }
+  }
+  function iconsPass(sel, sym) {
+    Array.prototype.forEach.call(d.querySelectorAll(sel), function (u) {
+      if (u.closest('#emc, #b12')) return;
+      var h = u.getAttribute('href') || u.getAttribute('xlink:href');
+      if (h && /#(bi|i)-wa$/.test(h)) { iconSwaps.push([u, h]); u.setAttribute('href', sym); }
+    });
+  }
   function chatWords(on) {
     if (!on) {
       wordSwaps.forEach(function (w) { w[0].nodeValue = w[1]; });
@@ -194,25 +270,20 @@
       wordSwaps = []; iconSwaps = [];
       return;
     }
-    if (!d.getElementById('emc-ic')) {
-      var sp = d.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      sp.setAttribute('width', '0'); sp.setAttribute('height', '0'); sp.setAttribute('aria-hidden', 'true'); sp.style.position = 'absolute';
-      sp.innerHTML = '<symbol id="emc-ic" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.5-.7L3 21l1.8-5.3A8.4 8.4 0 1 1 21 11.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>';
-      d.body.appendChild(sp);
-    }
-    var w = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT), n;
-    while ((n = w.nextNode())) {
-      var pe = n.parentElement;
-      if (!pe || pe.closest('#emc, #b12, script, style') || !/WhatsApp/.test(n.nodeValue)) continue;
-      var v = n.nodeValue, o = v;
-      WORDS.forEach(function (x) { v = v.replace(x[0], x[1]); });
-      if (v !== o) { wordSwaps.push([n, o]); n.nodeValue = v; }
-    }
-    Array.prototype.forEach.call(d.querySelectorAll('.btn--wa use'), function (u) {
-      if (u.closest('#emc, #b12')) return;
-      var h = u.getAttribute('href') || u.getAttribute('xlink:href');
-      if (h && /#(bi|i)-wa$/.test(h)) { iconSwaps.push([u, h]); u.setAttribute('href', '#emc-ic'); }
-    });
+    symbols();
+    if (X.chat.words.length) wordsPass(X.chat.words);
+    iconsPass('.btn--wa use', '#emc-ic');
+  }
+  // Запасной режим: чата нет — почта suporte@ericamarques.com (ссылки уже mailto, см. выше)
+  function mailMode() {
+    html.classList.add('emc-mail');
+    btn.setAttribute('aria-label', X.mail.aria);
+    symbols();
+    swap('wa-pop-link', X.mail.pop);   // пузырь в этом режиме скрыт, но слов про чат/WhatsApp в нём быть не должно
+    swap('pb-wa-t', X.mail.plaque);
+    swap('pb-wa-btn', '<svg class="i" aria-hidden="true"><use href="#emc-mail-ic"/></svg>' + X.mail.btn);
+    wordsPass(X.mail.words);
+    iconsPass('use', '#emc-mail-ic');
   }
   function onMode(on) {
     html.classList.toggle('emc-on', on);
@@ -220,9 +291,9 @@
     if (on) {
       btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-controls', 'emc'); btn.setAttribute('aria-expanded', S.open ? 'true' : 'false');
       if (!swaps.length) {
-        swap('wa-pop-link', 'Есть вопрос? Напиши <b>Эрике</b>');
-        swap('pb-wa-t', 'Есть вопросы? Задай их Эрике в&nbsp;чате');
-        swap('pb-wa-btn', 'Открыть чат');
+        if (X.chat.pop) swap('wa-pop-link', X.chat.pop);   // в PT-версии HTML уже про чат — текст остаётся как есть
+        if (X.chat.plaque) swap('pb-wa-t', X.chat.plaque);
+        if (X.chat.btn) swap('pb-wa-btn', X.chat.btn);
         chatWords(true);
       }
     } else {
@@ -233,6 +304,16 @@
     }
   }
   onMode(true);
+  // html.emc-pre (head прячет #sticky-cta-wa, #wa-pop, #pb-wa до первого кадра) снимаем, когда решение принято и chat.css применён
+  function releasePre() {
+    var n = 0;
+    (function chk() {
+      var ready = true;
+      try { ready = getComputedStyle(html).getPropertyValue('--emc-css').trim() === '1'; } catch (e) { /* без проверки */ }
+      if (ready || ++n > 30) html.classList.remove('emc-pre'); else setTimeout(chk, 100);
+    })();
+  }
+  releasePre();
 
   /* ---------- Окно чата ---------- */
   var SVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">';
@@ -297,9 +378,10 @@
     S.lastFrom = '';
     return add(a);
   }
-  function waBtn() {
-    var a = linkBtn(btn.getAttribute('href') || WA_DEFAULT, L.waBtn);
-    a.className = 'emc-cta emc-cta--wa';
+  function mailBtn() {   // запасная кнопка в окне чата: письмо на suporte@ericamarques.com
+    var a = linkBtn(MAIL_HREF, L.mailBtn);
+    a.className = 'emc-cta emc-cta--mail';
+    a.removeAttribute('target'); a.removeAttribute('rel');
     return a;
   }
   function closeButtons() {
@@ -477,9 +559,10 @@
     };
     S.starting = api('/session', body).then(function (r) {
       S.starting = null;
-      if (r.s === 200 && r.j.session_id) { netOk(); applySession(r.j); return true; }
+      if (r.s === 200 && r.j.session_id) { S.fails = 0; netOk(); applySession(r.j); return true; }
       if (r.s === 401 && body.session_id) { store('localStorage', 'em_chat_sid', null); return startSession(true); }
       if (r.s === 0 || r.s === 502 || r.s === 504 || (r.s === 503 && r.j.error !== 'chat_disabled') || r.s === 429) {
+        if (r.s !== 429 && ++S.fails >= START_TRIES) { fallback(); return false; }   // 502/503/нет сети несколько раз подряд — почта
         setTimeout(function () { if (!S.ok && !S.off) startSession(fresh); }, netFail());
         return false;
       }
@@ -639,7 +722,7 @@
           return;
         }
         if ((r.s === 503 && e === 'chat_disabled') || r.s === 403) { undo(''); fallback(); return; }
-        if (r.s === 503) { undo(L.unavail); waBtn(); sync(); return; }
+        if (r.s === 503) { undo(L.unavail); mailBtn(); sync(); return; }
         undo(L.err); sync();
       });
     })();
@@ -853,25 +936,25 @@
     }
   });
 
-  // Все ссылки wa.me (кроме подвала #b12 и запасной кнопки в самом чате) открывают чат
+  // Ссылки, которые раньше вели в WhatsApp (метка data-emc-link; подвал #b12 не трогаем), открывают чат. В запасном режиме это обычные mailto-ссылки.
   d.addEventListener('click', function (e) {
-    var a = e.target.closest ? e.target.closest('a[href*="wa.me"]') : null;
-    if (!a || a.closest('#b12') || a.closest('#emc')) return;
-    if (S.off || (!S.ok && S.net >= 2)) return;   // чат недоступен — пусть открывается WhatsApp
+    var a = e.target.closest ? e.target.closest('a[data-emc-link]') : null;
+    if (!a || a.closest('#emc')) return;
+    if (S.off) return;   // чат недоступен — mailto сработает сам
     if (e.ctrlKey || e.metaKey || e.shiftKey || e.button > 0) return;
     e.preventDefault();
     if (a === btn && S.open) closeChat(); else openChat(a);
   }, true);
 
-  /* ---------- Отказ чата: всё как раньше (wa.me) ---------- */
+  /* ---------- Отказ чата: запасной режим — почта (WhatsApp на сайте не используется) ---------- */
   function fallback() {
     if (S.off) return;
     S.off = true; S.ok = false; S.gen++;
     clearTimeout(S.gt); typing(false); peekHide(); banner(false);
-    onMode(false);
+    onMode(false); mailMode();
     badge.hidden = true;
-    if (S.open) { say(''); note('emc-sys', L.unavail); waBtn(); }
-    sync();
+    if (S.open) { say(''); note('emc-sys', L.unavail); mailBtn(); }
+    sync(); releasePre();
   }
 
   /* ---------- Оплата на странице: sck=web-<sid> ---------- */

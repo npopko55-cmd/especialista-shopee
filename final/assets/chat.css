@@ -2,6 +2,8 @@
    Токены — из site.css (Prata/Raleway, --ink, --sky-1 …). Всё под префиксом .emc / html.emc-on — на план А не влияет.
    Контраст: текст на белом/небе ≥ 4,5:1; оранжевая кнопка — #C24A12 (5,0:1 к белому). Цели касания ≥ 44 px. */
 
+html { --emc-css: 1; }   /* метка «chat.css применён»: по ней chat.js снимает html.emc-pre (head прячет WhatsApp-кнопки до первого кадра) */
+
 /* ---------- Круглая кнопка: вместо зелёной WhatsApp — фото Эрики (обрезка по лицу) ---------- */
 .emc-ava,
 html.emc-on .sticky-cta__wa,
@@ -133,7 +135,7 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
   box-shadow: 0 12px 24px -12px rgba(194, 74, 18, .7);
 }
 .emc-cta:disabled { opacity: .7; cursor: default; }
-.emc-cta--wa { background: #fff; color: #0F7A40; border: 1.5px solid #25D366; box-shadow: none; }
+.emc-cta--mail { background: #fff; color: #2B6F9E; border: 1.5px solid #2B6F9E; box-shadow: none; }
 
 .emc-typing { align-self: flex-start; display: flex; gap: 5px; padding: 14px 16px; border-radius: 18px; border-bottom-left-radius: 6px; background: #fff; }
 .emc-typing span { width: 7px; height: 7px; border-radius: 50%; background: #7A868F; animation: emc-dot 1.2s infinite ease-in-out; }
@@ -208,6 +210,16 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
 }
 
 /* План Б: кнопки, которые были «WhatsApp» (зелёные), на хостах чата — цвета сайта с иконкой чата */
-html.emc-on .btn--wa:not(.pb-wa__btn) { color: var(--ink, #1F2A33); border-color: var(--azure-sm, #2B6F9E); }
-html.emc-on .btn--wa:not(.pb-wa__btn) svg { color: var(--azure-sm, #2B6F9E); }
+html.emc-on .btn--wa:not(.pb-wa__btn), html.emc-mail .btn--wa:not(.pb-wa__btn) { color: var(--ink, #1F2A33); border-color: var(--azure-sm, #2B6F9E); }
+html.emc-on .btn--wa:not(.pb-wa__btn) svg, html.emc-mail .btn--wa:not(.pb-wa__btn) svg { color: var(--azure-sm, #2B6F9E); }
+
+/* ---------- Запасной режим: чат недоступен → почта suporte@ericamarques.com (WhatsApp на сайте не используется) ----------
+   Круглая кнопка и иконка плашки — синие, с конвертом; пузыри (.wa-pop, .emc-peek) не показываются. */
+html.emc-mail .sticky-cta__wa, html.emc-mail .pb-wa__ic { background: var(--azure-sm, #2B6F9E); color: #fff; }
+html.emc-mail .sticky-cta__wa { box-shadow: 0 0 0 4px rgba(255, 255, 255, .85), 0 14px 26px -10px rgba(31, 42, 51, .45); }
+html.emc-mail .pb-wa__ic { box-shadow: 0 8px 16px -8px rgba(31, 42, 51, .45); }
+html.emc-mail .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-shadow: 0 10px 22px -10px rgba(31, 42, 51, .5); }
+html.emc-mail .pb-wa__btn svg { color: #fff; }
+html.emc-mail .wa-pop, html.emc-mail .emc-peek { display: none !important; }
+html.emc-mail .sticky-cta__wa:focus-visible { outline: 3px solid #0B7DB0; outline-offset: 2px; }
 

@@ -5,7 +5,7 @@
    «oi|olá|привет|здравствуйте» → приветствие; «humano» → handoff; всё остальное → одна нейтральная фраза (не ссылка и не форма).
    Просьб оставить контакт демо не шлёт.
    Состояние — в localStorage (em_chat_mock_v1), поэтому перезагрузка восстанавливает историю.
-   Отладка из консоли: emChatMock.paid() — событие paid; emChatMock.disable(true|false) — 503 chat_disabled;
+   Отладка из консоли: emChatMock.paid() — событие paid; emChatMock.disable(true|false[, 502]) — 503 chat_disabled (или 502);
    emChatMock.reset() — стереть демо-переписку; emChatMock.force('form'|'form_only') — следующий ответ «text + contact_form» (проверка флага CONTACT_FORM).
    Приветствие — ТОЛЬКО тестовое. */
 (function () {
@@ -117,7 +117,7 @@
   function route(method, url, b) {
     var path = url.pathname, qs = url.searchParams, s, t = Date.now();
     if (path.slice(-9) === '/api/lead') { (DB.leads = DB.leads || []).push(b); save(); return [200, { ok: true }]; }
-    if (DB.off) return [503, { error: 'chat_disabled' }];
+    if (DB.off) return DB.offCode === 502 ? [502, { error: 'bad_gateway' }] : [503, { error: 'chat_disabled' }];
     var ep = path.replace(/^.*\/api\/chat/, '');
     if (method === 'GET' && ep === '/events') {
       s = sess(qs.get('session_id'));
@@ -204,7 +204,7 @@
       var ids = Object.keys(DB.s), s = DB.s[ids[ids.length - 1]];
       if (s) push(s, 'system', 'paid', 0, { text: 'Pagamento confirmado! Bem-vinda ao curso 🤍', title: 'Parabéns!', instruction_url: 'https://example.com/instrucao-de-acesso' });
     },
-    disable: function (on) { DB.off = on !== false; save(); wake(); },
+    disable: function (on, code) { DB.off = on !== false; DB.offCode = code === 502 ? 502 : 503; save(); wake(); },
     reset: function () { DB = { s: {}, off: false }; save(); },
     force: function (mode) { DB.force = mode === 'form' || mode === 'form_only' ? mode : null; save(); }
   };
