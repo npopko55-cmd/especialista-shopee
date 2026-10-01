@@ -629,7 +629,7 @@
   </div>
 </section>
 
-<!-- Блок 8 — тарифы (раунд 8, Лёша 30.09): таймер цены над карточками; порядок Специалист → Старт → VIP;
+<!-- Блок 8 — тарифы (раунд 8, Лёша 30.09): таймер цены над карточками; порядок Старт → Специалист → VIP (Лёша 01.10, видео IMG_3416: вернуть как было); таймер цены и в начале, и в конце тарифов (IMG_3417);
      у «Старта» недоступное — отдельной серой плашкой; места у «Специалиста» и VIP; бонусы без таймера (3 часа).
      Раунд 10 (Лёша 01.10): таймер цены — личные сутки посетителя (assets/site.js, ключ es_price_until), один на оба
      таймера страницы (здесь и в блоке 10); плитки часы : минуты : секунды, стартовые 24:00:00 до запуска скрипта;
@@ -637,7 +637,7 @@
 <section id="tariffs" class="blk bg-golden" aria-labelledby="tariffs-title">
   <h2 class="blk__title" id="tariffs-title">Выбери свой тариф</h2>
   <div class="t8-deal">
-    <p class="t8-deal__line">Самая низкая цена действует только 24 часа</p>
+    <p class="t8-deal__line">Самые низкие цены действуют до:</p>
     <div class="cd t8-pcd" data-price-timer role="timer">
       <div class="cd__tile"><b data-cd="h">24</b><span>часов</span></div>
       <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>
@@ -645,32 +645,6 @@
     </div>
   </div>
   <div class="t8">
-      <article class="t8-card t8-card--best" id="plan-best" aria-labelledby="plan-best-name">
-        <h3 class="t8-name" id="plan-best-name">Специалист по Shopee</h3>
-        <span class="t8-badge">⭐ выбирают чаще всего</span>
-        <p class="t8-sub">Освоить профессию целиком — все 5 способов</p>
-        <div class="t8-price">
-          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">41,27</span></p>
-          <p class="t8-day">≈ R$&nbsp;1,36 в день</p>
-          <p class="t8-full">или R$&nbsp;399 одним платежом</p>
-          <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Всего 70 мест</p>
-        </div>
-        <a class="btn t8-pay" id="btn-pay-specialist" href="https://go.hotmart.com/U107829757Q?ap=227b" rel="noopener" data-cta>Оплатить</a>
-        <ul class="t8-list list-check">
-          <li>Все 8 модулей: более 55 уроков, 5 способов</li>
-          <li>Домашние задания</li>
-          <li>Учебный тренажёр</li>
-          <li>4 учебных заказа от Эрики: карточки, дизайн, чат, видео</li>
-          <li>Доступ 6 месяцев</li>
-
-            <li>Поддержка — ответы на вопросы</li>
-            <li>Готовые команды для ИИ и образцы, которые продают — по всем 5 способам</li>
-            <li>Именной сертификат</li>
-            <li>2 бонусных урока: «Mercado Livre и Amazon», «Как продавать свои услуги и поднимать чек»</li>
-            <li>Участие в подарке: iPhone трём лучшим по баллам</li>
-            <li>Гарантия 7 дней</li>
-        </ul>
-      </article>
       <article class="t8-card" id="plan-start" aria-labelledby="plan-start-name">
         <h3 class="t8-name" id="plan-start-name">Старт</h3>
         <p class="t8-sub">Начать с двух способов: карточки и картинки</p>
@@ -701,6 +675,32 @@
           </ul>
         </div>
       </article>
+      <article class="t8-card t8-card--best" id="plan-best" aria-labelledby="plan-best-name">
+        <h3 class="t8-name" id="plan-best-name">Специалист по Shopee</h3>
+        <span class="t8-badge">⭐ выбирают чаще всего</span>
+        <p class="t8-sub">Освоить профессию целиком — все 5 способов</p>
+        <div class="t8-price">
+          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">41,27</span></p>
+          <p class="t8-day">≈ R$&nbsp;1,36 в день</p>
+          <p class="t8-full">или R$&nbsp;399 одним платежом</p>
+          <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Всего 70 мест</p>
+        </div>
+        <a class="btn t8-pay" id="btn-pay-specialist" href="https://go.hotmart.com/U107829757Q?ap=227b" rel="noopener" data-cta>Оплатить</a>
+        <ul class="t8-list list-check">
+          <li>Все 8 модулей: более 55 уроков, 5 способов</li>
+          <li>Домашние задания</li>
+          <li>Учебный тренажёр</li>
+          <li>4 учебных заказа от Эрики: карточки, дизайн, чат, видео</li>
+          <li>Доступ 6 месяцев</li>
+
+            <li>Поддержка — ответы на вопросы</li>
+            <li>Готовые команды для ИИ и образцы, которые продают — по всем 5 способам</li>
+            <li>Именной сертификат</li>
+            <li>2 бонусных урока: «Mercado Livre и Amazon», «Как продавать свои услуги и поднимать чек»</li>
+            <li>Участие в подарке: iPhone трём лучшим по баллам</li>
+            <li>Гарантия 7 дней</li>
+        </ul>
+      </article>
       <article class="t8-card" id="plan-vip" aria-labelledby="plan-vip-name">
         <h3 class="t8-name" id="plan-vip-name">VIP</h3>
         <p class="t8-sub">Всё из «Специалиста по Shopee» — и вдвое больше практики</p>
@@ -718,6 +718,14 @@
           <li>5 бонусных уроков: два из «Специалиста» + «TikTok Shop с нуля», «Портфолио и профиль, к которым магазины приходят сами», «Как вести несколько магазинов сразу и не выгореть»</li>
         </ul>
       </article>
+  </div>
+  <div class="t8-deal t8-deal--end">
+    <p class="t8-deal__line">Самые низкие цены действуют до:</p>
+    <div class="cd t8-pcd" data-price-timer role="timer">
+      <div class="cd__tile"><b data-cd="h">24</b><span>часов</span></div>
+      <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>
+      <div class="cd__tile"><b data-cd="s">00</b><span>секунд</span></div>
+    </div>
   </div>
   <div class="t8-bonus">
     <div class="t8-bonus__head">
@@ -864,7 +872,7 @@
     <blockquote class="b10-quote"><p>У женщины должны быть свои деньги. Давай начнём с твоих.</p></blockquote>
   </figure>
   <div class="b10-deal">
-    <p class="b10-deadline">Самая низкая цена закроется через:</p>
+    <p class="b10-deadline">Самые низкие цены действуют до:</p>
     <div class="cd b10-cd" data-price-timer role="timer">
       <div class="cd__tile"><b data-cd="h">24</b><span>часов</span></div>
       <div class="cd__tile"><b data-cd="m">00</b><span>минут</span></div>

@@ -744,3 +744,7 @@
   #tariffs .t8-bonus { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); column-gap: 24px; align-items: center; padding: 24px 28px; }
   #tariffs .t8-bonus__list { margin-top: 0; }
 }
+
+/* Лёша 01.10 (IMG_3417): таймер цены ещё и в конце тарифов, после VIP и перед бонусами */
+#tariffs .t8-deal--end { margin: 20px auto 20px; }
+
