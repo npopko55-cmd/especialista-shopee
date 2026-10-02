@@ -193,7 +193,7 @@
      Грузится ТОЛЬКО если вписан ID проекта (CLARITY_ID) и посетитель дал согласие «Аналитика и реклама» (window.esConsent()).
      Без ID или без согласия на странице нет ни одного запроса к Clarity. Чат маскируется (data-clarity-mask), поля ввода — тоже.
      События воронки: window.esTrack('имя') — копятся в очереди и уходят в Clarity после согласия; метки: источник (src), язык, utm. */
-  const CLARITY_ID = '';   /* вставить сюда ID проекта Clarity (clarity.microsoft.com → проект → Settings → Overview → Project ID, 10 знаков) */
+  const CLARITY_ID = 'yrgsywz9av';   /* вставить сюда ID проекта Clarity (clarity.microsoft.com → проект → Settings → Overview → Project ID, 10 знаков) */
   const trackQ = [];
   let clarityOn = false;
   const cl = (...a) => { try { if (typeof window.clarity === 'function') window.clarity(...a); } catch (e) { /* аналитика не должна ломать страницу */ } };
@@ -209,6 +209,7 @@
       t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, d, 'clarity', 'script', CLARITY_ID);
+    cl('consentv2', { ad_Storage: 'granted', analytics_Storage: 'granted' });   /* пишем только после согласия «Аналитика и реклама» */
     cl('set', 'src', emSrc || 'site');
     cl('set', 'lang', d.documentElement.lang || '');
     try { const q = new URLSearchParams(location.search); ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(k => { if (q.get(k)) cl('set', k, q.get(k)); }); } catch (e) { /* старый браузер */ }
