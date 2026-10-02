@@ -758,7 +758,7 @@
         if (U) flushUnsent();   // бэкенд снова отвечает — неотправленное сообщение уходит
         (r.j.events || []).forEach(function (ev) { if (accept(ev)) Q.push(ev); });
         if (r.j.last_id > S.lastId) S.lastId = r.j.last_id;
-        if (r.j.handoff) S.handoff = true;
+        if (typeof r.j.handoff === 'boolean') S.handoff = r.j.handoff;   // флаг передачи человеку отражает ответ сервера: после возврата бота снова виден «печатает» (без перезагрузки страницы)
         if (Q.length) { S.hasHistory = true; drain(); }
         if (r.j.chat_enabled === false) { fallback(); return; }
         poll();
