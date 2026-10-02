@@ -58,6 +58,11 @@ html.emc-late .wa-pop, html.emc-late .emc-peek { display: none !important; }
   text-align: left; font: 500 14.5px/1.35 var(--sans); color: var(--ink, #1F2A33);
 }
 .emc-peek__msg span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.emc-peek--long { max-width: min(320px, calc(100vw - 24px)); }
+.emc-peek--long .emc-peek__msg span { -webkit-line-clamp: 8; }   /* дожим / «с возвращением»: до ~300 знаков */
+.emc-peek { transition: opacity .18s ease, visibility 0s linear 0s; }
+/* прячется там же, где круглая кнопка: когда её закрыла бы кнопка оплаты (site.js → #sticky-cta-wa.is-over-cta) */
+.emc-peek.is-away { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .18s ease, visibility 0s linear .18s; }
 .emc-dots { display: none; align-items: center; gap: 4px; height: 20px; }
 .emc-dots i { width: 7px; height: 7px; border-radius: 50%; background: #8A97A1; animation: emc-pk-blink 1s infinite ease-in-out; }
 .emc-dots i:nth-child(2) { animation-delay: .15s; }

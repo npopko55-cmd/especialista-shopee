@@ -18,6 +18,8 @@
     plan_especialista: ['especialista', 'Especialista', 'https://go.hotmart.com/U107829757Q?ap=227b'],
     plan_vip: ['vip', 'VIP', 'https://go.hotmart.com/U107829757Q?ap=51de']
   };
+  var FU_TEXT = 'Oi! 🤍 Vi que você estava olhando os planos. Se ficou com alguma dúvida, é só me chamar aqui. Quem fechar nas próximas 3 horas ainda leva os presentes!';
+  var WB_TEXT = 'Que bom que você voltou! 🤍 Ficou com alguma dúvida sobre os planos? É só me chamar aqui.';
   var DB = load(), waiters = [], realFetch = window.fetch.bind(window);
 
   function load() { try { return JSON.parse(localStorage.getItem(KEY)) || { s: {}, off: false }; } catch (e) { return { s: {}, off: false }; } }
@@ -139,13 +141,23 @@
     if (method !== 'POST' || !b) return [404, { error: 'not_found' }];
     if (ep === '/session') {
       s = b.session_id ? sess(b.session_id) : null;
+      var existing = !!s;
       if (!s) {
         var u = uuid();
         s = DB.s[u] = { u: u, events: [], next: 1, busy: false, handoff: false, greeted: 0, msgs: {}, min: [], count: 0, name: null, buttons: {} };
         save();
       }
-      return [200, { session_id: sign(s.u), chat_enabled: true, greeting: GREETING, greeting_delay_ms: 4000, limits: LIMITS,
-        events: s.events.slice(-200), last_event_id: s.events.length ? s.events[s.events.length - 1].id : 0, handoff: s.handoff }];
+      var out = { session_id: sign(s.u), chat_enabled: true, greeting: GREETING, greeting_delay_ms: 4000, limits: LIMITS,
+        events: [], last_event_id: 0, handoff: s.handoff };
+      // дожим v2.2 (только для проверки виджета): ?followup=1 → enabled, delay_s 3; ?followup=0 → выключен; без параметра поля нет, как у старого бэкенда
+      var pg = String(b.page_url || '');
+      if (existing && /[?&]welcomeback=1(&|$)/.test(pg) && s.count > 0 && !s.handoff && !s.wb) {   // ?welcomeback=1: «с возвращением» при повторном заходе
+        s.wb = true; push(s, 'bot', 'text', 0, { text: WB_TEXT, meta: { welcome_back: true } });
+      }
+      out.events = s.events.slice(-200); out.last_event_id = s.events.length ? s.events[s.events.length - 1].id : 0;
+      if (/[?&]followup=1(&|$)/.test(pg)) out.followup = { enabled: true, delay_s: 3 };
+      else if (/[?&]followup=0(&|$)/.test(pg)) out.followup = { enabled: false, delay_s: 20 };
+      return [200, out];
     }
     s = sess(b.session_id);
     if (!s) return [401, { error: 'bad_session' }];
@@ -157,6 +169,13 @@
       }
       return [200, { event: g }];
     }
+    if (ep === '/followup') {
+      if (s.count === 0 || s.handoff || s.fu || b.reason !== 'closed') return [200, { followup: null }];
+      s.fu = true;
+      var fev = push(s, 'bot', 'text', 0, { text: FU_TEXT, meta: { followup: true } });
+      return [200, { followup: { text: FU_TEXT, event: fev } }];
+    }
+    if (ep === '/event') { (DB.analytics = DB.analytics || []).push({ kind: b.kind, session: s.u }); save(); return [200, { ok: true }]; }
     if (ep === '/contact') {
       if (b.consent !== true) return [422, { error: 'consent_required' }];
       s.name = String(b.name || '').split(' ')[0].slice(0, 40); save();

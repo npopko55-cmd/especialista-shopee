@@ -358,6 +358,49 @@
   peek.querySelector('.emc-peek__x').setAttribute('aria-label', L.peekClose);
   d.body.appendChild(peek);
 
+  /* ---------- Дожим после закрытия окна (контракт v2.2) ----------
+     Включён, только если /session вернул followup.enabled === true (боевой бэкенд без поля — виджет ничего не делает и не шлёт /followup).
+     Человек написал ≥ 1 сообщение → закрыл окно → ждём followup.delay_s с → если он на странице, окно не открыто и в этой сессии ещё не спрашивали —
+     один раз POST /followup {reason:'closed'} (флаг в localStorage erika_followup_asked_<sid>). Ответ {followup:null} — молчим; иначе текст
+     показывается облачком над круглой кнопкой (peekShow, kind 'followup'), событие из ответа кладётся в ленту; клик → открыть чат + POST /event followup_click. */
+  var F = { on: false, delay: 20, userMsg: false, t: 0, busy: false, wait: false };
+  function kindOf(ev) { var m = ev && ev.meta; return m && m.followup ? 'followup' : m && m.welcome_back ? 'welcome_back' : ''; }
+  function fuKey() { return 'erika_followup_asked_' + S.sid; }
+  function fuSetup(j) {
+    var f = j && j.followup;
+    F.on = !!(f && f.enabled === true);
+    F.delay = f && +f.delay_s > 0 ? +f.delay_s : 20;
+    if (!F.on) fuStop();
+  }
+  function fuStop() { clearTimeout(F.t); F.t = 0; F.wait = false; }
+  function fuArm() {
+    if (!F.on || S.off || !S.ok || !F.userMsg || F.t || F.busy || store('localStorage', fuKey())) return;
+    F.t = setTimeout(fuRun, F.delay * 1000);
+  }
+  function fuEvent(kind) { if (S.sid) api('/event', { session_id: S.sid, kind: kind }); }
+  function fuRun() {
+    F.t = 0;
+    if (!F.on || S.off || !S.ok || S.open) return;
+    if (d.hidden) { F.wait = true; return; }   // вкладка в фоне — дождёмся возвращения на страницу
+    if (store('localStorage', fuKey())) return;
+    store('localStorage', fuKey(), '1');       // максимум один раз за сессию: флаг ставим до запроса
+    F.busy = true;
+    var g = S.gen;
+    api('/followup', { session_id: S.sid, reason: 'closed' }, 15000).then(function (r) {
+      F.busy = false;
+      if (g !== S.gen || S.off) return;
+      var fu = r.s === 200 ? r.j.followup : null;
+      if (!fu || !fu.text) return;   // null, ошибка, таймаут, не 200 — молча
+      var ev = fu.event;
+      if (ev && typeof ev === 'object' && ev.id != null) {
+        ev.meta = ev.meta || {}; ev.meta.followup = true;
+        if (!S.seen[ev.id]) { S.seen[ev.id] = 1; show(ev); }   // если long-poll уже принёс это событие — оно покажется из очереди тем же облачком
+      } else {
+        show({ from: 'bot', type: 'text', text: fu.text, meta: { followup: true } });
+      }
+    });
+  }
+
   /* ---------- Лента ---------- */
   function scrollEnd() { feed.scrollTop = feed.scrollHeight; }
   function add(node) {
@@ -457,12 +500,12 @@
       if (!S.greetBound && ev.text === S.greeting) { S.greetBound = 1; S.greetId = ev.id; return; }
     }
     render(ev);
-    if (ev.from === 'user' || ev.type === 'user') S.rep = 0;
+    if (ev.from === 'user' || ev.type === 'user') { S.rep = 0; F.userMsg = true; }
     else if (isReply(ev)) S.rep++;
     if (ev.from !== 'user' && ev.type !== 'user' && ev.type !== 'typing') {
       if (ev.id != null && ev.id > S.lastReply) S.lastReply = ev.id;
       if (S.busy && (S.busyId == null || ev.id > S.busyId)) setBusy(false);
-      if (!S.open && !hist && ev.type !== 'system') { S.unread++; badgeUp(); if (ev.text) peekShow(ev.text, ev.from, ev.id); }
+      if (!S.open && !hist && ev.type !== 'system') { S.unread++; badgeUp(); if (ev.text) peekShow(ev.text, ev.from, ev.id, kindOf(ev)); }
       if (S.open && ev.id != null) markSeen(ev.id);
     }
     if (ev.type === 'handoff') setBusy(false);
@@ -478,7 +521,7 @@
     if (ev.from === 'bot' && ev.type === 'text' && S.greetEl &&
         ((S.greetId != null && ev.id === S.greetId) || (!S.greetBound && ev.text === S.greeting))) return 0;   // дубль приветствия: show() его отбросит
     var wait = Math.min(Math.max(+ev.delay_ms || 0, 0), 5000);
-    if (FAST || !isReply(ev)) return wait;
+    if (FAST || !isReply(ev) || kindOf(ev)) return wait;   // дожим и «с возвращением» — облачко без «печатает»
     var len = String(ev.text || '').length, now = Date.now(), human;
     if (S.rep === 0) {   // первый пузырь ответа: отсчёт от отправки сообщения; если ответ пришёл позже — показываем сразу
       var t1 = (S.busy || S.sending) && S.sentAt ? S.sentAt : now;
@@ -576,6 +619,7 @@
     S.gen++; S.lastId = 0; S.seen = {}; S.lastFrom = ''; S.pend = null; S.handoff = false;
     S.greeted = false; S.greetEl = null; S.greetBound = 0; S.greetId = null; S.echoes = []; S.hasHistory = false;
     clearTimeout(drainT); qRun = false; S.rep = 0; S.sentAt = 0; S.lastReply = 0;
+    F.userMsg = false; fuStop();
     Q = []; feed.textContent = ''; setBusy(false);
   }
   function restart() {
@@ -605,9 +649,10 @@
     else if (unreadEvs.length) {
       var ue = unreadEvs[unreadEvs.length - 1];
       S.unread = unreadEvs.length; badgeUp();
-      afterShown(function () { setTimeout(function () { peekShow(ue.text, ue.from, ue.id); }, PEEK_AFTER_MS); });   // через 2,5 с после появления кнопки
+      afterShown(function () { setTimeout(function () { peekShow(ue.text, ue.from, ue.id, kindOf(ue)); }, PEEK_AFTER_MS); });   // через 2,5 с после появления кнопки
     }
     if (j.last_event_id > S.lastId) S.lastId = j.last_event_id;
+    fuSetup(j);
     // последний — непрочитанный ответом вопрос человека: ждём ответ
     if (last && last.type === 'user' && !S.handoff) { S.sentAt = Date.now(); setBusy(true, last.id); typing(true); }
     S.greeting = j.greeting || null;
@@ -663,13 +708,13 @@
       setTimeout(poll, r.s === 0 ? netFail() : backoff());
     });
   }
-  d.addEventListener('visibilitychange', function () { if (!d.hidden) poll(); });
+  d.addEventListener('visibilitychange', function () { if (!d.hidden) { poll(); if (F.wait) { F.wait = false; fuRun(); } } });
 
   /* ---------- Отправка ---------- */
   function send(payload, echo) {
     if (!S.ok || S.off || S.busy || S.sending) return false;
     if (Date.now() < S.rateUntil) return false;
-    S.wrote = true; clearTimeout(S.gt);
+    S.wrote = true; F.userMsg = true; clearTimeout(S.gt);
     S.sentAt = Date.now(); S.rep = 0;
     say('');
     var body = { session_id: S.sid, client_msg_id: uuid(), page_url: location.href };
@@ -855,14 +900,15 @@
     peek.style.right = Math.max(12, innerWidth - r.right) + 'px';
     peek.style.bottom = (innerHeight - r.top + 12) + 'px';
   }
-  var peekText = '', peekFrom = '', peekId = 0, peekT = 0;
+  var peekText = '', peekFrom = '', peekId = 0, peekT = 0, peekKind = '';
   // крестик гасит только это сообщение: новое сообщение Эрики снова всплывает
   function peekDismissed(id) { var v = store('sessionStorage', 'em_chat_peek_dis'); return v != null && id <= +v; }
-  function peekShow(text, from, id) {
+  function peekShow(text, from, id, kind) {
     id = id != null ? +id : 0;
     if (S.open || peekDismissed(id)) return;
     var fresh = peekText !== text || peekId !== id;
-    peekText = text; peekFrom = from || peekFrom; peekId = id;
+    peekText = text; peekFrom = from || peekFrom; peekId = id; peekKind = kind || '';
+    peek.classList.toggle('emc-peek--long', !!peekKind);   // дожим / «с возвращением»: до ~300 знаков, без «печатает…»
     peek.querySelector('span').textContent = text;
     peek.querySelector('b').textContent = peekFrom === 'manager' ? L.team : L.erika;
     if (!btnVisible()) return;   // кнопка ещё спрятана (самый верх страницы) — покажем после прокрутки
@@ -870,17 +916,23 @@
     peek.hidden = false;
     html.classList.add('emc-peek-on');
     peekPlace();
-    if (fresh && !was && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    if (fresh && !was && !peekKind && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
       // как живое сообщение: сначала «печатает…», потом текст
       peek.classList.add('is-typing'); clearTimeout(peekT);
       peekT = setTimeout(function () { peek.classList.remove('is-typing'); peekPlace(); }, 1100);
     }
   }
-  function peekHide() { clearTimeout(peekT); peek.classList.remove('is-typing'); peek.hidden = true; peekText = ''; html.classList.remove('emc-peek-on'); }
+  function peekHide() { clearTimeout(peekT); peek.classList.remove('is-typing'); peek.hidden = true; peekText = ''; peekKind = ''; html.classList.remove('emc-peek-on'); }
   window.addEventListener('scroll', function () {
-    if (peekText && peek.hidden && !S.open && btnVisible()) peekShow(peekText, peekFrom, peekId);
+    if (peekText && peek.hidden && !S.open && btnVisible()) peekShow(peekText, peekFrom, peekId, peekKind);
   }, { passive: true });
   window.addEventListener('resize', peekPlace);
+  // Облачко прячется там же, где круглая кнопка: когда её закрыла бы кнопка оплаты (site.js ставит #sticky-cta-wa.is-over-cta); в emc-late и запасном режиме — CSS
+  if (window.MutationObserver) {
+    var away = function () { peek.classList.toggle('is-away', btn.classList.contains('is-over-cta')); };
+    new MutationObserver(away).observe(btn, { attributes: true, attributeFilter: ['class'] });
+    away();
+  }
   peek.querySelector('.emc-peek__msg').addEventListener('click', function () { openChat(btn); });
   peek.querySelector('.emc-peek__x').addEventListener('click', function () {
     store('sessionStorage', 'em_chat_peek_dis', String(peekId)); peekHide();
@@ -908,6 +960,8 @@
     html.classList.add('emc-open');
     html.classList.toggle('emc-lock', m);
     btn.setAttribute('aria-expanded', 'true');
+    fuStop();
+    if (from === btn && peekKind && F.on) fuEvent(peekKind + '_click');   // клик по облачку/кнопке после дожима или «с возвращением»
     S.unread = 0; badgeUp(); peekHide(); markSeen(S.lastId);
     if (!S.ok) startSession();
     sync(); vv(); scrollEnd();
@@ -923,6 +977,7 @@
     vv();
     var o = S.opener || btn;
     try { o.focus({ preventScroll: true }); } catch (e) { /* элемент исчез */ }
+    fuArm();
   }
   xB.addEventListener('click', closeChat);
   d.addEventListener('keydown', function (e) {
@@ -951,6 +1006,7 @@
     if (S.off) return;
     S.off = true; S.ok = false; S.gen++;
     clearTimeout(S.gt); typing(false); peekHide(); banner(false);
+    F.on = false; fuStop();   // запасной (почтовый) режим: дожима нет
     onMode(false); mailMode();
     badge.hidden = true;
     if (S.open) { say(''); note('emc-sys', L.unavail); mailBtn(); }
