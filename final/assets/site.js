@@ -241,7 +241,8 @@
     const seen = {};
     const once = n => { if (!seen[n]) { seen[n] = 1; window.esTrack(n); } };
     if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { once('view_' + e.target.id); io.unobserve(e.target); } }), { threshold: 0.25 });
+      /* секции высокие (тарифы ≈ 3 экрана), поэтому доля видимости не годится: считаем «дошёл», когда верх секции поднялся в нижние 80 % экрана */
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { once('view_' + e.target.id); io.unobserve(e.target); } }), { rootMargin: '0px 0px -20% 0px', threshold: 0 });
       ['b3', 'b5', 'b6', 'b7', 'tariffs', 'b8a', 'bvideo', 'b9', 'b10', 'b11'].forEach(id => { const x = d.getElementById(id); if (x) io.observe(x); });
     }
     d.addEventListener('click', e => {
