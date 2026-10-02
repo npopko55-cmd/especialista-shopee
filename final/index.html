@@ -15,8 +15,8 @@
   try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
   try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
 })(document.documentElement);</script>
-<link rel="stylesheet" href="assets/site.css?v=1002d">
-<link rel="stylesheet" href="assets/site-b.css?v=1002d">
+<link rel="stylesheet" href="assets/site.css?v=1003a">
+<link rel="stylesheet" href="assets/site-b.css?v=1003a">
 <!-- чат плана Б (корень, www, oferta., превью): до первого кадра прячем WhatsApp-кнопки, пока assets/chat.js не решит, чат это или запасная почта (emc-pre снимает chat.js; если он не загрузился — через 4 с) -->
 <script>(function(){var h=location.hostname;if(/^(www\.|oferta\.)?ericamarques\.com$/i.test(h)||/\.github\.io$/i.test(h)||/[?&]chat=(1|mock)(&|$)/.test(location.search)){var e=document.documentElement;e.className+=' emc-pre';setTimeout(function(){e.className=e.className.replace(/\bemc-pre\b/,'')},4000);}})();</script>
 <style>html.emc-pre #sticky-cta-wa,html.emc-pre #wa-pop,html.emc-pre #pb-wa{visibility:hidden}</style>
@@ -364,6 +364,13 @@
           <p class="feat__p">Готовые примеры работ по каждому способу. Сразу видно, как должно получиться.</p>
         </div>
       </article>
+      <article class="carousel__card feat feat--live">
+        <div class="feat__media feat__media--art"><span class="feat__art feat__art--live" aria-hidden="true"><img src="assets/img/erika-live.webp" width="480" height="640" alt="" loading="lazy" decoding="async"></span></div>
+        <div class="feat__txt">
+          <h3 class="feat__t">Эфиры со мной</h3>
+          <p class="feat__p">Отвечаю на твои вопросы вживую.</p>
+        </div>
+      </article>
       <article class="carousel__card feat feat--ava">
         <div class="feat__media feat__media--art"><span class="feat__art feat__art--ava" aria-hidden="true"><span class="feat__face"><img src="assets/img/hero-erika-cut-hd.webp" width="1050" height="1400" alt="" loading="lazy" decoding="async"></span><span class="feat__bubble"><svg class="i"><use href="#i-chat"/></svg></span></span></div>
         <div class="feat__txt">
@@ -652,6 +659,7 @@
           <ul class="t8-off__list">
             <li>Учебный тренажёр</li>
             <li>Учебные заказы от Эрики</li>
+            <li>Эфиры со мной</li>
             <li>Поддержка</li>
             <li>Готовые команды для ИИ</li>
             <li>Образцы, которые продают</li>
@@ -678,6 +686,7 @@
           <li>Учебный тренажёр</li>
           <li>4 учебных заказа от Эрики: карточки, дизайн, чат, видео</li>
           <li>Доступ 6 месяцев</li>
+          <li>3 эфира со мной</li>
 
             <li>Поддержка — ответы на вопросы</li>
             <li>Готовые команды для ИИ и образцы, которые продают — по всем 5 способам</li>
@@ -1021,8 +1030,8 @@
   </div>
 </div>
 
-<script src="assets/site.js?v=1002d" defer></script>
-<script src="assets/site-b.js?v=1002d" defer></script>
+<script src="assets/site.js?v=1003a" defer></script>
+<script src="assets/site-b.js?v=1003a" defer></script>
 <!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
 <script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=9,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
 </body>

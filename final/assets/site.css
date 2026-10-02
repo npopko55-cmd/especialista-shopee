@@ -1252,3 +1252,7 @@ html.emc-on .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-sh
 #sticky-cta-wa { transition: opacity .18s ease, transform .18s ease; }
 #sticky-cta-wa.is-over-cta { opacity: 0 !important; pointer-events: none !important; transform: scale(.9); }
 
+/* Никита 02.10: эфиры с Эрикой возвращены (слайд блока 6, строки в «Старте» и «Специалисте») */
+.feat__art--live { background: var(--sky-1); }
+.feat__media .feat__art--live img { position: absolute; inset: 0; width: 100%; height: 100%; left: 0; top: 0; transform: none; object-fit: cover; object-position: 50% 22%; }
+
