@@ -6,6 +6,8 @@
    (только localhost/127.0.0.1 — чтобы ссылкой нельзя было увести переписку и контакты на чужой сервер).
    Чат недоступен (session 502/503, chat_disabled, 403, 404, нет сети) — «запасной режим»: все ссылки на WhatsApp (кроме подвала #b12) становятся
    mailto:suporte@ericamarques.com, иконка — конверт, тексты «в WhatsApp/в чате» → «на почту», пузыри не показываются. WhatsApp на сайте больше не используется.
+   Из запасного режима виджет сам возвращается в чат: проба POST /session через 20, 30, 45, 60 с и дальше раз в 60 с (в скрытой вкладке пауза; ?recoverms=N — для тестов).
+   Сообщение, которое не ушло (502/503/нет сети/chat_disabled), остаётся серым «Não enviado — tentar de novo» (очередь на одно, тот же client_msg_id) и уходит один раз после восстановления.
    html.emc-pre (ставит head до первого кадра, прячет #sticky-cta-wa, #wa-pop, #pb-wa) снимается, как только решение принято и chat.css применён.
    Кнопка чата, пузырь-приглашение и .wa-pop скрыты до блока тарифов (html.emc-late, sessionStorage em_chat_late). Класс ставится при старте этого скрипта;
    чтобы не было ни одного кадра с кнопкой ДО его загрузки, можно продублировать в <head> (только на хостах чата), с запасным снятием, если chat.js не загрузится:
@@ -60,7 +62,7 @@
     policy: 'Política de Privacidade', submit: 'Enviar', sending: 'Enviando…', thanks: 'Obrigada!',
     required: 'Preencha este campo', too_short: 'Muito curto', too_long: 'Muito longo', invalid: 'Confira, por favor',
     consentErr: 'Marque a caixa para continuar', sendErr: 'Não deu para enviar. Tente de novo.',
-    instr: 'Ver instruções de acesso'
+    instr: 'Ver instruções de acesso', unsent: 'Não enviado — tentar de novo', resending: 'Enviando…'
   } };
   var L = T.pt;   // L — тексты самого окна чата (всегда pt-BR)
 
@@ -97,6 +99,11 @@
   var CONSENT_VERSION = 'pt-2026-10-01';
   var MAIL = 'suporte@ericamarques.com', MAIL_HREF = 'mailto:' + MAIL + '?subject=Duvida%20sobre%20o%20curso';
   var START_TRIES = 3;   // сессия не стартует (502/503/нет сети) столько раз подряд (≈ 3 с) — запасной режим
+  // Автовосстановление из запасного режима: проба POST /session через 20, 30, 45, 60 с и дальше раз в 60 с (в скрытой вкладке пауза).
+  // Неотправленное сообщение повторяется через 3, 6, 12, 20, 30 с. Для тестов: ?recoverms=2000 — все интервалы по 2 с.
+  var RECOVER_MS = [20000, 30000, 45000, 60000], UNSENT_RETRY_MS = [3000, 6000, 12000, 20000, 30000];
+  var qrm = +((/[?&]recoverms=(\d+)/.exec(location.search) || [])[1] || 0);
+  if (qrm >= 300) { RECOVER_MS = [qrm]; UNSENT_RETRY_MS = [qrm]; }
 
   function meta(n) { var m = d.querySelector('meta[name="' + n + '"]'); return m ? (m.getAttribute('content') || '').trim() : ''; }
   var API = meta('em-chat-api') || '/api/chat';
@@ -491,7 +498,7 @@
       for (var ei = S.echoes.length - 1; ei >= 0; ei--) {
         var pe = S.echoes[ei];
         if (pe.id === ev.id) return;
-        if (pe.id == null && ((pe.button_id && pe.button_id === ev.button_id) || (pe.text && pe.text === ev.text))) { pe.id = ev.id; return; }
+        if (pe.id == null && ((pe.button_id && pe.button_id === ev.button_id) || (pe.text && pe.text === ev.text))) { pe.id = ev.id; if (pe.m && U === pe.m) markSent(pe.m); return; }
       }
     }
     // приветствие уже показано виджетом — событие от greeting_shown не дублируем
@@ -560,7 +567,7 @@
     sync();
   }
   function sync() {
-    var lock = S.busy || S.sending || !S.ok || S.off;
+    var lock = S.busy || S.sending || (!S.ok && !S.off);   // в запасном режиме окно, если оно было открыто, принимает сообщение в очередь «не отправлено»
     ta.readOnly = lock;
     ta.placeholder = S.busy ? L.phWait : !S.ok && !S.off ? L.connecting : L.ph;
     var len = ta.value.length;
@@ -623,6 +630,7 @@
     S.greeted = false; S.greetEl = null; S.greetBound = 0; S.greetId = null; S.echoes = []; S.hasHistory = false;
     clearTimeout(drainT); qRun = false; S.rep = 0; S.sentAt = 0; S.lastReply = 0; S.clearedAt = 0;
     F.userMsg = false; fuStop();
+    U = null; cur = null; clearTimeout(unsentT); unsentN = 0;
     Q = []; feed.textContent = ''; setBusy(false);
   }
   function restart() {
@@ -733,6 +741,7 @@
       if (g !== S.gen || S.off) return;
       if (r.s === 200) {
         netOk();
+        if (U) flushUnsent();   // бэкенд снова отвечает — неотправленное сообщение уходит
         (r.j.events || []).forEach(function (ev) { if (accept(ev)) Q.push(ev); });
         if (r.j.last_id > S.lastId) S.lastId = r.j.last_id;
         if (r.j.handoff) S.handoff = true;
@@ -746,69 +755,123 @@
       setTimeout(poll, r.s === 0 ? netFail() : backoff());
     });
   }
-  d.addEventListener('visibilitychange', function () { if (!d.hidden) { poll(); if (F.wait) { F.wait = false; fuRun(); } } });
+  d.addEventListener('visibilitychange', function () {
+    if (d.hidden) return;
+    poll();
+    if (F.wait) { F.wait = false; fuRun(); }
+    if (S.off) {
+      if (recPending) { var rj = recPending; recPending = null; recoverOk(rj); }
+      else if (recWait) { recWait = false; recoverTry(); }
+    } else if (U) scheduleUnsent();
+  });
 
   /* ---------- Отправка ---------- */
+  /* ---------- Неотправленное сообщение (очередь на одно) ---------- */
+  var U = null, unsentT = 0, unsentN = 0, cur = null;   // U — последнее неотправленное; cur — сообщение, которое сейчас в запросе
+  function dropCap(m) { if (m.cap && m.cap.parentNode) m.cap.parentNode.removeChild(m.cap); m.cap = null; }
+  function markSent(m) {
+    if (U === m) { U = null; clearTimeout(unsentT); unsentN = 0; }
+    m.el.classList.remove('emc-b--unsent'); dropCap(m);
+  }
+  function dropUnsent() {   // в очереди только последнее неотправленное сообщение: прежнее убираем из ленты
+    var m = U; if (!m) return;
+    U = null; clearTimeout(unsentT); unsentN = 0; dropCap(m);
+    if (m.el.parentNode) m.el.parentNode.removeChild(m.el);
+    var ix = S.echoes.indexOf(m.pe); if (ix >= 0) S.echoes.splice(ix, 1);
+  }
+  function markUnsent(m) {
+    U = m; m.busy = false;
+    m.el.classList.add('emc-b--unsent');
+    if (!m.cap) {
+      m.cap = el('button', 'emc-unsent'); m.cap.type = 'button';
+      m.cap.addEventListener('click', retryUnsent);
+      if (!m.tap) { m.tap = 1; m.el.addEventListener('click', function () { if (U === m) retryUnsent(); }); }
+      if (m.el.parentNode) m.el.parentNode.insertBefore(m.cap, m.el.nextSibling);
+    }
+    m.cap.textContent = L.unsent; m.cap.disabled = false;
+    S.lastFrom = ''; scrollEnd(); sync(); scheduleUnsent();
+  }
+  function scheduleUnsent() {
+    clearTimeout(unsentT);
+    if (!U || S.off) return;   // в запасном режиме отправим после восстановления (recoverOk)
+    unsentT = setTimeout(function () { if (!d.hidden) flushUnsent(); }, UNSENT_RETRY_MS[Math.min(unsentN++, UNSENT_RETRY_MS.length - 1)]);
+  }
+  function retryUnsent() {   // тап по пузырю или подписи
+    if (!U || U.busy) return;
+    if (S.off) { recoverTry(); return; }
+    unsentN = 0; flushUnsent();
+  }
+  function flushUnsent() {
+    var m = U;
+    if (!m || m.busy || S.off || !S.ok || S.sending) return;
+    m.busy = true; m.tries = 1; m.g = S.gen;   // тот же client_msg_id: повтор безопасен (бэкенд идемпотентен)
+    m.cap.textContent = L.resending; m.cap.disabled = true;
+    S.sending = true; S.sentAt = Date.now(); S.rep = 0; sync();
+    post(m);
+  }
+  function undo(m, msg) {
+    markSent(m);
+    if (m.el.parentNode) m.el.parentNode.removeChild(m.el);
+    S.lastFrom = ''; S.pend = null; var ix = S.echoes.indexOf(m.pe); if (ix >= 0) S.echoes.splice(ix, 1);
+    if (m.payload.text && !ta.value) ta.value = m.payload.text;
+    grow();
+    if (msg) say(msg);
+  }
+  function post(m) {
+    cur = m;
+    var body = { session_id: S.sid, client_msg_id: m.cid, page_url: location.href };
+    if (m.payload.button_id) body.button_id = m.payload.button_id; else body.text = m.payload.text;
+    api('/message', body).then(function (r) {
+      if (m.g !== S.gen) return;
+      var e = r.j.error;
+      if (r.s === 0 || r.s === 502 || r.s === 504 || (r.s === 503 && e !== 'chat_disabled')) {   // бэкенд недоступен: один быстрый повтор, потом «не отправлено»
+        if (++m.tries < 2) { setTimeout(function () { if (m.g === S.gen) post(m); }, 1000); return; }
+        cur = null; S.sending = false; markUnsent(m); return;
+      }
+      cur = null;
+      if ((r.s === 503 && e === 'chat_disabled') || r.s === 403) { S.sending = false; markUnsent(m); fallback(); return; }
+      netOk();
+      S.sending = false;
+      if (r.s === 200 || r.s === 202) {
+        var id = r.j.event_id;
+        if (id != null) { S.seen[id] = 1; if (m.pe.id == null) m.pe.id = id; }
+        markSent(m); S.pend = null;
+        if (!S.handoff && !(id != null && S.lastReply > id)) { setBusy(true, id); typing(true); } else sync();
+        return;
+      }
+      if (r.s === 409) { undo(m, L.busy); setBusy(true, S.lastId); return; }
+      if (r.s === 413) { undo(m, fmt(L.tooLong, ta.maxLength)); sync(); return; }
+      if (r.s === 429) {
+        var sec = Math.max(1, Math.ceil(+r.j.retry_after || 10));
+        S.rateUntil = Date.now() + sec * 1000;
+        undo(m, fmt(L.rate, sec));
+        setTimeout(function () { say(''); sync(); }, sec * 1000);
+        sync(); return;
+      }
+      if (r.s === 401) {
+        undo(m, '');
+        restart().then(function (ok) { if (ok) send(m.payload, m.echo); });
+        return;
+      }
+      undo(m, L.err); sync();
+    });
+  }
   function send(payload, echo) {
-    if (!S.ok || S.off || S.busy || S.sending) return false;
+    if (S.busy || S.sending || (!S.ok && !S.off)) return false;
     if (Date.now() < S.rateUntil) return false;
     S.wrote = true; F.userMsg = true; clearTimeout(S.gt);
     S.sentAt = Date.now(); S.rep = 0;
     say('');
-    var body = { session_id: S.sid, client_msg_id: uuid(), page_url: location.href };
-    if (payload.button_id) body.button_id = payload.button_id; else body.text = payload.text;
-    var b = bubble('user', echo);
+    dropUnsent();
+    var m = { payload: payload, echo: echo, cid: uuid(), g: S.gen, tries: 0 };
+    m.el = bubble('user', echo);
     if (payload.button_id) closeButtons();
-    var pe0 = { el: b, text: payload.text, button_id: payload.button_id, id: null };
-    S.pend = pe0; S.echoes.push(pe0); if (S.echoes.length > 20) S.echoes.shift();
+    m.pe = { el: m.el, text: payload.text, button_id: payload.button_id, id: null, m: m };
+    S.pend = m.pe; S.echoes.push(m.pe); if (S.echoes.length > 20) S.echoes.shift();
     S.hasHistory = true;
+    if (S.off) { markUnsent(m); return true; }   // бэкенд недоступен (запасной режим при открытом окне): сообщение в ленте «не отправлено», уйдёт после восстановления
     S.sending = true; sync();
-    var tries = 0, g = S.gen;
-    function undo(msg) {
-      if (b.parentNode) b.parentNode.removeChild(b);
-      S.lastFrom = ''; S.pend = null; var ix = S.echoes.indexOf(pe0); if (ix >= 0) S.echoes.splice(ix, 1);
-      if (payload.text && !ta.value) ta.value = payload.text;
-      grow();
-      if (msg) say(msg);
-    }
-    (function go() {
-      api('/message', body).then(function (r) {
-        if (g !== S.gen) return;
-        if (r.s === 0 || r.s === 502 || r.s === 504) {
-          tries++;
-          if (tries >= 2) banner(true);
-          setTimeout(go, Math.min(1000 * Math.pow(2, tries - 1), 8000));   // тот же client_msg_id: повтор безопасен
-          return;
-        }
-        netOk();
-        S.sending = false;
-        var e = r.j.error;
-        if (r.s === 200 || r.s === 202) {
-          var id = r.j.event_id;
-          if (id != null) { S.seen[id] = 1; if (pe0.id == null) pe0.id = id; }
-          S.pend = null;
-          if (!S.handoff && !(id != null && S.lastReply > id)) { setBusy(true, id); typing(true); } else sync();
-          return;
-        }
-        if (r.s === 409) { undo(L.busy); setBusy(true, S.lastId); return; }
-        if (r.s === 413) { undo(fmt(L.tooLong, ta.maxLength)); sync(); return; }
-        if (r.s === 429) {
-          var sec = Math.max(1, Math.ceil(+r.j.retry_after || 10));
-          S.rateUntil = Date.now() + sec * 1000;
-          undo(fmt(L.rate, sec));
-          setTimeout(function () { say(''); sync(); }, sec * 1000);
-          sync(); return;
-        }
-        if (r.s === 401) {
-          undo('');
-          restart().then(function (ok) { if (ok) send(payload, echo); });
-          return;
-        }
-        if ((r.s === 503 && e === 'chat_disabled') || r.s === 403) { undo(''); fallback(); return; }
-        if (r.s === 503) { undo(L.unavail); mailBtn(); sync(); return; }
-        undo(L.err); sync();
-      });
-    })();
+    post(m);
     return true;
   }
 
@@ -1045,12 +1108,59 @@
   function fallback() {
     if (S.off) return;
     S.off = true; S.ok = false; S.gen++;
+    inflight.slice().forEach(function (c) { try { c.abort(); } catch (e) { /* уже завершён */ } }); inflight = []; S.polling = false;
+    if (cur) { var c0 = cur; cur = null; S.sending = false; markUnsent(c0); }   // сообщение в полёте не теряем
     clearTimeout(S.gt); typing(false); peekHide(); banner(false);
     F.on = false; fuStop();   // запасной (почтовый) режим: дожима нет
     onMode(false); mailMode();
     badge.hidden = true;
-    if (S.open) { say(''); note('emc-sys', L.unavail); mailBtn(); }
+    if (S.open) { say(''); unavailEls = [note('emc-sys', L.unavail), mailBtn()]; }
     sync(); releasePre();
+    recN = 0; recoverArm();
+  }
+
+  /* ---------- Автовосстановление из запасного режима ----------
+     Проба POST /session с сохранённым session_id (или null): 200 и chat_enabled === true → тихо возвращаемся в чат без перезагрузки
+     (снимаем mailto-подмены тексты/иконки, emc-mail; окно и лента на месте, long-poll запускается заново, неотправленное сообщение уходит один раз). */
+  var recT = 0, recN = 0, recBusy = false, recWait = false, recPending = null, unavailEls = [];
+  function recoverArm() {
+    clearTimeout(recT); recT = 0;
+    if (!S.off) return;
+    recT = setTimeout(recoverTry, RECOVER_MS[Math.min(recN, RECOVER_MS.length - 1)]);
+  }
+  function recoverTry() {
+    clearTimeout(recT); recT = 0;
+    if (!S.off || recBusy) return;
+    if (d.hidden) { recWait = true; return; }   // скрытая вкладка: пауза, при возврате — сразу
+    recBusy = true;
+    probe(store('localStorage', 'em_chat_sid'));
+  }
+  function probe(sid) {
+    var body = { session_id: sid || null, turnstile_token: getTurnstileToken(), page_url: location.href, referrer: d.referrer || '', utm: utm(), lang: 'pt-BR' };
+    api('/session', body).then(function (r) {
+      if (!S.off) { recBusy = false; return; }
+      if (r.s === 401 && sid) { store('localStorage', 'em_chat_sid', null); probe(null); return; }
+      recBusy = false;
+      if (r.s === 200 && r.j.chat_enabled === true && r.j.session_id) {
+        if (d.hidden) { recPending = r.j; return; }   // вкладка скрыта — применим при возврате
+        recoverOk(r.j);
+        return;
+      }
+      recN++; recoverArm();
+    });
+  }
+  function recoverOk(j) {
+    if (!S.off) return;
+    recPending = null; recN = 0; clearTimeout(recT); recT = 0;
+    swaps.forEach(function (s0) { s0[0].innerHTML = s0[1]; }); swaps = []; chatWords(false);   // исходные тексты и иконки
+    html.classList.remove('emc-mail');
+    S.off = false; S.fails = 0; S.net = 0; S.bo = 0; S.starting = null; S.polling = false;
+    banner(false);
+    unavailEls.forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); }); unavailEls = [];
+    html.classList.add('emc-recover'); setTimeout(function () { html.classList.remove('emc-recover'); }, 500);   // плавная замена кнопки (CSS)
+    onMode(true);
+    applySession(j);
+    flushUnsent();
   }
 
   /* ---------- Оплата на странице: sck=web-<sid> ---------- */

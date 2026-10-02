@@ -119,6 +119,13 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
   background: #0B7DB0; color: #fff;
 }
 .emc-b--mgr { background: #FBF8EF; }
+/* неотправленное сообщение (бэкенд был недоступен): серый пузырь + подпись-кнопка «Não enviado — tentar de novo» */
+.emc-b--unsent { background: #DCE2E6; color: #4E5A63; cursor: pointer; }
+.emc-unsent {
+  align-self: flex-end; min-height: 36px; margin: -4px 4px 0; padding: 0 8px; border: 0; background: none; cursor: pointer;
+  font: 600 13.5px/1.2 var(--sans); color: #A83A0C; text-decoration: underline; text-underline-offset: 2px;
+}
+.emc-unsent:disabled { cursor: default; color: #4E5A63; text-decoration: none; }
 .emc-b--paid { background: #FFF3EA; }
 .emc-b--paid b { display: block; margin-bottom: 4px; font: 400 18px/1.25 var(--serif); }
 .emc-sys { align-self: center; max-width: 92%; margin: 6px 0; font-size: 13.5px; line-height: 1.4; color: var(--muted, #4E5A63); text-align: center; }
@@ -209,7 +216,7 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .emc, .emc-peek, .emc-typing span, .emc-dots i, html.emc-on .sticky-cta__wa::before { animation: none !important; }
+  .emc, .emc-peek, .emc-typing span, .emc-dots i, html.emc-on .sticky-cta__wa::before, html.emc-recover .sticky-cta__wa { animation: none !important; }
   html.emc-late .sticky-cta__wa { transform: none; }
   .emc-typing span { opacity: .6; }
 }
@@ -226,5 +233,8 @@ html.emc-mail .pb-wa__ic { box-shadow: 0 8px 16px -8px rgba(31, 42, 51, .45); }
 html.emc-mail .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-shadow: 0 10px 22px -10px rgba(31, 42, 51, .5); }
 html.emc-mail .pb-wa__btn svg { color: #fff; }
 html.emc-mail .wa-pop, html.emc-mail .emc-peek { display: none !important; }
+/* возврат из запасного режима: плавная замена кнопки (только прозрачность) */
+html.emc-recover .sticky-cta__wa { animation: emc-fade .3s ease both; }
+@keyframes emc-fade { from { opacity: 0; } to { opacity: 1; } }
 html.emc-mail .sticky-cta__wa:focus-visible { outline: 3px solid #0B7DB0; outline-offset: 2px; }
 
