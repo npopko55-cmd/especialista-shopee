@@ -15,8 +15,8 @@
   try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
   try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
 })(document.documentElement);</script>
-<link rel="stylesheet" href="assets/site.css?v=1003a">
-<link rel="stylesheet" href="assets/site-b.css?v=1003a">
+<link rel="stylesheet" href="assets/site.css?v=1003c">
+<link rel="stylesheet" href="assets/site-b.css?v=1003c">
 <!-- чат плана Б (корень, www, oferta., превью): до первого кадра прячем WhatsApp-кнопки, пока assets/chat.js не решит, чат это или запасная почта (emc-pre снимает chat.js; если он не загрузился — через 4 с) -->
 <script>(function(){var h=location.hostname;if(/^(www\.|oferta\.)?ericamarques\.com$/i.test(h)||/\.github\.io$/i.test(h)||/[?&]chat=(1|mock)(&|$)/.test(location.search)){var e=document.documentElement;e.className+=' emc-pre';setTimeout(function(){e.className=e.className.replace(/\bemc-pre\b/,'')},4000);}})();</script>
 <style>html.emc-pre #sticky-cta-wa,html.emc-pre #wa-pop,html.emc-pre #pb-wa{visibility:hidden}</style>
@@ -365,7 +365,7 @@
         </div>
       </article>
       <article class="carousel__card feat feat--live">
-        <div class="feat__media feat__media--art"><span class="feat__art feat__art--live" aria-hidden="true"><img src="assets/img/erika-live.webp" width="480" height="640" alt="" loading="lazy" decoding="async"></span></div>
+        <div class="feat__media feat__media--art"><span class="feat__art feat__art--live" aria-hidden="true"><img src="assets/img/erika-live2.webp" width="640" height="640" alt="" loading="lazy" decoding="async"><span class="feat__rec"><i></i>LIVE</span></span></div>
         <div class="feat__txt">
           <h3 class="feat__t">Эфиры со мной</h3>
           <p class="feat__p">Отвечаю на твои вопросы вживую.</p>
@@ -851,12 +851,12 @@
       <!-- раунд 6 (Лиза, скрин 1835138): тот же блок «Карта отказала?» с кнопкой помощи — прямо во вкладке «Рассрочка»;
            пока открыта эта вкладка, такой же блок в списке ниже скрыт (одинаковый текст на экране один раз) -->
       <div class="b9-row b9-row--fail b9-row--tab"><img class="obj obj--sm" src="assets/3d/A24.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Карта отказала?</h3><p>Скорее всего, на ней не хватило лимита на всю сумму. Оплати через Pix или другой картой.</p></div>
-        <div class="b9-help"><a class="btn btn--wa b9-help__btn" id="b9-help-inst" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Preciso%20de%20ajuda%20com%20o%20pagamento%20do%20curso." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Получить помощь</a><p class="b9-help__note">Эрика ответит в WhatsApp</p></div></div>
+        <div class="b9-help"><a class="btn btn--wa b9-help__btn" id="b9-help-inst" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Preciso%20de%20ajuda%20com%20o%20pagamento%20do%20curso." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Получить помощь</a><p class="b9-help__note">Ассистент Эрики ответит в WhatsApp</p></div></div>
     </div>
   </div>
   <ul class="b9-info">
     <li class="b9-row b9-row--fail"><img class="obj obj--sm" src="assets/3d/A24.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Карта отказала?</h3><p>Скорее всего, на ней не хватило лимита на всю сумму. Оплати через Pix или другой картой.</p></div>
-      <div class="b9-help"><a class="btn btn--wa b9-help__btn" id="b9-help" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Preciso%20de%20ajuda%20com%20o%20pagamento%20do%20curso." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Получить помощь</a><p class="b9-help__note">Эрика ответит в WhatsApp</p></div></li>
+      <div class="b9-help"><a class="btn btn--wa b9-help__btn" id="b9-help" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Preciso%20de%20ajuda%20com%20o%20pagamento%20do%20curso." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Получить помощь</a><p class="b9-help__note">Ассистент Эрики ответит в WhatsApp</p></div></li>
     <li class="b9-row"><img class="obj obj--sm" src="assets/3d/A33.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Pix — без процентов</h3><p>Через Pix «Специалист» стоит R$&nbsp;399 одним платежом. В рассрочку проценты платит покупатель: 12 × R$&nbsp;41,27 ≈ R$&nbsp;495.</p></div></li>
     <li class="b9-row"><img class="obj obj--sm" src="assets/3d/gift.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Что будет после оплаты</h3><ul class="b9-after list-check"><li>Сразу на почту придёт письмо с доступом к курсу и номером покупки. Сохрани его.</li><li>Заходишь в приложение и начинаешь с первого урока.</li><li>Нет письма? Проверь папку «Спам» или напиши нам в WhatsApp.</li></ul></div></li>
   </ul>
@@ -1030,9 +1030,9 @@
   </div>
 </div>
 
-<script src="assets/site.js?v=1003a" defer></script>
-<script src="assets/site-b.js?v=1003a" defer></script>
+<script src="assets/site.js?v=1003c" defer></script>
+<script src="assets/site-b.js?v=1003c" defer></script>
 <!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
-<script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=9,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
+<script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=12,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
 </body>
 </html>

@@ -47,8 +47,8 @@
 
   /* ---------- Тексты интерфейса (pt-BR). Для русского — добавить T.ru и выбрать по lang ---------- */
   var T = { pt: {
-    open: 'Abrir chat com a Erika', close: 'Fechar chat', name: 'Erika Marques', online: 'online',
-    erika: 'Erika', team: 'Equipe', you: 'Você', log: 'Conversa com a Erika',
+    open: 'Abrir chat com a assistente da Erika', close: 'Fechar chat', name: 'Assistente da Erika', online: 'online',
+    erika: 'Assistente', team: 'Equipe', you: 'Você', log: 'Conversa com a assistente da Erika',
     ph: 'Escreva sua mensagem…', phWait: 'Aguarde a resposta…', send: 'Enviar mensagem',
     connecting: 'Conectando…', offline: 'Sem conexão. Tentando de novo…',
     busy: 'Espere a resposta da mensagem anterior.', tooLong: 'Mensagem longa demais: até {n} caracteres.',
@@ -70,20 +70,20 @@
   var TX = {
     ru: {
       pre: /WhatsApp/,   // быстрый отсев текстовых узлов, где есть что менять
-      chat: { pop: 'Есть вопрос? Напиши <b>Эрике</b>', plaque: 'Есть вопросы? Задай их Эрике в&nbsp;чате', btn: 'Открыть чат',
+      chat: { pop: 'Есть вопрос? Напиши <b>ассистенту</b>', plaque: 'Есть вопросы? Задай их ассистенту Эрики в&nbsp;чате', btn: 'Открыть чат',
         words: [[/Задать вопрос в WhatsApp/g, 'Задать вопрос в чате'], [/напиши нам в WhatsApp/g, 'напиши нам в чат'], [/Напиши в WhatsApp/g, 'Напиши в чат'], [/ответит в WhatsApp/g, 'ответит в чате']] },
       mail: { aria: 'Написать на почту', pop: 'Есть вопрос? Напиши нам на&nbsp;<b>почту</b>', plaque: 'Есть вопросы? Напиши нам на&nbsp;почту', btn: 'Написать на почту',
-        words: [[/Эрика ответит в WhatsApp/g, 'Ответим на почте'], [/Задать вопрос в WhatsApp/g, 'Написать на почту'], [/напиши нам в WhatsApp/g, 'напиши нам на почту'], [/Напиши в WhatsApp/g, 'Напиши на почту']] }
+        words: [[/Ассистент Эрики ответит в WhatsApp/g, 'Ответим на почте'], [/Задать вопрос в WhatsApp/g, 'Написать на почту'], [/напиши нам в WhatsApp/g, 'напиши нам на почту'], [/Напиши в WhatsApp/g, 'Напиши на почту']] }
     },
     pt: {
-      pre: /chat/,
+      pre: /chat|assistente/,
       chat: { pop: null, plaque: null, btn: null, words: [], aria: 'Abrir o chat' },
       mail: { aria: 'Escrever por e-mail', pop: 'Dúvidas? Escreva pra gente por e-mail', plaque: 'Dúvidas? Escreva pra gente por e-mail', btn: 'Escrever por e-mail',
-        words: [[/Não sabe qual plano escolher\? Escreva aqui no chat — eu te ajudo\./g, 'Não sabe qual plano escolher? Escreva por e-mail — a gente te ajuda.'],
-          [/Pergunte no chat — eu respondo por aqui\./g, 'Escreva por e-mail — a gente responde.'],
-          [/Respondo suas dúvidas e te ajudo a escolher o plano\./g, 'Respondemos por e-mail e te ajudamos a escolher o plano.'],
-          [/Eu respondo por aqui/g, 'Respondemos por e-mail'],
-          [/Falar com a Erika no chat/g, 'Escrever por e-mail'], [/Pedir ajuda no chat/g, 'Escrever por e-mail']] }
+        words: [[/Não sabe qual plano escolher\? Pergunte aqui no chat — a assistente da Erika te ajuda\./g, 'Não sabe qual plano escolher? Escreva por e-mail — a gente te ajuda.'],
+          [/Pergunte no chat — a assistente da Erika responde por aqui\./g, 'Escreva por e-mail — a gente responde.'],
+          [/A assistente da Erika responde suas dúvidas e te ajuda a escolher o plano\./g, 'Respondemos por e-mail e te ajudamos a escolher o plano.'],
+          [/A assistente da Erika responde por aqui/g, 'Respondemos por e-mail'],
+          [/Falar com a assistente no chat/g, 'Escrever por e-mail'], [/Pedir ajuda no chat/g, 'Escrever por e-mail']] }
     }
   };
   var X = TX[PL];
@@ -578,15 +578,18 @@
   function grow() { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 132) + 'px'; }
 
   /* ---------- Сеть ---------- */
+  var inflight = [];   // запросы в полёте (long-poll, followup…): команда /clear обрывает их все
   function api(path, body, ms) {
     var ctl = window.AbortController ? new AbortController() : null;
     var tm = ctl ? setTimeout(function () { ctl.abort(); }, ms || 15000) : 0;
     var opt = { method: body ? 'POST' : 'GET', signal: ctl ? ctl.signal : undefined };
+    if (ctl) inflight.push(ctl);
+    function done() { clearTimeout(tm); var i = inflight.indexOf(ctl); if (i >= 0) inflight.splice(i, 1); }
     if (body) { opt.headers = { 'Content-Type': 'application/json' }; opt.body = JSON.stringify(body); }
     return fetch(path === LEAD ? LEAD : API + path, opt).then(function (r) {
-      clearTimeout(tm);
+      done();
       return r.json().catch(function () { return {}; }).then(function (j) { return { s: r.status, j: j || {} }; });
-    }, function () { clearTimeout(tm); return { s: 0, j: {} }; });
+    }, function () { done(); return { s: 0, j: {} }; });
   }
   function backoff() { S.bo = S.bo ? Math.min(S.bo * 2, 8000) : 1000; return S.bo; }
   function netFail() { S.net++; if (S.net >= 2) banner(true); return backoff(); }
@@ -618,7 +621,7 @@
   function reset() {
     S.gen++; S.lastId = 0; S.seen = {}; S.lastFrom = ''; S.pend = null; S.handoff = false;
     S.greeted = false; S.greetEl = null; S.greetBound = 0; S.greetId = null; S.echoes = []; S.hasHistory = false;
-    clearTimeout(drainT); qRun = false; S.rep = 0; S.sentAt = 0; S.lastReply = 0;
+    clearTimeout(drainT); qRun = false; S.rep = 0; S.sentAt = 0; S.lastReply = 0; S.clearedAt = 0;
     F.userMsg = false; fuStop();
     Q = []; feed.textContent = ''; setBusy(false);
   }
@@ -628,8 +631,42 @@
     return startSession(true).then(function (ok) { if (ok) note('emc-sys', L.restarted); return ok; });
   }
 
+  /* ---------- Служебная команда для тестировщиков: «/clear», «/reset», «/novo» (после trim и без учёта регистра) ----------
+     Сообщение не уходит на бэкенд и не рисуется в ленте. Виджет забывает сессию (session_id и все свои метки в localStorage/sessionStorage,
+     кроме общесайтовых: es_cookies_v1, es_price_until, em_src, em_chat_late), обрывает запросы, чистит ленту и поле и создаёт новую сессию
+     (POST /session с session_id = null): новый sid, ссылки оплаты получают новый sck, приветствие — как при первом заходе. Окно остаётся открытым.
+     Старая сессия на сервере остаётся. В интерфейсе о команде нигде не сказано. */
+  var CMDS = { '/clear': 1, '/reset': 1, '/novo': 1 };
+  var KEEP = { es_cookies_v1: 1, es_price_until: 1, em_src: 1, em_chat_late: 1, em_chat_mock_v1: 1, em_lead_pending: 1 };
+  function wipeKeys(sid) {
+    ['localStorage', 'sessionStorage'].forEach(function (kind) {
+      try {
+        var st = window[kind], ks = [], i;
+        for (i = 0; i < st.length; i++) ks.push(st.key(i));
+        ks.forEach(function (k) {
+          if (KEEP[k] || (kind === 'sessionStorage' && k === 'em_chat_open')) return;   // окно остаётся открытым
+          if (/^(em_chat_|erika_)/.test(k) || (sid && k.indexOf(sid) >= 0)) st.removeItem(k);
+        });
+      } catch (e) { /* приватный режим */ }
+    });
+  }
+  function clearSession() {
+    var old = S.sid;
+    inflight.slice().forEach(function (c) { try { c.abort(); } catch (e) { /* уже завершён */ } });
+    inflight = [];
+    wipeKeys(old);
+    reset();
+    clearTimeout(S.gt); clearTimeout(S.busyT);
+    S.polling = false; S.ok = false; S.sid = null; S.greeting = null; S.wrote = false; S.fails = 0; S.net = 0; S.bo = 0; S.starting = null;
+    S.unread = 0; S.afterClear = true; F.on = false; F.busy = false;
+    peekHide(); badgeUp(); banner(false); say('');
+    ta.value = ''; grow(); sync();
+    startSession(true);   // обычная логика: ответ /session → applySession → приветствие через greeting_delay_ms; при отказе — запасной режим
+  }
+
   function applySession(j) {
     if (S.sid && S.sid !== j.session_id) reset();
+    if (S.afterClear) { S.afterClear = false; S.clearedAt = Date.now(); }   // приветствие отсчитываем от ответа новой сессии
     S.sid = j.session_id; S.ok = true;
     store('localStorage', 'em_chat_sid', S.sid);
     if (j.chat_enabled === false) { fallback(); return; }
@@ -669,7 +706,8 @@
     if (!S.greeting || S.hasHistory || S.wrote || S.greeted) return;
     if (isLate()) return;   // кнопки ещё нет — запланируем, когда она появится (lateShow)
     // кнопка появилась после тарифов — приветствие через PEEK_AFTER_MS после неё; иначе, как раньше, от загрузки страницы
-    var wait = shownAt ? Math.min(S.greetDelay, PEEK_AFTER_MS) - (Date.now() - shownAt) : S.greetDelay - (Date.now() - t0);
+    var wait = S.clearedAt ? S.greetDelay - (Date.now() - S.clearedAt)   // после /clear — greeting_delay_ms от ответа новой сессии
+      : shownAt ? Math.min(S.greetDelay, PEEK_AFTER_MS) - (Date.now() - shownAt) : S.greetDelay - (Date.now() - t0);
     S.gt = setTimeout(greetShow, Math.max(0, wait));
   }
   function greetShow() {
@@ -777,7 +815,9 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var text = ta.value.replace(/\s+$/, '').replace(/^\s+/, '');
-    if (!text || sendB.disabled) return;
+    if (!text) return;
+    if (!S.off && Object.prototype.hasOwnProperty.call(CMDS, text.toLowerCase())) { clearSession(); return; }   // служебная команда: не отправляем и не показываем
+    if (sendB.disabled) return;
     if (text.length > ta.maxLength) { say(fmt(L.tooLong, ta.maxLength)); return; }
     if (send({ text: text }, text)) { ta.value = ''; grow(); sync(); }
   });
