@@ -11,14 +11,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&amp;family=Raleway:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="assets/site.css">
 <link rel="stylesheet" href="assets/spasibo.css">
-<link rel="stylesheet" href="assets/obrigado.css">
+<link rel="stylesheet" href="assets/obrigado.css?v=1002e">
 </head>
 <body class="ty">
-<!--
-  Page "Obrigada" (Hotmart: Pos-venda > Externa > compra aprovada).
-  Texts: document "Most oplata > dostup", sections 05 (COMO ENTRAR NO CURSO - 3 PASSOS) and 06.1. Do not edit them.
-  Placeholders to replace (search for data-slot): video-como-entrar, skrin-1, skrin-2, skrin-3.
--->
+<!-- Страница после оплаты (Hotmart: Pós-venda > Externa > compra aprovada). Инструкция — 7 слайдов assets/obrigado/passo-N.webp (скрины от команды, 02.10), тексты слайдов продублированы в <details>. -->
 <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
   <symbol id="t-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="t-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
@@ -37,59 +33,45 @@
     <div class="ty-badge" aria-hidden="true"><svg class="i"><use href="#t-check"/></svg></div>
     <h1 id="ty-title"><span class="ty-h1-main">Pagamento confirmado!</span> <span class="ty-h1-sub">Bem-vinda ao Especialista em <span class="nw">Shopee 🧡</span></span></h1>
     <p class="ty-lead">Falta só um passo para você começar. Leva uns <span class="nw">3 minutos.</span></p>
-
-    <!-- TODO video-como-entrar: placeholder until the 1-minute screen recording "como entrar no curso" arrives (Semyon, after the test purchase).
-         Replace the whole figure below (slot video-como-entrar) with a real player in the same 16:9 frame, e.g.:
-         <video class="ty-video ty-video--real" controls playsinline preload="metadata" poster="assets/obrigado/como-entrar-poster.webp" src="assets/obrigado/como-entrar.mp4"></video>
-         The poster must be a real frame of that recording. -->
-    <figure class="ty-video" data-slot="video-como-entrar">
-      <span class="ty-video__play" aria-hidden="true"><svg class="i"><use href="#i-play"/></svg></span>
-      <figcaption class="ty-video__cap">Vídeo de 1 minuto: como entrar no curso</figcaption>
-    </figure>
   </section>
 
   <section class="blk bg-section ty-how" id="ty-steps" aria-labelledby="ty-steps-t">
-    <h2 id="ty-steps-t">Como entrar no <span class="nw">curso —</span> 3 passos</h2>
-    <ol class="ty-steps">
-      <li class="ty-step" id="ty-passo-1">
-        <h3><span class="ty-n">1.</span> Abra o seu <span class="nw">e-mail</span></h3>
-        <p>Procure a mensagem da Hotmart com o assunto</p>
-        <p class="ty-subj"><svg class="i" aria-hidden="true"><use href="#t-mail"/></svg><b>"Compra aprovada: tudo pronto para acessar o seu produto!"</b></p>
-        <p><b>Não achou?</b> Olhe também em "Spam" e "Promoções".</p>
-        <!-- TODO skrin-1: placeholder. Replace the <div class="ty-phone"> with the real phone screenshot from Semyon
-             (step 1: the Hotmart e-mail in the inbox), e.g.
-             <img class="ty-phone-img" src="assets/obrigado/passo-1.webp" width="..." height="..." alt="E-mail da Hotmart na caixa de entrada" loading="lazy" decoding="async"> -->
-        <figure class="ty-shot" data-slot="skrin-1">
-          <div class="ty-phone"><div class="ty-phone__screen"><svg class="i" aria-hidden="true"><use href="#t-image"/></svg><span class="ty-phone__cap">Tela do passo 1</span></div></div>
-        </figure>
-      </li>
-      <li class="ty-step" id="ty-passo-2">
-        <h3><span class="ty-n">2.</span> Crie a sua senha</h3>
-        <p>Toque no botão <b class="nw">"Acessar meu produto"</b> e crie uma senha:<br>
-          de 7 a 20 caracteres, com pelo menos uma letra e um número.</p>
-        <p>Use sempre o mesmo <span class="nw">e-mail</span> que você usou na compra.</p>
-        <p><b>Já tem conta na Hotmart?</b> É só entrar com a senha que você já usa.</p>
-        <!-- TODO skrin-2: placeholder. Replace the <div class="ty-phone"> with the real phone screenshot from Semyon
-             (step 2: the password creation screen), e.g.
-             <img class="ty-phone-img" src="assets/obrigado/passo-2.webp" width="..." height="..." alt="Tela de criar a senha na Hotmart" loading="lazy" decoding="async"> -->
-        <figure class="ty-shot" data-slot="skrin-2">
-          <div class="ty-phone"><div class="ty-phone__screen"><svg class="i" aria-hidden="true"><use href="#t-image"/></svg><span class="ty-phone__cap">Tela do passo 2</span></div></div>
-        </figure>
-      </li>
-      <li class="ty-step" id="ty-passo-3">
-        <h3><span class="ty-n">3.</span> Abra o curso pelo celular</h3>
-        <p>Baixe o aplicativo <b>"Hotmart"</b> na Play Store ou na App Store.</p>
-        <p>Entre com o seu <span class="nw">e-mail</span> e a sua senha (<b>não use <span class="nw">"Continuar com o Google"</span></b>).</p>
-        <p>Se pedir CEP e endereço, é normal: é só preencher.</p>
-        <p>Toque em <span class="nw"><b>"Meus produtos"</b> →</span> <b class="nw">"Especialista em Shopee"</b> e comece pela <span class="nw">aula 0.1.</span></p>
-        <!-- TODO skrin-3: placeholder. Replace the <div class="ty-phone"> with the real phone screenshot from Semyon
-             (step 3: the course inside the Hotmart app), e.g.
-             <img class="ty-phone-img" src="assets/obrigado/passo-3.webp" width="..." height="..." alt="O curso no aplicativo Hotmart" loading="lazy" decoding="async"> -->
-        <figure class="ty-shot" data-slot="skrin-3">
-          <div class="ty-phone"><div class="ty-phone__screen"><svg class="i" aria-hidden="true"><use href="#t-image"/></svg><span class="ty-phone__cap">Tela do passo 3</span></div></div>
-        </figure>
-      </li>
-    </ol>
+    <h2 id="ty-steps-t">Como entrar no <span class="nw">curso —</span> 7 passos</h2>
+    <p class="ty-guide__hint" aria-hidden="true">Arraste para o lado e siga os 7 passos <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></p>
+    <div class="ty-guide" data-ty-guide>
+      <div class="ty-guide__track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Passo a passo: como entrar no curso">
+      <figure class="ty-slide" id="ty-passo-1"><img src="assets/obrigado/passo-1.webp" width="720" height="1280" alt="Passo 1 de 7: Seu acesso chegou!. Abra o e-mail da Hotmart recebido após a compra e toque em “Definir senha e acessar conteúdo”." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-2"><img src="assets/obrigado/passo-2.webp" width="720" height="1280" alt="Passo 2 de 7: Crie sua senha. Digite uma nova senha, repita no campo abaixo e toque em “Save” (Salvar)." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-3"><img src="assets/obrigado/passo-3.webp" width="720" height="1280" alt="Passo 3 de 7: Vai assistir pelo celular?. Procure “Hotmart” na App Store ou no Google Play, baixe o aplicativo e abra." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-4"><img src="assets/obrigado/passo-4.webp" width="720" height="1280" alt="Passo 4 de 7: Entre com seu e-mail. Digite o mesmo e-mail usado na compra e toque em “Log in” (Entrar)." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-5"><img src="assets/obrigado/passo-5.webp" width="720" height="1280" alt="Passo 5 de 7: Confira sua caixa de entrada. A Hotmart enviou um código para o e-mail usado na compra. Copie o código, digite aqui e toque em “Confirm” (Confirmar)." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-6"><img src="assets/obrigado/passo-6.webp" width="720" height="1280" alt="Passo 6 de 7: Encontre o nosso curso. Em “My products” (Meus produtos), aparecem os cursos que você comprou. Toque em “Especialista em Shopee”." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-7"><img src="assets/obrigado/passo-7.webp" width="720" height="1280" alt="Passo 7 de 7: Agora é só começar!. Dentro do curso, toque em “Watch” (Assistir) para começar as aulas." loading="lazy" decoding="async"></figure>
+      </div>
+      <button type="button" class="ty-guide__btn ty-guide__btn--prev" data-prev aria-label="Passo anterior"><svg class="i" aria-hidden="true" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button type="button" class="ty-guide__btn ty-guide__btn--next" data-next aria-label="Próximo passo"><svg class="i" aria-hidden="true" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <div class="ty-guide__dots">
+      <button type="button" aria-label="Seu acesso chegou! (1/7)" aria-current="true"></button>
+      <button type="button" aria-label="Crie sua senha (2/7)"></button>
+      <button type="button" aria-label="Vai assistir pelo celular? (3/7)"></button>
+      <button type="button" aria-label="Entre com seu e-mail (4/7)"></button>
+      <button type="button" aria-label="Confira sua caixa de entrada (5/7)"></button>
+      <button type="button" aria-label="Encontre o nosso curso (6/7)"></button>
+      <button type="button" aria-label="Agora é só começar! (7/7)"></button>
+      </div>
+    </div>
+    <details class="ty-text">
+      <summary>Prefere ler? Veja os 7 passos em texto</summary>
+      <ol class="ty-text__list">
+        <li><h3>Seu acesso chegou!</h3><p>Abra o e-mail da Hotmart recebido após a compra e toque em “Definir senha e acessar conteúdo”.</p><p class="ty-text__tip"><b>Dica:</b> Não encontrou? Confira também o spam e a aba Promoções.</p></li>
+        <li><h3>Crie sua senha</h3><p>Digite uma nova senha, repita no campo abaixo e toque em “Save” (Salvar).</p><p class="ty-text__tip"><b>Dica:</b> Use pelo menos 7 caracteres, incluindo letras e números. Guarde sua senha!</p></li>
+        <li><h3>Vai assistir pelo celular?</h3><p>Procure “Hotmart” na App Store ou no Google Play, baixe o aplicativo e abra.</p><p class="ty-text__tip"><b>Dica:</b> No computador, você pode acessar o curso pelo navegador.</p></li>
+        <li><h3>Entre com seu e-mail</h3><p>Digite o mesmo e-mail usado na compra e toque em “Log in” (Entrar).</p><p class="ty-text__tip"><b>Dica:</b> Use o e-mail informado na hora do pagamento.</p></li>
+        <li><h3>Confira sua caixa de entrada</h3><p>A Hotmart enviou um código para o e-mail usado na compra. Copie o código, digite aqui e toque em “Confirm” (Confirmar).</p><p class="ty-text__tip"><b>Dica:</b> Se não chegar, confira o spam ou toque em “Resend code” para reenviar.</p></li>
+        <li><h3>Encontre o nosso curso</h3><p>Em “My products” (Meus produtos), aparecem os cursos que você comprou. Toque em “Especialista em Shopee”.</p><p class="ty-text__tip"><b>Dica:</b> Procure a capa do curso com a foto da Erika.</p></li>
+        <li><h3>Agora é só começar!</h3><p>Dentro do curso, toque em “Watch” (Assistir) para começar as aulas.</p><p class="ty-text__tip"><b>Dica:</b> Comece pelo Módulo 0. Te espero na primeira aula!</p></li>
+      </ol>
+    </details>
 
     <div class="ty-stuck">
       <svg class="i" aria-hidden="true"><use href="#t-mail"/></svg>
@@ -106,5 +88,6 @@
     <p class="ty-foot__links"><a id="ty-terms" href="termos/">Termos de Compra</a> <a id="ty-privacy" href="privacidade/">Política de Privacidade</a></p>
   </footer>
 </main>
+<script src="assets/obrigado.js?v=2"></script>
 </body>
 </html>

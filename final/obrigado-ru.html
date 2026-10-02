@@ -11,16 +11,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&amp;family=Raleway:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="assets/site.css">
 <link rel="stylesheet" href="assets/spasibo.css">
-<link rel="stylesheet" href="assets/obrigado.css">
-<link rel="stylesheet" href="assets/obrigado-ru.css">
+<link rel="stylesheet" href="assets/obrigado.css?v=1002e">
+<link rel="stylesheet" href="assets/obrigado-ru.css?v=1002e">
 </head>
 <body class="ty">
-<!--
-  Обратный перевод obrigado.html для сверки текста (на сайт не выкладывается).
-  Шаги 1–3 — по переводу из документа «Мостик оплата → доступ» (строки «Перевод:» после инструкции раздела 05),
-  куски, которых в том переводе нет, переведены буквально; остальное — буквальный перевод.
-  Заглушки те же, что в obrigado.html: видео и три скриншота.
--->
+<!-- Страница после оплаты (Hotmart: Pós-venda > Externa > compra aprovada). Инструкция — 7 слайдов assets/obrigado/passo-N.webp (скрины от команды, 02.10), тексты слайдов продублированы в <details>. -->
 <div class="ru-note" role="note">Русский перевод для проверки — на сайте страница на португальском (obrigado.html)</div>
 <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
   <symbol id="t-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
@@ -40,50 +35,45 @@
     <div class="ty-badge" aria-hidden="true"><svg class="i"><use href="#t-check"/></svg></div>
     <h1 id="ty-title"><span class="ty-h1-main">Оплата подтверждена!</span> <span class="ty-h1-sub">Добро пожаловать в Especialista em <span class="nw">Shopee 🧡</span></span></h1>
     <p class="ty-lead">Остался всего один шаг, чтобы ты начала. Займёт <span class="nw">минуты 3.</span></p>
-
-    <!-- Заглушка видео (как в obrigado.html) -->
-    <figure class="ty-video" data-slot="video-como-entrar">
-      <span class="ty-video__play" aria-hidden="true"><svg class="i"><use href="#i-play"/></svg></span>
-      <figcaption class="ty-video__cap">Видео на 1 минуту: как войти в курс</figcaption>
-    </figure>
   </section>
 
   <section class="blk bg-section ty-how" id="ty-steps" aria-labelledby="ty-steps-t">
-    <h2 id="ty-steps-t">Как войти в <span class="nw">курс —</span> 3 шага</h2>
-    <ol class="ty-steps">
-      <li class="ty-step" id="ty-passo-1">
-        <h3><span class="ty-n">1.</span> Открой почту</h3>
-        <p>Найди письмо Hotmart с темой</p>
-        <p class="ty-subj"><svg class="i" aria-hidden="true"><use href="#t-mail"/></svg><b>«Покупка одобрена: всё готово для доступа к продукту!»</b></p>
-        <p><b>Не нашла?</b> Проверь «Спам» и «Промоакции».</p>
-        <!-- Заглушка скриншота 1 -->
-        <figure class="ty-shot" data-slot="skrin-1">
-          <div class="ty-phone"><div class="ty-phone__screen"><svg class="i" aria-hidden="true"><use href="#t-image"/></svg><span class="ty-phone__cap">Экран шага 1</span></div></div>
-        </figure>
-      </li>
-      <li class="ty-step" id="ty-passo-2">
-        <h3><span class="ty-n">2.</span> Создай пароль</h3>
-        <p>Нажми <b class="nw">«Acessar meu produto»</b> и создай пароль:<br>
-          от 7 до 20 символов, хотя бы одна буква и одна цифра.</p>
-        <p>Всегда используй тот же <span class="nw">e-mail</span>, что при покупке.</p>
-        <p><b>Если аккаунт Hotmart уже есть,</b> просто войди со своим паролем.</p>
-        <!-- Заглушка скриншота 2 -->
-        <figure class="ty-shot" data-slot="skrin-2">
-          <div class="ty-phone"><div class="ty-phone__screen"><svg class="i" aria-hidden="true"><use href="#t-image"/></svg><span class="ty-phone__cap">Экран шага 2</span></div></div>
-        </figure>
-      </li>
-      <li class="ty-step" id="ty-passo-3">
-        <h3><span class="ty-n">3.</span> Открой курс с телефона</h3>
-        <p>Скачай приложение <b>Hotmart</b> в Play Store или App Store.</p>
-        <p>Войди по <span class="nw">e-mail</span> и паролю (<b>не через <span class="nw">«Войти с Google»</span></b>).</p>
-        <p>Если попросит CEP и адрес, это нормально, заполни.</p>
-        <p>Нажми <span class="nw"><b>«Мои продукты»</b> →</span> <b class="nw">«Especialista em Shopee»</b>, начни с <span class="nw">урока 0.1.</span></p>
-        <!-- Заглушка скриншота 3 -->
-        <figure class="ty-shot" data-slot="skrin-3">
-          <div class="ty-phone"><div class="ty-phone__screen"><svg class="i" aria-hidden="true"><use href="#t-image"/></svg><span class="ty-phone__cap">Экран шага 3</span></div></div>
-        </figure>
-      </li>
-    </ol>
+    <h2 id="ty-steps-t">Как войти в <span class="nw">курс —</span> 7 шагов</h2>
+    <p class="ty-guide__hint" aria-hidden="true">Листай вбок и выполняй 7 шагов <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></p>
+    <div class="ty-guide" data-ty-guide>
+      <div class="ty-guide__track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Пошагово: как войти в курс">
+      <figure class="ty-slide" id="ty-passo-1"><img src="assets/obrigado/passo-1.webp" width="720" height="1280" alt="Шаг 1 из 7: Твой доступ пришёл!. Открой письмо от Hotmart, которое пришло после покупки, и нажми «Definir senha e acessar conteúdo» («Задать пароль и открыть доступ»)." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-2"><img src="assets/obrigado/passo-2.webp" width="720" height="1280" alt="Шаг 2 из 7: Создай пароль. Введи новый пароль, повтори его в поле ниже и нажми «Save» («Сохранить»)." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-3"><img src="assets/obrigado/passo-3.webp" width="720" height="1280" alt="Шаг 3 из 7: Будешь смотреть с телефона?. Найди «Hotmart» в App Store или Google Play, скачай приложение и открой его." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-4"><img src="assets/obrigado/passo-4.webp" width="720" height="1280" alt="Шаг 4 из 7: Войди по e-mail. Введи тот же e-mail, что при покупке, и нажми «Log in» («Войти»)." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-5"><img src="assets/obrigado/passo-5.webp" width="720" height="1280" alt="Шаг 5 из 7: Проверь почту. Hotmart отправила код на e-mail, указанный при покупке. Скопируй код, введи здесь и нажми «Confirm» («Подтвердить»)." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-6"><img src="assets/obrigado/passo-6.webp" width="720" height="1280" alt="Шаг 6 из 7: Найди наш курс. В разделе «My products» («Мои продукты») появятся купленные курсы. Нажми «Especialista em Shopee»." loading="lazy" decoding="async"></figure>
+      <figure class="ty-slide" id="ty-passo-7"><img src="assets/obrigado/passo-7.webp" width="720" height="1280" alt="Шаг 7 из 7: Теперь осталось начать!. Внутри курса нажми «Watch» («Смотреть»), чтобы начать уроки." loading="lazy" decoding="async"></figure>
+      </div>
+      <button type="button" class="ty-guide__btn ty-guide__btn--prev" data-prev aria-label="Предыдущий шаг"><svg class="i" aria-hidden="true" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button type="button" class="ty-guide__btn ty-guide__btn--next" data-next aria-label="Следующий шаг"><svg class="i" aria-hidden="true" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <div class="ty-guide__dots">
+      <button type="button" aria-label="Твой доступ пришёл! (1/7)" aria-current="true"></button>
+      <button type="button" aria-label="Создай пароль (2/7)"></button>
+      <button type="button" aria-label="Будешь смотреть с телефона? (3/7)"></button>
+      <button type="button" aria-label="Войди по e-mail (4/7)"></button>
+      <button type="button" aria-label="Проверь почту (5/7)"></button>
+      <button type="button" aria-label="Найди наш курс (6/7)"></button>
+      <button type="button" aria-label="Теперь осталось начать! (7/7)"></button>
+      </div>
+    </div>
+    <details class="ty-text">
+      <summary>Удобнее читать? Смотри 7 шагов текстом</summary>
+      <ol class="ty-text__list">
+        <li><h3>Твой доступ пришёл!</h3><p>Открой письмо от Hotmart, которое пришло после покупки, и нажми «Definir senha e acessar conteúdo» («Задать пароль и открыть доступ»).</p><p class="ty-text__tip"><b>Совет:</b> Не нашла? Проверь также «Спам» и «Промоакции».</p></li>
+        <li><h3>Создай пароль</h3><p>Введи новый пароль, повтори его в поле ниже и нажми «Save» («Сохранить»).</p><p class="ty-text__tip"><b>Совет:</b> Минимум 7 символов, буквы и цифры. Сохрани пароль!</p></li>
+        <li><h3>Будешь смотреть с телефона?</h3><p>Найди «Hotmart» в App Store или Google Play, скачай приложение и открой его.</p><p class="ty-text__tip"><b>Совет:</b> На компьютере курс можно открыть в браузере.</p></li>
+        <li><h3>Войди по e-mail</h3><p>Введи тот же e-mail, что при покупке, и нажми «Log in» («Войти»).</p><p class="ty-text__tip"><b>Совет:</b> Используй e-mail, который указала при оплате.</p></li>
+        <li><h3>Проверь почту</h3><p>Hotmart отправила код на e-mail, указанный при покупке. Скопируй код, введи здесь и нажми «Confirm» («Подтвердить»).</p><p class="ty-text__tip"><b>Совет:</b> Если код не пришёл, проверь спам или нажми «Resend code», чтобы отправить заново.</p></li>
+        <li><h3>Найди наш курс</h3><p>В разделе «My products» («Мои продукты») появятся купленные курсы. Нажми «Especialista em Shopee».</p><p class="ty-text__tip"><b>Совет:</b> Ищи обложку курса с фото Эрики.</p></li>
+        <li><h3>Теперь осталось начать!</h3><p>Внутри курса нажми «Watch» («Смотреть»), чтобы начать уроки.</p><p class="ty-text__tip"><b>Совет:</b> Начни с Модуля 0. Жду тебя на первом уроке!</p></li>
+      </ol>
+    </details>
 
     <div class="ty-stuck">
       <svg class="i" aria-hidden="true"><use href="#t-mail"/></svg>
@@ -100,5 +90,6 @@
     <p class="ty-foot__links"><a id="ty-terms" href="termos/">Условия покупки</a> <a id="ty-privacy" href="privacidade/">Политика конфиденциальности</a></p>
   </footer>
 </main>
+<script src="assets/obrigado.js?v=2"></script>
 </body>
 </html>

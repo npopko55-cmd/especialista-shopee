@@ -192,3 +192,70 @@ body.ty { padding-bottom: env(safe-area-inset-bottom); }
   .ty-h1-sub { font-size: 26px; }
 }
 
+
+/* =====================================================================
+   Инструкция: 7 слайдов-скринов (Никита 02.10). Телефон — лента с боковой подсказкой «листай», точки под ней;
+   планшет — 2 слайда в кадре, от 1024 — 3, стрелки по бокам. Текст слайдов продублирован в <details> ниже ленты.
+   ===================================================================== */
+.ty-guide__hint {
+  display: flex; align-items: center; justify-content: center; gap: 8px; margin: 14px auto 0; padding: 0 12px;
+  font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--muted); text-align: center;
+}
+.ty-guide__hint svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ty-guide { position: relative; margin: 14px 0 0; }
+.ty-guide__track {
+  position: relative; display: flex; gap: 14px; margin: 0 -20px; padding: 4px 20px 16px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.ty-guide__track::-webkit-scrollbar { display: none; }
+.ty-guide__track:focus-visible { outline: 3px solid var(--azure-sm); outline-offset: 2px; border-radius: 12px; }
+.ty-slide {
+  flex: 0 0 min(80%, 330px); margin: 0; scroll-snap-align: start; border-radius: 22px; overflow: hidden;
+  background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.ty-slide img { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; }
+.ty-guide__btn {
+  position: absolute; top: calc(50% - 30px); z-index: 2; display: none; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--ink); cursor: pointer;
+  box-shadow: 0 8px 18px -8px rgba(31, 42, 51, .45); -webkit-tap-highlight-color: transparent;
+}
+.ty-guide__btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ty-guide__btn:focus-visible { outline: 3px solid var(--azure-sm); outline-offset: 2px; }
+.ty-guide__btn[disabled] { opacity: .35; cursor: default; }
+.ty-guide__btn--prev { left: -14px; }
+.ty-guide__btn--next { right: -14px; }
+.ty-guide__dots { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: -2px; }
+.ty-guide__dots button { position: relative; width: 24px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ty-guide__dots button::before { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 999px; background: rgba(31, 42, 51, .22); transition: width .2s ease, margin .2s ease, background .2s ease; }
+.ty-guide__dots button[aria-current="true"]::before { width: 22px; margin-left: -11px; background: var(--ink); }
+.ty-guide__dots button:focus-visible { outline: 3px solid var(--azure-sm); outline-offset: 0; border-radius: 8px; }
+
+.ty-text { margin: 22px 0 0; border-radius: var(--r-md, 18px); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.ty-text > summary {
+  display: flex; align-items: center; min-height: 52px; padding: 0 18px; list-style: none; cursor: pointer;
+  font-size: 16px; font-weight: 700; color: var(--ink); -webkit-tap-highlight-color: transparent;
+}
+.ty-text > summary::-webkit-details-marker { display: none; }
+.ty-text > summary::after { content: ""; margin-left: auto; width: 10px; height: 10px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg) translateY(-2px); transition: transform .2s ease; }
+.ty-text[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+.ty-text > summary:focus-visible { outline: 3px solid var(--azure-sm); outline-offset: 2px; border-radius: 16px; }
+.ty-text__list { margin: 0; padding: 4px 18px 18px 38px; }
+.ty-text__list li { padding: 12px 0; border-top: 1px solid var(--line); }
+.ty-text__list li:first-child { border-top: 0; }
+.ty-text__list h3 { margin: 0 0 6px; font-size: 18px; font-weight: 700; line-height: 1.25; color: var(--ink); }
+.ty-text__list p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.ty-text__list .ty-text__tip { margin-top: 6px; color: var(--muted); }
+
+@media (min-width: 768px) {
+  .ty-guide__hint { display: none; }
+  .ty-guide { margin-top: 28px; }
+  .ty-guide__track { gap: 20px; margin: 0; padding: 4px 0 16px; scroll-padding-inline: 0; }
+  .ty-slide { flex: 0 0 calc((100% - 20px) / 2); }
+  .ty-guide__btn { display: grid; }
+  .ty-text { max-width: 720px; margin-inline: auto; }
+}
+@media (min-width: 1024px) {
+  .ty-slide { flex: 0 0 calc((100% - 40px) / 3); }
+}
+@media (prefers-reduced-motion: reduce) { .ty-guide__dots button::before, .ty-text > summary::after { transition: none; } }
