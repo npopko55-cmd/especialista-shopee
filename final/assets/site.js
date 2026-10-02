@@ -170,12 +170,12 @@
      Значение: utm_content из ссылки (b-direct, b-form, a-direct …); нет — по пути: lead=1 → b-form, хост oferta. → b-direct, иначе site (корень).
      Запоминаем на сессию (форма → сайт сохраняет метки в адресе, но на всякий случай). */
   let emSrc = '';
-  try { emSrc = sessionStorage.getItem('em_src') || ''; } catch (e) { /* приватный режим */ }
+  try { emSrc = (sessionStorage.getItem('em_src') || '').replace(/[^A-Za-z0-9]/g, ''); } catch (e) { /* приватный режим */ }
   if (!emSrc) {
     try {
       const q = new URLSearchParams(location.search);
-      emSrc = (q.get('utm_content') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40)
-        || (q.get('lead') === '1' ? 'b-form' : /^oferta\./i.test(location.hostname) ? 'b-direct' : 'site');
+      emSrc = (q.get('utm_content') || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 40)
+        || (q.get('lead') === '1' ? 'bform' : /^oferta\./i.test(location.hostname) ? 'bdirect' : 'site');
       try { sessionStorage.setItem('em_src', emSrc); } catch (e) { /* без хранилища: метка только на этой странице */ }
     } catch (e) { emSrc = ''; }
   }
@@ -197,8 +197,27 @@
   const trackQ = [];
   let clarityOn = false;
   const cl = (...a) => { try { if (typeof window.clarity === 'function') window.clarity(...a); } catch (e) { /* аналитика не должна ломать страницу */ } };
+  /* Анонимные счётчики воронки по меткам ссылок → /api/hit на своём сервере (leads.service → лист «Статистика», блок «по меткам»).
+     Без cookies и идентификаторов: только событие, метка (utm_content) и кампания; каждое событие один раз за загрузку страницы. Только на боевых хостах. */
+  const HIT_MAP = { view_tariffs: 'view_tariffs', click_get_access: 'get_access', open_video: 'video_open', click_pay_start: 'pay_start',
+    click_pay_specialist: 'pay_especialista', click_pay_vip: 'pay_vip', chat_open: 'chat_open', chat_message: 'chat_message' };
+  const hitSent = {};
+  const hitHost = /(^|\.)ericamarques\.com$/i.test(location.hostname);
+  const sendHit = ev => {
+    if (!hitHost || hitSent[ev]) return;
+    hitSent[ev] = 1;
+    try {
+      const q = new URLSearchParams(location.search);
+      const body = JSON.stringify({ event: ev, page: 'site', utm_source: (emSrc || 'site').toLowerCase().slice(0, 60),
+        utm_campaign: (q.get('utm_campaign') || '').toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 60) });
+      if (navigator.sendBeacon) navigator.sendBeacon('/api/hit', new Blob([body], { type: 'application/json' }));
+      else fetch('/api/hit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+    } catch (e) { /* счётчик не должен ломать страницу */ }
+  };
+  try { if (hitHost && !sessionStorage.getItem('em_view_sent')) { sessionStorage.setItem('em_view_sent', '1'); sendHit('view'); } } catch (e) { sendHit('view'); }
   window.esTrack = name => {
     if (!name) return;
+    if (HIT_MAP[name]) sendHit(HIT_MAP[name]);
     if (clarityOn) cl('event', name); else if (trackQ.length < 60) trackQ.push(name);
   };
   const loadClarity = () => {
