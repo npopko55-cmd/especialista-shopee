@@ -1271,3 +1271,8 @@ html.emc-on .pb-wa__btn { background: var(--ink); color: #fff; border: 0; box-sh
 /* PT-версия: картинка платформы с белым фоном (русская была прозрачной) */
 html[lang="pt-BR"] .feat--pl .feat__media { background: #fff; }
 
+/* Лёша 02.10 (скрин 16:52): фото эфира крупнее и другое — настоящий кадр из урока (улыбка, руки), портретный формат 4:5 на всю ширину карточки */
+.feat--live .feat__media--art { height: auto; aspect-ratio: 4 / 5; }
+.feat__media .feat__art--live img { object-position: 50% 12%; }
+@media (min-width: 768px) { .feat--live .feat__media--art { aspect-ratio: auto; } }
+
