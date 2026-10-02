@@ -15,8 +15,8 @@
   try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
   try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
 })(document.documentElement);</script>
-<link rel="stylesheet" href="assets/site.css?v=1003c">
-<link rel="stylesheet" href="assets/site-b.css?v=1003c">
+<link rel="stylesheet" href="assets/site.css?v=1004a">
+<link rel="stylesheet" href="assets/site-b.css?v=1004a">
 <!-- чат плана Б (корень, www, oferta., превью): до первого кадра прячем WhatsApp-кнопки, пока assets/chat.js не решит, чат это или запасная почта (emc-pre снимает chat.js; если он не загрузился — через 4 с) -->
 <script>(function(){var h=location.hostname;if(/^(www\.|oferta\.)?ericamarques\.com$/i.test(h)||/\.github\.io$/i.test(h)||/[?&]chat=(1|mock)(&|$)/.test(location.search)){var e=document.documentElement;e.className+=' emc-pre';setTimeout(function(){e.className=e.className.replace(/\bemc-pre\b/,'')},4000);}})();</script>
 <style>html.emc-pre #sticky-cta-wa,html.emc-pre #wa-pop,html.emc-pre #pb-wa{visibility:hidden}</style>
@@ -62,7 +62,7 @@
     <div class="cta">
       <a class="btn" id="cta-b1" href="#tariffs">Получить доступ</a>
       <ul class="hero__trust">
-        <li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-checkc"/></svg><span>Pix или карта</span></li><li class="hero__dot" aria-hidden="true">·</li><li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-zap"/></svg><span>Доступ сразу после оплаты</span></li><li class="hero__dot" aria-hidden="true">·</li><li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-shield"/></svg><span>Гарантия&nbsp;7&nbsp;дней</span></li>
+        <li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-checkc"/></svg><span>Pix или карта</span></li><li class="hero__dot" aria-hidden="true">·</li><li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-zap"/></svg><span>Доступ сразу после оплаты</span></li><li class="hero__dot" aria-hidden="true">·</li><li><svg class="i" aria-hidden="true" focusable="false"><use href="#i-shield"/></svg><span>Возврат&nbsp;7&nbsp;дней</span></li>
       </ul>
     </div>
     <ul class="hero__chips">
@@ -179,7 +179,7 @@
   </div>
   <div class="cta">
     <a class="btn" id="cta-b2" href="#tariffs">Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 
@@ -205,7 +205,7 @@
   </ul>
   <div class="cta">
     <a class="btn" id="cta-b3" href="#tariffs">Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 <!-- ================= Блок 4 — что за обучение (инфографика: продавцы → вакансии → профессия) ================= -->
@@ -289,7 +289,7 @@
   </div>
   <div class="cta">
     <a class="btn" id="cta-b4" href="#tariffs">Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 
@@ -303,7 +303,7 @@
   </div>
   <div class="b5__g">
     <svg class="i b5__gi" aria-hidden="true" focusable="false"><use href="#i-shield"/></svg>
-    <p><strong>Гарантия 7 дней.</strong> Если не подойдёт&nbsp;— <b class="b5__big">вернём 100% денег</b>, без объяснения причин.</p>
+    <p><strong>Возврат 7 дней.</strong> Если не подойдёт&nbsp;— <b class="b5__big">вернём 100% денег</b>, без объяснения причин.</p>
   </div>
   <ul class="card b5__panel">
     <li class="b5__row"><span class="b5__flag" aria-hidden="true"><svg viewBox="0 0 32 22" width="32" height="22" focusable="false"><rect width="32" height="22" rx="4" fill="#009B3A"/><path d="M16 2.6 29 11 16 19.4 3 11z" fill="#FEDF00"/><circle cx="16" cy="11" r="5.4" fill="#002776"/><path d="M10.9 10.3Q15.8 8.7 21.2 11.7" fill="none" stroke="#fff" stroke-width="1.1"/></svg></span> <p>Работаем по законам Бразилии. Твою покупку защищает Кодекс защиты прав потребителя.</p></li>
@@ -319,7 +319,7 @@
   </div>
   <div class="cta">
     <a class="btn" id="cta-b5" href="#tariffs">Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 <!-- ================= Блок 6 — что ты получаешь: лента из 8 слайдов (3 макета + 5 бывших плиток) + iPhone ================= -->
@@ -434,7 +434,7 @@
   </div>
   <div class="cta">
     <a class="btn" id="cta-b6" href="#tariffs">Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 
@@ -513,7 +513,7 @@
   <p class="b6a-legal">Учебный заказ — тренировка, а не оплачиваемая работа. Настоящих клиентов ты находишь сама.</p>
   <div class="cta">
     <a class="btn" id="b6a-cta" href="#tariffs" data-cta>Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 
@@ -553,7 +553,7 @@
       <div class="b7-card reveal">
         <img class="b7-card__obj obj obj--sm" src="assets/3d/A16.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 2 —</span> <span class="b7-card__name">Способ 1. Карточки товаров</span></h3>
-        <p class="b7-card__res"><b>Результат:</b> делаешь карточки товаров и закрываешь первую сделку с магазином.</p>
+        <p class="b7-card__res"><b>Результат:</b> учишься делать карточки товаров и знаешь, где искать первый магазин и что ему отправить.</p>
         <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">9</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>За что на самом деле платят магазины</li><li>Первая карточка в кабинете продавца и приём оплаты</li><li>Тренажёр: учебный заказ</li><li>20 карточек за час</li><li>Где искать первого клиента: 10 мест и 10 готовых откликов</li><li>Правило первого клиента: только по предоплате</li><li>Почему проверка карточки не задерживает твою оплату</li><li>Первая сделка</li><li>Итоги модуля</li></ul>
         </details>
@@ -575,7 +575,7 @@
       <div class="b7-card reveal">
         <img class="b7-card__obj obj obj--sm" src="assets/3d/A18.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
         <h3 class="b7-card__t"><span class="b7-card__k">Модуль 4 —</span> <span class="b7-card__name">Способ 3. <span class="nw">Чат-менеджер</span> магазина</span></h3>
-        <p class="b7-card__res"><b>Результат:</b> ведёшь чат магазина и договариваешься о работе на месяц.</p>
+        <p class="b7-card__res"><b>Результат:</b> учишься вести чат магазина и предлагать месячный договор.</p>
         <details class="b7-acc"><summary><span class="b7-acc__lab">Уроки</span> <span class="b7-acc__n" aria-hidden="true">7</span> <span class="b7-acc__go" aria-hidden="true"><span class="b7-acc__more">Смотреть<span class="b7-acc__w"> уроки</span></span><span class="b7-acc__less">Свернуть</span><svg class="i"><use href="#bi-down"/></svg></span></summary>
           <ul class="b7-lessons"><li>Почему магазин платит за чат</li><li>Ответы покупателям и возвраты без страха</li><li>40 готовых ответов и один телефон на четыре магазина</li><li>Где найти магазины и как предложить договор на месяц</li><li>Реклама внутри Shopee</li><li>Цифры магазина</li><li>Итоги модуля</li></ul>
         </details>
@@ -617,7 +617,7 @@
   </ol>
   <div class="cta b7-cta">
     <a class="btn b7-cta__btn" id="b7-cta" href="#tariffs" data-cta>Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 
@@ -651,7 +651,7 @@
           <li>Модули 0–3: 28 уроков, 2 способа</li>
           <li>Домашние задания</li>
           <li>Доступ 2 месяца</li>
-          <li>Гарантия 7 дней</li>
+          <li>Возврат 7 дней</li>
         </ul>
         <div class="t8-off">
           <p class="t8-off__h">Не входит в этот тариф</p>
@@ -693,7 +693,7 @@
             <li>Именной сертификат</li>
             <li>2 бонусных урока: «Mercado Livre и Amazon», «Как продавать свои услуги и поднимать чек»</li>
             <li>Участие в подарке: iPhone трём лучшим по баллам</li>
-            <li>Гарантия 7 дней</li>
+            <li>Возврат 7 дней</li>
         </ul>
       </article>
       <article class="t8-card" id="plan-vip" aria-labelledby="plan-vip-name">
@@ -737,10 +737,11 @@
       <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/clipboard.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 3</span><p class="t8-bonus__name">Чек-лист «Первый клиент за 14 дней»</p></div></li>
       <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/calculator.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 4</span><p class="t8-bonus__name">Калькулятор цены + готовый прайс для клиентов</p></div></li>
     </ul>
+    <p class="t8-bonus__note">Подарки входят в программу курса и открываются после первых модулей.</p>
   </div>
   <div class="cta">
     <a class="btn" id="tariffs-cta" href="#tariffs" data-cta>Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
   <!-- План Б: плашка «Есть вопросы — напиши Эрике» в конце блока тарифов (Лёша 01.10: после тарифов, не раньше). Скрыта по умолчанию; site.js показывает на плане Б (?lead=1, ?planb=1, хост oferta.) -->
   <div class="pb-wa" id="pb-wa" hidden aria-labelledby="pb-wa-t">
@@ -862,7 +863,7 @@
   </ul>
   <div class="cta">
     <a class="btn" id="b9-cta" href="#tariffs" data-cta>Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
 </section>
 
@@ -903,7 +904,7 @@
   </div>
   <div class="cta">
     <a class="btn" id="b10-cta" href="#tariffs" data-cta>Получить доступ</a>
-    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+    <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
   <p class="b10-help">Не знаешь, какой тариф выбрать? Напиши в WhatsApp — поможем.</p>
   <a class="btn btn--wa b10-wa" id="b10-wa" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Vim%20do%20site%20do%20curso%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Задать вопрос в WhatsApp</a>
@@ -939,7 +940,7 @@
     <a class="btn btn--wa b11-wa" id="b11-wa" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Vim%20do%20site%20do%20curso%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Задать вопрос в WhatsApp</a>
     <div class="cta">
       <a class="btn" id="b11-cta" href="#tariffs" data-cta>Получить доступ</a>
-      <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Гарантия&nbsp;7&nbsp;дней</p>
+      <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
     </div>
   </div>
 </section>
@@ -1030,8 +1031,8 @@
   </div>
 </div>
 
-<script src="assets/site.js?v=1003c" defer></script>
-<script src="assets/site-b.js?v=1003c" defer></script>
+<script src="assets/site.js?v=1004a" defer></script>
+<script src="assets/site-b.js?v=1004a" defer></script>
 <!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
 <script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=12,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
 </body>
