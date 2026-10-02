@@ -189,6 +189,52 @@
   markPay();
   window.addEventListener('pageshow', markPay);
 
+  /* ---------- Вебвизор: Microsoft Clarity (бесплатно: записи сессий, карты кликов и прокрутки, воронки) ----------
+     Грузится ТОЛЬКО если вписан ID проекта (CLARITY_ID) и посетитель дал согласие «Аналитика и реклама» (window.esConsent()).
+     Без ID или без согласия на странице нет ни одного запроса к Clarity. Чат маскируется (data-clarity-mask), поля ввода — тоже.
+     События воронки: window.esTrack('имя') — копятся в очереди и уходят в Clarity после согласия; метки: источник (src), язык, utm. */
+  const CLARITY_ID = '';   /* вставить сюда ID проекта Clarity (clarity.microsoft.com → проект → Settings → Overview → Project ID, 10 знаков) */
+  const trackQ = [];
+  let clarityOn = false;
+  const cl = (...a) => { try { if (typeof window.clarity === 'function') window.clarity(...a); } catch (e) { /* аналитика не должна ломать страницу */ } };
+  window.esTrack = name => {
+    if (!name) return;
+    if (clarityOn) cl('event', name); else if (trackQ.length < 60) trackQ.push(name);
+  };
+  const loadClarity = () => {
+    if (!CLARITY_ID || clarityOn || !(window.esConsent && window.esConsent())) return;
+    clarityOn = true;
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, d, 'clarity', 'script', CLARITY_ID);
+    cl('set', 'src', emSrc || 'site');
+    cl('set', 'lang', d.documentElement.lang || '');
+    try { const q = new URLSearchParams(location.search); ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(k => { if (q.get(k)) cl('set', k, q.get(k)); }); } catch (e) { /* старый браузер */ }
+    trackQ.splice(0).forEach(n => cl('event', n));
+  };
+  window.addEventListener('es-consent', loadClarity);
+  setTimeout(loadClarity, 0);
+  /* события воронки: этапы страницы и клики */
+  (function () {
+    const seen = {};
+    const once = n => { if (!seen[n]) { seen[n] = 1; window.esTrack(n); } };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { once('view_' + e.target.id); io.unobserve(e.target); } }), { threshold: 0.25 });
+      ['b3', 'b5', 'b6', 'b7', 'tariffs', 'b8a', 'bvideo', 'b9', 'b10', 'b11'].forEach(id => { const x = d.getElementById(id); if (x) io.observe(x); });
+    }
+    d.addEventListener('click', e => {
+      const t = e.target.closest && e.target.closest('a, button');
+      if (!t) return;
+      if (t.classList.contains('t8-pay')) once('click_pay_' + (t.id || '').replace('btn-pay-', ''));
+      else if (t.hasAttribute('data-cta') || /^#tariffs/.test(t.getAttribute('href') || '')) once('click_get_access');
+      else if (t.hasAttribute('data-video-open')) once('open_video');
+    }, true);
+    const vid = d.getElementById('sales-video');
+    if (vid) { vid.addEventListener('play', () => once('video_play')); vid.addEventListener('ended', () => once('video_end')); }
+  })();
+
   /* Окна продаж (Лёша 01.10): 2–4 октября и 7–9 октября по Бразилиа (UTC−3); 5–6 октября продажи закрыты («места закончились»).
      Конец окна для таймера: первое окно — 05.10 02:59:59 UTC, второе — 10.10 02:59:59 UTC. Время берём у сервера (заголовок Date),
      чтобы сбитые часы на телефоне ничего не открывали и не закрывали; нет ответа — часы устройства. */
@@ -372,7 +418,7 @@
      первый экран: Эрика, оффер и кнопка видны сразу. Пока лист открыт — панель compact. */
   const KEY = 'es_cookies_v1';
   const readCk = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
-  const saveCk = v => { try { localStorage.setItem(KEY, JSON.stringify({ v, at: new Date().toISOString() })); } catch (e) { /* приватный режим */ } };
+  const saveCk = v => { try { localStorage.setItem(KEY, JSON.stringify({ v, at: new Date().toISOString() })); } catch (e) { /* приватный режим */ } window.dispatchEvent(new Event('es-consent')); };
   window.esConsent = () => { const r = readCk(); return !!r && r.v === 'all'; };
   const ck = d.getElementById('cookie');
   if (ck) {

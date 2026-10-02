@@ -238,3 +238,6 @@ html.emc-recover .sticky-cta__wa { animation: emc-fade .3s ease both; }
 @keyframes emc-fade { from { opacity: 0; } to { opacity: 1; } }
 html.emc-mail .sticky-cta__wa:focus-visible { outline: 3px solid #0B7DB0; outline-offset: 2px; }
 
+/* кнопка оплаты в чате: стабильное нажатие на iOS (без задержки двойного тапа, поверх соседних слоёв ленты) */
+.emc-cta { position: relative; z-index: 1; touch-action: manipulation; -webkit-tap-highlight-color: rgba(194, 74, 18, .25); -webkit-touch-callout: none; }
+

@@ -15,8 +15,8 @@
   try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
   try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
 })(document.documentElement);</script>
-<link rel="stylesheet" href="assets/site.css?v=1004a">
-<link rel="stylesheet" href="assets/site-b.css?v=1004a">
+<link rel="stylesheet" href="assets/site.css?v=1005d">
+<link rel="stylesheet" href="assets/site-b.css?v=1005d">
 <script>(function(){var h=location.hostname;if(/^(www\.|oferta\.)?ericamarques\.com$/i.test(h)||/\.github\.io$/i.test(h)||/[?&]chat=(1|mock)(&|$)/.test(location.search)){var e=document.documentElement;e.className+=' emc-pre';setTimeout(function(){e.className=e.className.replace(/\bemc-pre\b/,'')},4000);}})();</script>
 <style>html.emc-pre #sticky-cta-wa,html.emc-pre #wa-pop,html.emc-pre #pb-wa{visibility:hidden}</style>
 </head>
@@ -615,9 +615,11 @@
         <h3 class="t8-name" id="plan-start-name">Start</h3>
         <p class="t8-sub">Pra começar com 2 formas: cadastro de produtos e design de imagens</p>
         <div class="t8-price">
+          <p class="t8-was"><span class="t8-was__l">De</span> <s>R$&nbsp;499</s></p>
           <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">30,92</span></p>
           <p class="t8-day">≈ R$ 1 por dia</p>
           <p class="t8-full">ou R$ 299 à vista</p>
+          <p class="t8-save">Você economiza R$ 200</p>
         </div>
         <a class="btn t8-pay" id="btn-pay-start" href="https://go.hotmart.com/U107829757Q?ap=25dd" rel="noopener" data-cta>Comprar</a>
         <ul class="t8-list list-check">
@@ -643,14 +645,15 @@
         </div>
       </article>
       <article class="t8-card t8-card--best" id="plan-best" aria-labelledby="plan-best-name">
+        <div class="t8-top"><span class="t8-badge">⭐ O mais escolhido</span> <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Só 70 vagas</p></div>
         <h3 class="t8-name" id="plan-best-name">Especialista em Shopee</h3>
-        <span class="t8-badge">⭐ O mais escolhido</span>
         <p class="t8-sub">Pra aprender a profissão inteira — as 5 formas</p>
         <div class="t8-price">
+          <p class="t8-was"><span class="t8-was__l">De</span> <s>R$&nbsp;699</s></p>
           <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">41,27</span></p>
           <p class="t8-day">≈ R$ 1,36 por dia</p>
           <p class="t8-full">ou R$ 399 à vista</p>
-          <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Turma com 70 vagas</p>
+          <p class="t8-save">Você economiza R$ 300</p>
         </div>
         <a class="btn t8-pay" id="btn-pay-specialist" href="https://go.hotmart.com/U107829757Q?ap=227b" rel="noopener" data-cta>Comprar</a>
         <ul class="t8-list list-check">
@@ -670,13 +673,15 @@
         </ul>
       </article>
       <article class="t8-card" id="plan-vip" aria-labelledby="plan-vip-name">
+        <div class="t8-top"><p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Só 30 vagas</p></div>
         <h3 class="t8-name" id="plan-vip-name">VIP</h3>
         <p class="t8-sub">Tudo do Especialista em Shopee — e o dobro de prática</p>
         <div class="t8-price">
+          <p class="t8-was"><span class="t8-was__l">De</span> <s>R$&nbsp;999</s></p>
           <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">61,95</span></p>
           <p class="t8-day">≈ R$ 2,04 por dia</p>
           <p class="t8-full">ou R$ 599 à vista</p>
-          <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Turma com 30 vagas</p>
+          <p class="t8-save">Você economiza R$ 400</p>
         </div>
         <a class="btn t8-pay" id="btn-pay-vip" href="https://go.hotmart.com/U107829757Q?ap=51de" rel="noopener" data-cta>Comprar</a>
         <ul class="t8-list list-check">
@@ -990,8 +995,8 @@
 </div>
 
 <script>window.EM_LANG="pt";window.EM_I18N={"Предыдущая карточка": "Cartão anterior", "Следующая карточка": "Próximo cartão", "Карточка {i} из {n}": "Cartão {i} de {n}", "Места закончились": "Esgotado", "Сохранить": "Salvar"};</script>
-<script src="assets/site.js?v=1004a" defer></script>
-<script src="assets/site-b.js?v=1004a" defer></script>
-<script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=13,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
+<script src="assets/site.js?v=1005d" defer></script>
+<script src="assets/site-b.js?v=1005d" defer></script>
+<script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=15,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
 </body>
 </html>

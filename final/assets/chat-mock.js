@@ -11,7 +11,7 @@
 (function () {
   'use strict';
   var KEY = 'em_chat_mock_v1';
-  var GREETING = 'Oi! Aqui é a Erika 🤍 Ficou com alguma dúvida? É só escrever aqui que eu respondo';
+  var GREETING = 'Oi! Eu sou a assistente da Erika 🤍 Ficou com alguma dúvida? É só escrever aqui que eu respondo';
   var LIMITS = { max_chars: 500, daily_messages: 30 };
   var PLANS = {
     plan_start: ['start', 'Start', 'https://go.hotmart.com/U107829757Q?ap=25dd'],

@@ -326,6 +326,7 @@
   var SVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">';
   var panel = el('div', 'emc');
   panel.id = 'emc'; panel.hidden = true;
+  panel.setAttribute('data-clarity-mask', 'True');   // вебвизор не записывает переписку
   panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-labelledby', 'emc-name');
   panel.innerHTML =
     '<div class="emc__head"><span class="emc-ava" aria-hidden="true"></span>' +
@@ -422,9 +423,22 @@
     return add(el('div', 'emc-b emc-b--' + (from === 'user' ? 'user' : from === 'manager' ? 'mgr' : 'bot'), text || ''));
   }
   function note(cls, text) { S.lastFrom = ''; return add(el('p', cls, text)); }
-  function linkBtn(url, title) {
+  // Оплата из чата: на телефоне и во встроенных браузерах (Instagram, Telegram, Facebook, TikTok) ссылка в новой вкладке часто блокируется — открываем в этой же вкладке.
+  // Обычная ссылка без preventDefault; клик считаем через sendBeacon, переход не ждёт.
+  function sameTab() { return mq.matches || /iPhone|iPad|iPod|Instagram|FBAN|FBAV|FB_IAB|Telegram|TikTok|Snapchat|Line\/|; wv\)/i.test(navigator.userAgent || ''); }
+  function planOf(url) { var m = /[?&]ap=([0-9a-z]+)/i.exec(url || ''); var k = m ? m[1].toLowerCase() : ''; return k === '25dd' ? 'start' : k === '227b' ? 'especialista' : k === '51de' ? 'vip' : ''; }
+  function ctaClick(url, plan) {
+    try {
+      if (window.esTrack) window.esTrack('chat_cta_' + (plan || planOf(url) || 'link'));
+      if (!S.sid || !navigator.sendBeacon) return;
+      navigator.sendBeacon(API + '/event', new Blob([JSON.stringify({ session_id: S.sid, kind: 'cta_click', plan: plan || planOf(url) })], { type: 'application/json' }));
+    } catch (e) { /* аналитика не должна мешать переходу */ }
+  }
+  function linkBtn(url, title, plan) {
     var a = el('a', 'emc-cta', title);
-    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.href = url;
+    if (!sameTab()) { a.target = '_blank'; a.rel = 'noopener'; }
+    a.addEventListener('click', function () { ctaClick(url, plan); });
     S.lastFrom = '';
     return add(a);
   }
@@ -470,7 +484,7 @@
       S.lastFrom = '';
       add(row);
     } else if (t === 'cta' && ev.url) {
-      linkBtn(ev.url, ev.title || ev.text || '');
+      linkBtn(ev.url, ev.title || ev.text || '', ev.plan || '');
     } else if (t === 'contact_form') {
       add(contactForm(ev));
       S.lastFrom = '';
@@ -860,6 +874,7 @@
     if (S.busy || S.sending || (!S.ok && !S.off)) return false;
     if (Date.now() < S.rateUntil) return false;
     S.wrote = true; F.userMsg = true; clearTimeout(S.gt);
+    try { if (window.esTrack) window.esTrack('chat_message'); } catch (e) { /* аналитика */ }
     S.sentAt = Date.now(); S.rep = 0;
     say('');
     dropUnsent();
@@ -1057,6 +1072,7 @@
     lateShow();   // человек сам открыл чат (ссылкой на странице) — кнопка нужна, чтобы вернуться к переписке и увидеть ответ
     S.open = true;
     store('sessionStorage', 'em_chat_open', '1');
+    try { if (window.esTrack) window.esTrack('chat_open'); } catch (e) { /* аналитика не должна ломать чат */ }
     panel.hidden = false;
     var m = mq.matches;
     if (m) panel.setAttribute('aria-modal', 'true'); else panel.removeAttribute('aria-modal');

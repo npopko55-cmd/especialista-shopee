@@ -766,3 +766,18 @@ html.is-soldout #tariffs .t8-deal, html.is-soldout #b10 .b10-deal, html.is-soldo
 /* PT-страница: пометка под подарками (какие подарки в каком тарифе) */
 #tariffs .t8-bonus__note { margin: 14px 4px 0; font-size: 14px; line-height: 1.45; color: var(--tx2); text-wrap: pretty; }
 
+/* Лёша 02.10 (голосовое 16:23, вариант «с экономией»): порядок в цене — зачёркнутая «было», рассрочка, цена при оплате, зелёная выгода, места.
+   Зачёркнутая цена крупная и читаемая: линия того же тёмного цвета, не красная */
+#tariffs .t8-was { margin: 0 0 6px; font-size: 16px; font-weight: 600; line-height: 1.2; color: var(--tx2); text-align: center; }
+#tariffs .t8-was s { margin-left: 4px; font-size: 28px; font-weight: 700; color: #4B5964; text-decoration-line: line-through; text-decoration-thickness: 2px; text-decoration-color: #4B5964; }
+#tariffs .t8-save { display: table; margin: 10px auto 0; padding: 6px 13px; border-radius: 999px; background: #E3F5EC; color: #146B46; font-size: 14px; font-weight: 700; line-height: 1.2; }
+
+/* Лёша 02.10 (голосовое 16:25): места — в самом верху карточки, на одной строке с ярлыком «выбирают чаще всего» (как на российском рынке);
+   строки мест в блоке цены больше нет. На десктопе ярлык тоже в строке (раньше висел на верхнем крае) */
+#tariffs .t8-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; min-height: 30px; margin: -4px 0 12px; }
+#tariffs .t8-top .t8-badge { order: 0; position: static; transform: none; align-self: auto; margin: 0; }
+#tariffs .t8-top .t8-seats { margin: 0 0 0 auto; padding: 4px 11px 4px 9px; font-size: 14px; }
+@media (min-width: 1024px) {
+  #tariffs #plan-start { padding-top: 66px; }   /* у «Старта» мест нет: название стоит на одном уровне с соседями */
+}
+
