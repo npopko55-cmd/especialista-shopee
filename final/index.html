@@ -15,11 +15,12 @@
   try { h.setAttribute('data-b2', new URLSearchParams(location.search).get('b2') === 'a' ? 'a' : 'faces'); } catch (e) { h.setAttribute('data-b2', 'faces'); }
   try { if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-rv'); } catch (e) { /* без появления */ }
 })(document.documentElement);</script>
-<link rel="stylesheet" href="assets/site.css?v=1006c">
-<link rel="stylesheet" href="assets/site-b.css?v=1006c">
+<link rel="stylesheet" href="assets/site.css?v=1006f">
+<link rel="stylesheet" href="assets/site-b.css?v=1006f">
 <!-- чат плана Б (корень, www, oferta., превью): до первого кадра прячем WhatsApp-кнопки, пока assets/chat.js не решит, чат это или запасная почта (emc-pre снимает chat.js; если он не загрузился — через 4 с) -->
 <script>(function(){var h=location.hostname;if(/^(www\.|oferta\.)?ericamarques\.com$/i.test(h)||/\.github\.io$/i.test(h)||/[?&]chat=(1|mock)(&|$)/.test(location.search)){var e=document.documentElement;e.className+=' emc-pre';setTimeout(function(){e.className=e.className.replace(/\bemc-pre\b/,'')},4000);}})();</script>
 <style>html.emc-pre #sticky-cta-wa,html.emc-pre #wa-pop,html.emc-pre #pb-wa{visibility:hidden}</style>
+<link rel="preload" href="assets/chat.css?v=18" as="style"><link rel="preload" href="assets/chat.js?v=18" as="script">   <!-- кнопка чата появляется, как только загрузятся chat.css/chat.js: качаем их сразу, не дожидаясь конца страницы; версия = var v в parts/tail.html -->
 </head>
 <body>
 <!-- Иконки (линейные, как lucide): <svg class="i"><use href="#i-…"/></svg> -->
@@ -1036,9 +1037,9 @@
   </div>
 </div>
 
-<script src="assets/site.js?v=1006c" defer></script>
-<script src="assets/site-b.js?v=1006c" defer></script>
+<script src="assets/site.js?v=1006f" defer></script>
+<script src="assets/site-b.js?v=1006f" defer></script>
 <!-- Веб-чат ИИ-менеджера (план Б): только на oferta.* или с ?chat=1 / ?chat=mock (демо без бэкенда). Иначе ничего не грузится. -->
-<script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=16,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
+<script>(function(){var h=location.hostname,m=/[?&]chat=(1|mock)(&|$)/.exec(location.search),host=/^(www\.|oferta\.)?ericamarques\.com$/i.test(h),prev=/\.github\.io$/i.test(h);if(!m&&!host&&!prev)return;window.__EMC_PREVIEW=!host;var v=18,d=document,l=d.createElement('link');l.rel='stylesheet';l.href='assets/chat.css?v='+v;d.head.appendChild(l);function s(f){var e=d.createElement('script');e.src='assets/'+f+'?v='+v;e.async=false;d.body.appendChild(e);}if(prev||(m&&m[1]==='mock'))s('chat-mock.js');s('chat.js');})();</script>
 </body>
 </html>

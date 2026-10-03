@@ -342,8 +342,8 @@ b, strong { font-weight: 700; }
   transition: transform .2s ease, opacity .2s ease, visibility 0s linear .2s;
 }
 .sticky-cta__wa { transition: opacity .25s ease, transform .25s ease, visibility 0s linear 0s; }
-.sticky-cta.is-top .sticky-cta__wa { opacity: 0; visibility: hidden; transform: scale(.8); pointer-events: none; transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s; }
-@media (prefers-reduced-motion: reduce) { .sticky-cta .btn, .sticky-cta.is-compact .btn, .sticky-cta__wa, .sticky-cta.is-top .sticky-cta__wa { transition: none; } }
+/* 03.10 (Никита): круглая кнопка чата видна сразу при открытии сайта (раньше прямо на самом верху была скрыта до прокрутки, .is-top) */
+@media (prefers-reduced-motion: reduce) { .sticky-cta .btn, .sticky-cta.is-compact .btn, .sticky-cta__wa { transition: none; } }
 
 /* ---------- Окно видео ---------- */
 .vmodal {

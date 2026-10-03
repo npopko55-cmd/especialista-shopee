@@ -39,9 +39,8 @@ html.emc-on .sticky-cta__wa::before {
 html.emc-on.emc-ring:not(.emc-peek-on):not(.emc-open) .sticky-cta__wa::before { animation: emc-ring 2s ease-out 2 both; }   /* ≤ 1 анимация; при пузыре/окне — выключено */
 @keyframes emc-ring { 0% { transform: scale(1); opacity: .6; } 75%, 100% { transform: scale(1.6); opacity: 0; } }
 
-/* Кнопка, пузырь-приглашение и .wa-pop скрыты, пока человек не долистал до тарифов (html.emc-late ставит chat.js до первого кадра).
+/* Пузырь-приглашение и .wa-pop скрыты, пока человек не долистал до тарифов (html.emc-late ставит chat.js до первого кадра). Круглая кнопка чата видна сразу (Никита 03.10).
    Без transition в скрытом состоянии; обратно — плавно (fade/scale 250 мс из site.css: .sticky-cta__wa { transition }). */
-html.emc-late .sticky-cta__wa { opacity: 0 !important; visibility: hidden !important; transform: scale(.8); pointer-events: none !important; transition: none !important; }
 html.emc-late .wa-pop, html.emc-late .emc-peek { display: none !important; }
 
 /* ---------- Пузырь с приветствием у закрытой кнопки ---------- */
@@ -217,7 +216,6 @@ html.emc-lock, html.emc-lock body { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .emc, .emc-peek, .emc-typing span, .emc-dots i, html.emc-on .sticky-cta__wa::before, html.emc-recover .sticky-cta__wa { animation: none !important; }
-  html.emc-late .sticky-cta__wa { transform: none; }
   .emc-typing span { opacity: .6; }
 }
 

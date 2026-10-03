@@ -43,7 +43,7 @@
   // Следующие пузыри того же ответа: HUMAN_NEXT_MIN_MS … HUMAN_NEXT_MIN_MS + HUMAN_NEXT_RND_MS, а на длинных — по HUMAN_PER_CHAR_MS на символ, потолок HUMAN_NEXT_MAX_MS.
   var HUMAN_MIN_MS = 1800, HUMAN_PER_CHAR_MS = 55, HUMAN_MAX_MS = 7000, HUMAN_JITTER_MS = 400;
   var HUMAN_NEXT_MIN_MS = 1200, HUMAN_NEXT_RND_MS = 1000, HUMAN_NEXT_MAX_MS = 4500;
-  // Круглая кнопка чата и пузырь-приглашение появляются только когда человек долистал до тарифов (#tariffs): html.emc-late прячет их.
+  // Круглая кнопка чата видна сразу при открытии сайта (Никита 03.10); пузырь-приглашение появляется, когда человек долистал до тарифов (#tariffs): html.emc-late прячет его.
   // Пузырь-приглашение (приветствие / непрочитанное) — через PEEK_AFTER_MS после появления кнопки.
   var LATE_TARGET = 'tariffs', PEEK_AFTER_MS = 2500;
 
@@ -123,13 +123,13 @@
   function fmt(s, n) { return s.replace('{n}', n); }
   var FAST = q.get('chatfast') === '1';   // автотесты: человеческих пауз нет
 
-  /* ---------- Кнопка чата прячется до тарифов: html.emc-late ставим сразу при старте скрипта, до первого кадра ---------- */
+  /* ---------- Пузырь-приглашение прячется до тарифов (кнопка чата видна сразу): html.emc-late ставим сразу при старте скрипта, до первого кадра ---------- */
   var lateOn = store('sessionStorage', 'em_chat_late') !== '1';
   if (lateOn) {
     html.classList.add('emc-late');
     try {   // страховка от мигания: то же правило есть в chat.css, но стили могут догрузиться позже скрипта
       var cs0 = d.createElement('style');
-      cs0.textContent = 'html.emc-late .sticky-cta__wa,html.emc-late .wa-pop,html.emc-late .emc-peek{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:none!important}';
+      cs0.textContent = 'html.emc-late .wa-pop,html.emc-late .emc-peek{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:none!important}';
       d.head.appendChild(cs0);
     } catch (e) { /* нет head */ }
   }

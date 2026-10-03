@@ -215,9 +215,19 @@
     } catch (e) { /* счётчик не должен ломать страницу */ }
   };
   try { if (hitHost && !sessionStorage.getItem('em_view_sent')) { sessionStorage.setItem('em_view_sent', '1'); sendHit('view'); } } catch (e) { sendHit('view'); }
+  /* «Кликнувших уникально»: одно событие pay_click за сессию при первом нажатии на любой тариф (кнопка на странице или в чате);
+     pay_start / pay_especialista / pay_vip остаются нажатиями по тарифам (для их сравнения), как и view — раз за сессию. */
+  let paySent = false;
+  const sendPayClick = () => {
+    if (paySent) return;
+    paySent = true;
+    try { if (sessionStorage.getItem('em_pay_sent')) return; sessionStorage.setItem('em_pay_sent', '1'); } catch (e) { /* без хранилища: раз за страницу */ }
+    sendHit('pay_click');
+  };
   window.esTrack = name => {
     if (!name) return;
     if (HIT_MAP[name]) sendHit(HIT_MAP[name]);
+    if (/^(click_pay_|chat_cta_)/.test(name)) sendPayClick();
     if (clarityOn) cl('event', name); else if (trackQ.length < 60) trackQ.push(name);
   };
   const loadClarity = () => {
@@ -370,11 +380,7 @@
     }
   }
   applyBar();
-  /* На самом верху страницы круглая WhatsApp закрывала бы третий пункт под кнопкой первого экрана — появляется после небольшой прокрутки */
-  if (bar) {
-    const topBar = () => bar.classList.toggle('is-top', (window.scrollY || d.documentElement.scrollTop || 0) < 48);
-    topBar(); window.addEventListener('scroll', topBar, { passive: true });
-  }
+  /* 03.10: круглая кнопка чата видна сразу, без прокрутки (раньше прямо на самом верху её прятал класс .is-top) */
 
   /* ---------- План Б: плашка «Напиши мне в WhatsApp» (#pb-wa) ----------
      Показываем тем, кто пришёл через форму сбора данных (cadastro.html добавляет ?lead=1); запоминаем на сессию.
@@ -652,6 +658,7 @@
       const r = wa.getBoundingClientRect();
       if (!r.width) return;
       const hit = targets().some(el => {
+        if (el.id === 'cta-b1') return false;   /* кнопка первого экрана: круглая задевает лишь её правый край (текст по центру свободен), поэтому кнопка чата не гаснет и не мигает на первых экранах */
         const b = el.getBoundingClientRect();
         return b.width > 0 && b.bottom > 0 && b.top < innerHeight && !(b.right < r.left + 4 || b.left > r.right - 4 || b.bottom < r.top + 4 || b.top > r.bottom - 4);
       });
