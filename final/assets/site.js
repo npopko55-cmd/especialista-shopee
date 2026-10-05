@@ -266,13 +266,14 @@
     if (vid) { vid.addEventListener('play', () => once('video_play')); vid.addEventListener('ended', () => once('video_end')); }
   })();
 
-  /* Окна продаж (Лёша 01.10): 2–4 октября и 7–9 октября по Бразилиа (UTC−3); 5–6 октября продажи закрыты («места закончились»).
-     Конец окна для таймера: первое окно — 05.10 02:59:59 UTC, второе — 10.10 02:59:59 UTC. Время берём у сервера (заголовок Date),
-     чтобы сбитые часы на телефоне ничего не открывали и не закрывали; нет ответа — часы устройства. */
-  const CLOSE_FROM = Date.parse('2026-10-05T03:00:00Z'), CLOSE_TO = Date.parse('2026-10-07T03:00:00Z');
+  /* Окна продаж. Было (Лёша 01.10): 2–4 и 7–9 октября, 5–6 октября закрыто («места закончились»).
+     05.10 Никита отключил закрытие: продажа идёт без перерыва до конца второго окна — 10.10 02:59:59 UTC (09.10 23:59 по Бразилиа).
+     Закрытие можно вернуть, вписав даты в CLOSE_FROM/CLOSE_TO; вручную: ?soldout=1 (закрыть) / ?soldout=0 (открыть) для проверки.
+     Время берём у сервера (заголовок Date), чтобы сбитые часы на телефоне ничего не открывали и не закрывали; нет ответа — часы устройства. */
+  const CLOSE_FROM = 0, CLOSE_TO = 0;   /* пустое окно закрытия: soldTime всегда false */
   let skew = 0;
   const nowMs = () => Date.now() + skew;
-  const saleEnd = now => Date.parse(now < CLOSE_FROM ? '2026-10-05T02:59:59Z' : '2026-10-10T02:59:59Z');
+  const saleEnd = () => Date.parse('2026-10-10T02:59:59Z');
   const soldTime = now => now >= CLOSE_FROM && now < CLOSE_TO;
   let soldQ = null;
   try { const q = new URLSearchParams(location.search).get('soldout'); soldQ = q === '1' ? true : q === '0' ? false : null; } catch (e) { /* старый браузер */ }
