@@ -1187,9 +1187,13 @@
       var a = d.getElementById(id);
       if (!a) return;
       try {
-        var u = new URL(a.getAttribute('href'), location.href);
+        // «Места закончились» (site.js): у кнопки нет href, ссылка лежит в data-href — метку кладём туда, а саму кнопку ссылкой не делаем
+        var attr = a.classList.contains('is-sold') ? 'data-href' : 'href';
+        var cur = a.getAttribute(attr);
+        if (!cur) return;
+        var u = new URL(cur, location.href);
         u.searchParams.set('sck', 'web-' + s);
-        a.setAttribute('href', u.href);
+        a.setAttribute(attr, u.href);
       } catch (e) { /* ссылку не трогаем */ }
     });
   }
