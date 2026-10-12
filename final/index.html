@@ -366,17 +366,17 @@
         </div>
       </article>
       <article class="carousel__card feat feat--live">
-        <div class="feat__media feat__media--art"><span class="feat__art feat__art--live" aria-hidden="true"><img src="assets/img/erika-live3.webp" width="522" height="652" alt="" loading="lazy" decoding="async"><span class="feat__rec"><i></i>LIVE</span></span></div>
+        <div class="feat__media feat__media--art"><span class="feat__art feat__art--live" aria-hidden="true"><img src="assets/img/erika-live3.webp" width="522" height="652" alt="" loading="lazy" decoding="async"><span class="feat__rec"><i></i>REC</span></span></div>
         <div class="feat__txt">
           <h3 class="feat__t">Эфиры со мной</h3>
-          <p class="feat__p">Отвечаю на твои вопросы вживую.</p>
+          <p class="feat__p">Эфиры с Эрикой — в записи.</p>
         </div>
       </article>
       <article class="carousel__card feat feat--ava">
         <div class="feat__media feat__media--art"><span class="feat__art feat__art--ava" aria-hidden="true"><span class="feat__face"><img src="assets/img/hero-erika-cut-hd.webp" width="1050" height="1400" alt="" loading="lazy" decoding="async"></span><span class="feat__bubble"><svg class="i"><use href="#i-chat"/></svg></span></span></div>
         <div class="feat__txt">
-          <h3 class="feat__t">Поддержка</h3>
-          <p class="feat__p">Застряла — задай вопрос, тебе ответят.</p>
+          <h3 class="feat__t">Центр ответов</h3>
+          <p class="feat__p">100 ответов на самые частые вопросы учениц.</p>
         </div>
       </article>
       <article class="carousel__card feat feat--cert">
@@ -401,18 +401,10 @@
           <details class="more" open>
             <summary>Какие уроки</summary>
             <div class="feat__bon">
-              <p class="feat__bt">В тарифе «Специалист» — 2 бонусных урока:</p>
+              <p class="feat__bt">2 бонусных урока:</p>
               <ul class="feat__bl">
                 <li>«Mercado Livre и Amazon»</li>
-                <li>«Как продавать свои услуги и поднимать чек»</li>
-              </ul>
-              <p class="feat__bt">В тарифе VIP — 5 бонусных уроков:</p>
-              <ul class="feat__bl">
-                <li>«Mercado Livre и Amazon»</li>
-                <li>«Как продавать свои услуги и поднимать чек»</li>
-                <li>«TikTok Shop с нуля»</li>
                 <li>«Портфолио и профиль, к которым магазины приходят сами»</li>
-                <li>«Как вести несколько магазинов сразу и не выгореть»</li>
               </ul>
             </div>
           </details>
@@ -628,7 +620,7 @@
      таймера страницы (здесь и в блоке 10); плитки часы : минуты : секунды, стартовые 24:00:00 до запуска скрипта;
      подарков три (чек-лист, калькулятор цены, готовый прайс) -->
 <section id="tariffs" class="blk bg-golden" aria-labelledby="tariffs-title">
-  <h2 class="blk__title" id="tariffs-title">Выбери свой тариф</h2>
+  <h2 class="blk__title" id="tariffs-title">Твой тариф</h2>
   <div class="t8-deal">
     <p class="t8-deal__line">До повышения цен осталось:</p>
     <div class="cd t8-pcd" data-price-timer role="timer">
@@ -638,86 +630,34 @@
     </div>
     <p class="t8-deal__note">Успей занять место по самой низкой цене</p>
   </div>
-  <div class="t8">
+  <div class="t8 t8--single">
+      <!-- 12.10 (Никита, правка Кати через Лизу): один тариф «Acesso Completo» вместо Старт / Специалист / VIP. Цена 179 — оффер Hotmart 0u0bfaqt («Oferta promocional»);
+           id кнопки оставлен btn-pay-specialist, чтобы счётчики и чат не пересобирать (в таблице это колонка «Especialista») -->
       <article class="t8-card t8-card--best" id="plan-best" aria-labelledby="plan-best-name">
-        <div class="t8-top"><span class="t8-badge">⭐ выбирают чаще всего</span> <p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Всего 70 мест</p></div>
-        <h3 class="t8-name" id="plan-best-name">Специалист по Shopee</h3>
+        <h3 class="t8-name" id="plan-best-name">Полный доступ</h3>
         <p class="t8-sub">Освоить профессию целиком — все 5 способов</p>
         <div class="t8-price">
-          <p class="t8-was"><span class="t8-was__l">Было</span> <s>R$&nbsp;699</s></p>
-          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">41,27</span></p>
-          <p class="t8-day">≈ R$&nbsp;1,36 в день</p>
-          <p class="t8-full">или R$&nbsp;399 одним платежом</p>
-          <p class="t8-save">Ты экономишь R$&nbsp;300</p>
+          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">18,51</span></p>
+          <p class="t8-day">≈ R$&nbsp;0,61 в день</p>
+          <p class="t8-full">или R$&nbsp;179 одним платежом</p>
         </div>
-        <a class="btn t8-pay" id="btn-pay-specialist" href="https://go.hotmart.com/U107829757Q?ap=227b" rel="noopener" data-cta>Оплатить</a>
+        <a class="btn t8-pay" id="btn-pay-specialist" href="https://pay.hotmart.com/T107775226D?off=0u0bfaqt" rel="noopener" data-cta>Оплатить</a>
         <ul class="t8-list list-check">
           <li>Все 8 модулей: более 55 уроков, 5 способов</li>
           <li>Домашние задания</li>
           <li>Учебный тренажёр</li>
           <li>4 учебных заказа от Эрики: карточки, дизайн, чат, видео</li>
-          <li>Доступ 6 месяцев</li>
-          <li>3 эфира со мной</li>
-
-            <li>Поддержка — ответы на вопросы</li>
-            <li>Готовые команды для ИИ и образцы, которые продают — по всем 5 способам</li>
-            <li>Именной сертификат</li>
-            <li>2 бонусных урока: «Mercado Livre и Amazon», «Как продавать свои услуги и поднимать чек»</li>
-            <li>Участие в подарке: iPhone трём лучшим по баллам</li>
-            <li>Возврат 7 дней</li>
-        </ul>
-      </article>
-      <article class="t8-card" id="plan-vip" aria-labelledby="plan-vip-name">
-        <div class="t8-top"><p class="t8-seats"><svg class="i" aria-hidden="true"><use href="#bi-users"/></svg>Всего 30 мест</p></div>
-        <h3 class="t8-name" id="plan-vip-name">VIP</h3>
-        <p class="t8-sub">Всё из «Специалиста по Shopee» — и вдвое больше практики</p>
-        <div class="t8-price">
-          <p class="t8-was"><span class="t8-was__l">Было</span> <s>R$&nbsp;999</s></p>
-          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">61,95</span></p>
-          <p class="t8-day">≈ R$&nbsp;2,04 в день</p>
-          <p class="t8-full">или R$&nbsp;599 одним платежом</p>
-          <p class="t8-save">Ты экономишь R$&nbsp;400</p>
-        </div>
-        <a class="btn t8-pay" id="btn-pay-vip" href="https://go.hotmart.com/U107829757Q?ap=51de" rel="noopener" data-cta>Оплатить</a>
-        <ul class="t8-list list-check">
-          <li>Всё, что в тарифе «Специалист по Shopee»</li>
-          <li>8 учебных заказов от Эрики — вдвое больше: по два на каждый способ</li>
-          <li>Доступ 12 месяцев</li>
-          <li>5 бонусных уроков: два из «Специалиста» + «TikTok Shop с нуля», «Портфолио и профиль, к которым магазины приходят сами», «Как вести несколько магазинов сразу и не выгореть»</li>
-        </ul>
-      </article>
-      <article class="t8-card" id="plan-start" aria-labelledby="plan-start-name">
-        <h3 class="t8-name" id="plan-start-name">Старт</h3>
-        <p class="t8-sub">Начать с двух способов: карточки и картинки</p>
-        <div class="t8-price">
-          <p class="t8-was"><span class="t8-was__l">Было</span> <s>R$&nbsp;499</s></p>
-          <p class="t8-inst"><span class="t8-inst__x">12 ×</span> <span class="t8-inst__cur">R$</span>&nbsp;<span class="t8-inst__sum">30,92</span></p>
-          <p class="t8-day">≈ R$&nbsp;1 в день</p>
-          <p class="t8-full">или R$&nbsp;299 одним платежом</p>
-          <p class="t8-save">Ты экономишь R$&nbsp;200</p>
-        </div>
-        <a class="btn t8-pay" id="btn-pay-start" href="https://go.hotmart.com/U107829757Q?ap=25dd" rel="noopener" data-cta>Оплатить</a>
-        <ul class="t8-list list-check">
-          <li>Модули 0–3: 28 уроков, 2 способа</li>
-          <li>Домашние задания</li>
-          <li>Доступ 2 месяца</li>
+          <li>Именной сертификат</li>
+          <li>Доступ 180 дней</li>
+          <li>Набор из 52 инструментов и 14 готовых текстов</li>
+          <li>Карта профессии</li>
+          <li>Банк из 40 готовых ответов для чата магазина</li>
+          <li>Эфиры с Эрикой — в записи</li>
+          <li>Центр ответов: 100 ответов на самые частые вопросы учениц</li>
+          <li>2 бонусных урока: «Mercado Livre и Amazon», «Портфолио и профиль, к которым магазины приходят сами»</li>
+          <li>Участие в подарке: iPhone трём лучшим по баллам</li>
           <li>Возврат 7 дней</li>
         </ul>
-        <div class="t8-off">
-          <p class="t8-off__h">Не входит в этот тариф</p>
-          <p class="t8-offnote">— недоступно в этом тарифе</p>
-          <ul class="t8-off__list">
-            <li>Учебный тренажёр</li>
-            <li>Учебные заказы от Эрики</li>
-            <li>Эфиры со мной</li>
-            <li>Поддержка</li>
-            <li>Готовые команды для ИИ</li>
-            <li>Образцы, которые продают</li>
-            <li>Именной сертификат</li>
-            <li>Бонусные уроки</li>
-            <li>iPhone трём лучшим</li>
-          </ul>
-        </div>
       </article>
   </div>
   <div class="t8-deal t8-deal--end">
@@ -738,10 +678,9 @@
       </div>
     </div>
     <ul class="t8-bonus__list">
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/gift-access.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 1</span><p class="t8-bonus__name">Удвоение доступа к урокам</p></div></li>
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/gift-orders.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 2</span><p class="t8-bonus__name">Учебных заказов от меня вдвое больше</p></div></li>
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/clipboard.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 3</span><p class="t8-bonus__name">Чек-лист «Первый клиент за 14 дней»</p></div></li>
-      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/calculator.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 4</span><p class="t8-bonus__name">Калькулятор цены + готовый прайс для клиентов</p></div></li>
+      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/clipboard.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 1</span><p class="t8-bonus__name">«7 первых дней» — план на первую неделю по дням: что смотреть и что делать</p></div></li>
+      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/notebook.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 2</span><p class="t8-bonus__name">Набор шаблонов: карточки, баннеры и портфолио — правятся с телефона</p></div></li>
+      <li class="t8-bonus__item"><img class="t8-bonus__ico" src="assets/3d/A18.webp" alt="" width="56" height="56" loading="lazy" decoding="async"><div><span class="t8-bonus__n" aria-hidden="true">Подарок 3</span><p class="t8-bonus__name">25 готовых сообщений магазинам: от первого письма до ответа на «сколько стоит?»</p></div></li>
     </ul>
     <p class="t8-bonus__note">Подарки входят в программу курса и открываются после первых модулей.</p>
   </div>
@@ -755,7 +694,7 @@
     <span class="pb-wa__ic" aria-hidden="true"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg></span>
     <div class="pb-wa__txt">
       <h2 class="pb-wa__t" id="pb-wa-t">Напиши мне в&nbsp;WhatsApp</h2>
-      <p class="pb-wa__p">Отвечу на вопросы и подскажу, какой тариф выбрать.</p>
+      <p class="pb-wa__p">Отвечу на вопросы и подскажу, подойдёт ли тебе обучение.</p>
     </div>
     <a class="btn btn--wa pb-wa__btn" id="pb-wa-btn" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Vim%20do%20site%20do%20curso%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener"><svg class="i" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg>Написать в WhatsApp</a>
   </div>
@@ -767,15 +706,15 @@
 <section id="b8a" class="blk bg-section" aria-labelledby="b8a-title">
   <h2 class="blk__title" id="b8a-title">Думаешь, не потянешь? <span class="b8a-az">Давай посчитаем</span></h2>
   <div class="b8a-g b8a-g--day">
-  <div class="b8a-day" aria-hidden="true"><span class="b8a-day__sum">R$&nbsp;1,36</span><span class="b8a-day__unit">в день</span></div>
+  <div class="b8a-day" aria-hidden="true"><span class="b8a-day__sum">R$&nbsp;0,61</span><span class="b8a-day__unit">в день</span></div>
   <div class="b8a-cmp" aria-hidden="true">
-    <div class="b8a-cmp__i"><img class="b8a-cmp__obj" src="assets/3d/coffee.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><span>меньше половины чашки кофе</span></div>
-    <div class="b8a-cmp__i"><img class="b8a-cmp__obj" src="assets/3d/bus.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><span>меньше четверти поездки</span></div>
+    <div class="b8a-cmp__i"><img class="b8a-cmp__obj" src="assets/3d/coffee.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><span>меньше четверти чашки кофе</span></div>
+    <div class="b8a-cmp__i"><img class="b8a-cmp__obj" src="assets/3d/bus.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><span>меньше пятой части поездки</span></div>
   </div>
   </div>
   <div class="b8a-g b8a-text">
-    <p>«Специалист по Shopee» в рассрочку — R$&nbsp;1,36 в день. Это меньше половины чашки кофе и меньше четверти одной поездки на автобусе.</p>
-    <p>Весь платёж за месяц — R$&nbsp;41,27: как 7 поездок на автобусе. «Старт» — около R$&nbsp;1 в день.</p>
+    <p>«Полный доступ» в рассрочку — R$&nbsp;0,61 в день. Это меньше четверти чашки кофе и меньше пятой части одной поездки на автобусе.</p>
+    <p>Весь платёж за месяц — R$&nbsp;18,51: примерно 3 поездки на автобусе.</p>
   </div>
   <div class="b8a-g b8a-g--scales">
   <h3 class="b8a-sub">А теперь другая сторона</h3>
@@ -783,11 +722,11 @@
     <img class="b8a-scales__img" src="assets/3d/scales.webp" alt="" width="360" height="329" loading="lazy" decoding="async">
   </div>
   <div class="b8a-pans" aria-hidden="true">
-    <span class="b8a-pan"><b>R$&nbsp;41,27</b> в месяц</span>
-    <span class="b8a-pan"><b>5 × R$&nbsp;10</b> карточки</span>
+    <span class="b8a-pan"><b>R$&nbsp;18,51</b> в месяц</span>
+    <span class="b8a-pan"><b>2 × R$&nbsp;10</b> карточки</span>
   </div>
   <p class="b8a-covered"><svg class="i" aria-hidden="true"><use href="#bi-check"/></svg>платёж покрыт</p>
-  <p class="b8a-p b8a-card">По рыночным ценам магазин платит за одну карточку товара около R$&nbsp;10, а новичку за одну картинку — R$&nbsp;30–80. Пять карточек — и платёж «Специалиста» за месяц покрыт.</p>
+  <p class="b8a-p b8a-card">По рыночным ценам магазин платит за одну карточку товара около R$&nbsp;10, а новичку за одну картинку — R$&nbsp;30–80. Две карточки — и платёж «Полного доступа» за месяц покрыт.</p>
   </div>
   <p class="b8a-g b8a-quote">Это не трата. Это первый шаг, чтобы в доме были твои деньги.</p>
   <ul class="b8a-g b8a-qs">
@@ -824,7 +763,7 @@
     </div>
     <div class="b9-panel is-active" id="b9-pix" role="tabpanel" aria-labelledby="b9-tab-pix" data-tab-panel="pix">
       <ol class="b9-steps">
-        <li><span class="b9-n" aria-hidden="true">01</span><p>Выбери тариф и нажми «Оплатить».</p></li>
+        <li><span class="b9-n" aria-hidden="true">01</span><p>Нажми «Оплатить» под тарифом.</p></li>
         <li><span class="b9-n" aria-hidden="true">02</span><p>Впиши имя, почту и WhatsApp, выбери «Pix».</p></li>
         <li><span class="b9-n" aria-hidden="true">03</span><p>На экране появится код. Нажми «Скопировать код».</p></li>
         <li><span class="b9-n" aria-hidden="true">04</span><p>Открой приложение банка → Pix → «Pix Copia e Cola», вставь код и подтверди оплату.</p></li>
@@ -840,7 +779,7 @@
     </div>
     <div class="b9-panel" id="b9-card" role="tabpanel" aria-labelledby="b9-tab-card" data-tab-panel="card">
       <ol class="b9-steps">
-        <li><span class="b9-n" aria-hidden="true">01</span><p>Выбери тариф и нажми «Оплатить».</p></li>
+        <li><span class="b9-n" aria-hidden="true">01</span><p>Нажми «Оплатить» под тарифом.</p></li>
         <li><span class="b9-n" aria-hidden="true">02</span><p>Впиши имя, почту и WhatsApp, выбери «Карта».</p></li>
         <li><span class="b9-n" aria-hidden="true">03</span><p>Впиши номер карты, срок действия, код с обратной стороны и имя, как на карте.</p></li>
         <li><span class="b9-n" aria-hidden="true">04</span><p>Выбери «1 платёж» и подтверди. Банк может попросить подтвердить оплату в приложении или по СМС.</p></li>
@@ -848,7 +787,7 @@
     </div>
     <div class="b9-panel" id="b9-inst" role="tabpanel" aria-labelledby="b9-tab-inst" data-tab-panel="inst">
       <ol class="b9-steps">
-        <li><span class="b9-n" aria-hidden="true">01</span><p>Выбери тариф и нажми «Оплатить».</p></li>
+        <li><span class="b9-n" aria-hidden="true">01</span><p>Нажми «Оплатить» под тарифом.</p></li>
         <li><span class="b9-n" aria-hidden="true">02</span><p>Впиши имя, почту и WhatsApp, выбери «Карта».</p></li>
         <li><span class="b9-n" aria-hidden="true">03</span><p>Впиши данные карты.</p></li>
         <li><span class="b9-n" aria-hidden="true">04</span><p>Выбери, на сколько платежей разбить оплату — до 12. Итоговую сумму увидишь до оплаты.</p></li>
@@ -864,7 +803,7 @@
   <ul class="b9-info">
     <li class="b9-row b9-row--fail"><img class="obj obj--sm" src="assets/3d/A24.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Карта отказала?</h3><p>Скорее всего, на ней не хватило лимита на всю сумму. Оплати через Pix или другой картой.</p></div>
       <div class="b9-help"><a class="btn btn--wa b9-help__btn" id="b9-help" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Preciso%20de%20ajuda%20com%20o%20pagamento%20do%20curso." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Получить помощь</a><p class="b9-help__note">Ассистент Эрики ответит в WhatsApp</p></div></li>
-    <li class="b9-row"><img class="obj obj--sm" src="assets/3d/A33.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Pix — без процентов</h3><p>Через Pix «Специалист» стоит R$&nbsp;399 одним платежом. В рассрочку проценты платит покупатель: 12 × R$&nbsp;41,27 ≈ R$&nbsp;495.</p></div></li>
+    <li class="b9-row"><img class="obj obj--sm" src="assets/3d/A33.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Pix — без процентов</h3><p>Через Pix «Полный доступ» стоит R$&nbsp;179 одним платежом. В рассрочку проценты платит покупатель: 12 × R$&nbsp;18,51 ≈ R$&nbsp;222.</p></div></li>
     <li class="b9-row"><img class="obj obj--sm" src="assets/3d/gift.webp" alt="" width="44" height="44" loading="lazy" decoding="async"><div><h3 class="b9-row__h">Что будет после оплаты</h3><ul class="b9-after list-check"><li>Сразу на почту придёт письмо с доступом к курсу и номером покупки. Сохрани его.</li><li>Заходишь в приложение и начинаешь с первого урока.</li><li>Нет письма? Проверь папку «Спам» или напиши нам в WhatsApp.</li></ul></div></li>
   </ul>
   <div class="cta">
@@ -906,13 +845,13 @@
       <div class="cd__tile"><b data-cd="s">00</b><span>секунд</span></div>
     </div>
     <p class="b10-note">Успей занять место по самой низкой цене</p>
-    <p class="b10-bonus">Оплатишь в течение 3 часов — получишь бонусы: удвоение доступа, вдвое больше учебных заказов, чек-лист «Первый клиент за 14 дней», калькулятор цены и готовый прайс.</p>
+    <p class="b10-bonus">Оплатишь в течение 3 часов — получишь бонусы: «7 первых дней», набор шаблонов и 25 готовых сообщений магазинам.</p>
   </div>
   <div class="cta">
     <a class="btn" id="b10-cta" href="#tariffs" data-cta>Получить доступ</a>
     <p class="cta__note">Pix или карта · Доступ сразу после оплаты · Возврат&nbsp;7&nbsp;дней</p>
   </div>
-  <p class="b10-help">Не знаешь, какой тариф выбрать? Напиши в WhatsApp — поможем.</p>
+  <p class="b10-help">Остались вопросы? Напиши в WhatsApp — поможем.</p>
   <a class="btn btn--wa b10-wa" id="b10-wa" href="https://wa.me/557187627227?text=Ol%C3%A1%21%20Vim%20do%20site%20do%20curso%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#bi-wa"/></svg>Задать вопрос в WhatsApp</a>
 </section>
 
@@ -926,17 +865,17 @@
     <details class="b11-q"><summary>Нужен компьютер?</summary><div class="b11-a"><p>Нет, хватит телефона с интернетом.</p></div></details>
     <details class="b11-q"><summary>Сколько времени нужно?</summary><div class="b11-a"><p>От 1 до 4 часов в день — в своём графике.</p></div></details>
     <details class="b11-q"><summary>Когда и куда придёт доступ?</summary><div class="b11-a"><p>Сразу после оплаты — на почту, которую ты указала. Поэтому указывай её внимательно.</p></div></details>
-    <details class="b11-q"><summary>Сколько длится доступ?</summary><div class="b11-a"><p>Зависит от тарифа: «Старт» — 2 месяца, «Специалист по Shopee» — 6 месяцев, VIP — 12 месяцев. Оплатишь в течение 3 часов — доступ удвоим (кроме «Старта»): 12 и 24 месяца.</p></div></details>
+    <details class="b11-q"><summary>Сколько длится доступ?</summary><div class="b11-a"><p>Доступ к обучению — 180 дней (6 месяцев).</p></div></details>
     <details class="b11-q"><summary>У меня нет кредитной карты. Смогу оплатить?</summary><div class="b11-a"><p>Да, через Pix со своего банковского счёта.</p></div></details>
     <details class="b11-q"><summary>У меня «грязное имя» (долги в Serasa). Смогу оплатить?</summary><div class="b11-a"><p>Да. Pix — это перевод с твоего банковского счёта, кредитную историю никто не проверяет.</p></div></details>
-    <details class="b11-q"><summary>Своих денег прямо сейчас нет. Что делать?</summary><div class="b11-a"><p>Можно оплатить картой мужа или мамы — с их согласия, доступ получаешь ты. Или разбить оплату до 12 платежей: «Специалист по Shopee» — R$&nbsp;41,27 в месяц.</p></div></details>
-    <details class="b11-q"><summary>Муж против. Как ему объяснить?</summary><div class="b11-a"><p>Покажи расчёт: R$&nbsp;1,36 в день. Работа из дома, рядом с детьми. И 7 дней на возврат — если не подойдёт, вернём 100% денег.</p></div></details>
+    <details class="b11-q"><summary>Своих денег прямо сейчас нет. Что делать?</summary><div class="b11-a"><p>Можно оплатить картой мужа или мамы — с их согласия, доступ получаешь ты. Или разбить оплату до 12 платежей: «Полный доступ» — R$&nbsp;18,51 в месяц.</p></div></details>
+    <details class="b11-q"><summary>Муж против. Как ему объяснить?</summary><div class="b11-a"><p>Покажи расчёт: R$&nbsp;0,61 в день. Работа из дома, рядом с детьми. И 7 дней на возврат — если не подойдёт, вернём 100% денег.</p></div></details>
     <details class="b11-q"><summary>Сколько времени в день, если ребёнок на руках?</summary><div class="b11-a"><p>Один урок — 15–25 минут, потом задание. Можно заниматься, пока малыш спит.</p></div></details>
     <details class="b11-q"><summary>Я боюсь первого клиента. Вдруг я испорчу работу?</summary><div class="b11-a"><p>Поэтому обучение так и построено. Сначала тренажёр: тренировка прямо в телефоне, где можно ошибаться сколько угодно раз — никто не видит и ты ничего не теряешь. Потом учебный заказ от меня: делаешь работу целиком, как для магазина, но без денег и без риска. И только потом — настоящий клиент. К нему ты приходишь, уже сделав такую работу своими руками.</p></div></details>
     <details class="b11-q"><summary>Вы даёте клиентов?</summary><div class="b11-a"><p>Нет. Настоящих клиентов ты находишь сама — этому посвящены отдельные уроки: 10 мест и 10 готовых сообщений. Внутри обучения я даю учебные заказы от вымышленных магазинов: это тренировка, а не оплачиваемая работа. Платит тебе не курс, а твой будущий клиент.</p></div></details>
     <details class="b11-q"><summary>Где искать первых клиентов?</summary><div class="b11-a"><p>Этому посвящены отдельные уроки: где искать магазины и что им написать.</p></div></details>
     <details class="b11-q"><summary>А если заказчик не заплатит?</summary><div class="b11-a"><p>В программе есть отдельный урок: первая работа — только по предоплате.</p></div></details>
-    <details class="b11-q"><summary>Как получить iPhone?</summary><div class="b11-a"><p>За уроки и задания ты получаешь баллы. Три ученицы с наибольшим числом баллов по итогам обучения получат iPhone. Это есть в тарифах «Специалист по Shopee» и VIP.</p></div></details>
+    <details class="b11-q"><summary>Как получить iPhone?</summary><div class="b11-a"><p>За уроки и задания ты получаешь баллы. Три ученицы с наибольшим числом баллов по итогам обучения получат iPhone. Это есть в тарифе «Полный доступ».</p></div></details>
   </div>
   <div class="b11-ask">
     <div class="b11-ask__row">

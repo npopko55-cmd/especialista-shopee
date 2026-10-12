@@ -781,3 +781,9 @@ html.is-soldout #tariffs .t8-deal, html.is-soldout #b10 .b10-deal, html.is-soldo
   #tariffs #plan-start { padding-top: 66px; }   /* у «Старта» мест нет: название стоит на одном уровне с соседями */
 }
 
+
+/* 12.10 (Никита): один тариф «Полный доступ» вместо трёх — карточка по центру */
+#tariffs .t8.t8--single { max-width: 560px; margin-inline: auto; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1024px) {
+  #tariffs .t8.t8--single { max-width: none; grid-template-columns: minmax(0, 560px); justify-content: center; }
+}
