@@ -273,7 +273,8 @@
   const CLOSE_FROM = 0, CLOSE_TO = 0;   /* пустое окно закрытия: soldTime всегда false */
   let skew = 0;
   const nowMs = () => Date.now() + skew;
-  const saleEnd = () => Date.parse('2026-10-10T02:59:59Z');
+  /* 13.10 (Никита): таймер снова просто личные 24 часа, как было; общего конца окна у него нет (раньше срок обрезался 10.10 02:59:59 UTC и таймер показывал нули) */
+  const saleEnd = () => Date.parse('2099-12-31T23:59:59Z');
   const soldTime = now => now >= CLOSE_FROM && now < CLOSE_TO;
   let soldQ = null;
   try { const q = new URLSearchParams(location.search).get('soldout'); soldQ = q === '1' ? true : q === '0' ? false : null; } catch (e) { /* старый браузер */ }
